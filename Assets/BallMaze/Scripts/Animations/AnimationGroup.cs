@@ -1,0 +1,65 @@
+﻿
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+class AnimationGroup : MonoBehaviour
+{
+
+    public event AnimationEventHandler FinishedAnimating;
+    private List<MyAnimation> animations;
+    private List<MyAnimation> executingAnimations;
+
+    void Awake()
+    {
+        animations = new List<MyAnimation>();
+        executingAnimations = new List<MyAnimation>();
+    }
+
+    public void AddAnimation(MyAnimation animation)
+    {
+        animations.Add(animation);
+        animation.FinishedAnimating += new AnimationEventHandler(AnimationFinishedAnimating);
+    }
+
+    private void AnimationFinishedAnimating(MonoBehaviour sender)
+    {
+        MyAnimation animation = (MyAnimation)sender;
+        if (executingAnimations.Remove(animation))
+        {
+            if (executingAnimations.Count == 0)
+            {
+                RaiseFinishedAnimating();
+            }
+        }
+        else
+        {
+            Debug.LogError(gameObject.name + "  - " + sender + ":  The animations should have been in the executing list");
+        }
+    }
+
+    private void RaiseFinishedAnimating()
+    {
+        if (FinishedAnimating != null)
+        {
+            FinishedAnimating.Invoke(this);
+        }
+    }
+
+    public void StartAnimating()
+    {
+        foreach (MyAnimation animation in animations)
+        {
+            executingAnimations.Add(animation);
+            animation.StartAnimating();
+        }
+    }
+
+    void OnDestroy()
+    {
+        foreach (MyAnimation animation in animations)
+        {
+            Destroy(animation);
+        }
+    }
+}
