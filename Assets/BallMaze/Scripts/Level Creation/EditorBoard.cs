@@ -11,7 +11,7 @@ namespace BallMaze.LevelCreation
 
         void Start()
         {
-            board = new BoardPosition[0, 0];
+            board = new Position[0, 0];
         }
 
         public override float SizeRatio
@@ -26,7 +26,7 @@ namespace BallMaze.LevelCreation
         {
             boardData = data;
             DeleteBoard();
-            board = new BoardPosition[data.Width, data.Height];
+            board = new Position[data.Width, data.Height];
             for (int x = 0; x < data.Width; x++)
             {
                 for (int y = 0; y < data.Height; y++)
@@ -39,9 +39,9 @@ namespace BallMaze.LevelCreation
                         tile.transform.SetParent(transform, false);
 
                         IBallController ball = BallCreator.GetBall(data.balls[x, y], 1);
-                        ball.Init(x, y, this);
+                        ball.Init(x, y,0, this);
 
-                        board[x, y] = new BoardPosition(tile, ball);
+                        board[x, y] = new Position(tile, ball);
                     }
                 }
             }

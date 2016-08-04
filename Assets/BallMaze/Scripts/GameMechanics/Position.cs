@@ -3,17 +3,17 @@ using BallMaze.GameMechanics.Tiles;
 
 namespace BallMaze.GameMechanics
 {
-    public class BoardPosition
+    public class Position
     {
         internal TileController tile;
         internal IBallController ball;
 
-        public BoardPosition()
+        public Position()
         {
 
         }
 
-        internal BoardPosition(TileController tile, IBallController ball)
+        internal Position(TileController tile, IBallController ball)
         {
             this.tile = tile;
             this.ball = ball;

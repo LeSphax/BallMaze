@@ -8,4 +8,12 @@ namespace BallMaze.Inputs
         UP, DOWN, RIGHT, LEFT,
         NONE
     }
+
+    [Serializable]
+    public enum CubeFace
+    {
+        X, Y, Z,
+        MX, MY, MZ
+    }
+    
 }

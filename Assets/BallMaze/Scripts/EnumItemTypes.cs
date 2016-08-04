@@ -24,30 +24,6 @@ public enum TileType
     SYNCED,
 }
 
-public static class MyExtensions
-{
-    public static Enum Next<Enum>(this Enum src) where Enum : struct
-    {
-#if !UNITY_WP_8_1
-        if (!typeof(Enum).IsEnum) throw new ArgumentException(String.Format("Argumnent {0} is not an Enum", typeof(Enum).FullName));
-#endif
-
-        Enum[] Arr = (Enum[])System.Enum.GetValues(src.GetType());
-        int j = Array.IndexOf<Enum>(Arr, src) + 1;
-        return (Arr.Length == j) ? Arr[0] : Arr[j];
-    }
-
-    public static Enum Previous<Enum>(this Enum src) where Enum : struct
-    {
-#if !UNITY_WP_8_1
-        if (!typeof(Enum).IsEnum) throw new ArgumentException(String.Format("Argumnent {0} is not an Enum", typeof(Enum).FullName));
-#endif
-
-        Enum[] Arr = (Enum[])System.Enum.GetValues(src.GetType());
-        int j = Array.IndexOf<Enum>(Arr, src) -1;
-        return (0 > j) ? Arr[Arr.Length-1] : Arr[j];
-    }
-}
 [Serializable]
 public class BallData
 {
@@ -95,6 +71,16 @@ public class BallData
             for (int j = 0; j < height; j++)
                 matrix[i, j] = GetEmptyBall();
         }
+        return matrix;
+    }
+
+    public static BallData[,,] GetEmptyBallDataMatrix(int width, int height, int depth)
+    {
+        BallData[,,] matrix = new BallData[width, height,depth];
+        for (int i = 0; i < width; i++)
+            for (int j = 0; j < height; j++)
+                for (int k = 0; k < height; k++)
+                    matrix[i, j,k] = GetEmptyBall();
         return matrix;
     }
 
@@ -168,6 +154,16 @@ public class TileData
             for (int j = 0; j < height; j++)
                 matrix[i, j] = GetNormalTile();
         }
+        return matrix;
+    }
+
+    public static TileData[,,] GetEmptyTileDataMatrix(int width, int height, int depth)
+    {
+        TileData[,,] matrix = new TileData[width, height, depth];
+        for (int i = 0; i < width; i++)
+            for (int j = 0; j < height; j++)
+                for (int k = 0; k < height; k++)
+                    matrix[i, j, k] = GetNormalTile();
         return matrix;
     }
 

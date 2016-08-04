@@ -15,9 +15,12 @@ namespace BallMaze.GameMechanics
         bool IsEmpty();
 
         void InitObjectiveType(ObjectiveType type);
-        void Init(int x, int y, Board model);
+        void Init(int x, int y, int z, Board model);
+        void Init(int x, int y, int z, CubeModel model);
 
-        Vector2 GetPosition();
+
+
+        Vector3 GetPosition();
 
         void Destroy();
 

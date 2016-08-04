@@ -9,9 +9,13 @@ namespace BallMaze.GameMechanics
 
         protected int posX;
         protected int posY;
+        protected int posZ;
+
 
         protected View view;
         protected Board boardModel;
+
+        protected CubeModel cubeModel;
 
         public ObjectiveType objectiveType = ObjectiveType.NONE;
 
@@ -54,12 +58,24 @@ namespace BallMaze.GameMechanics
             view = gameObject.AddComponent<View>();
         }
 
-        public virtual void Init(int x, int y, Board boardModel)
+        public virtual void Init(int x, int y, int z, Board boardModel)
         {
             gameObject.transform.SetParent(boardModel.transform, false);
             this.boardModel = boardModel;
             posX = x;
             posY = y;
+            posZ = z;
+
+            InitView();
+        }
+
+        public virtual void Init(int x, int y, int z, CubeModel cubeModel)
+        {
+            this.cubeModel = cubeModel;
+            gameObject.transform.SetParent(cubeModel.transform, false);
+            posX = x;
+            posY = y;
+            posZ = z;
 
             InitView();
         }
@@ -75,15 +91,19 @@ namespace BallMaze.GameMechanics
             return false;
         }
 
-        public virtual Vector2 GetPosition()
+        public virtual Vector3 GetPosition()
         {
-            return new Vector2(posX, posY);
+            return new Vector3(posX, posY, posZ);
         }
 
 
 
         protected Vector3 GetWorldPosition()
         {
+            if (boardModel == null)
+            {
+                return cubeModel.GetWorldPosition(posX,posY,posZ);
+            }
             return boardModel.GetWorldPosition(posX, posY);
         }
 

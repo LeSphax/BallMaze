@@ -9,18 +9,27 @@ namespace BallMaze.GameMechanics
 
         private int posX;
         private int posY;
+        private int posZ;
 
         public event EmptyEventHandler FinishedAnimating;
 
-        public virtual Vector2 GetPosition()
+        public virtual Vector3 GetPosition()
         {
-            return new Vector2(posX, posY);
+            return new Vector3(posX, posY, posZ);
         }
 
-        public virtual void Init(int x, int y, Board model)
+        public virtual void Init(int x, int y, int z, Board model)
         {
             this.posX = x;
             this.posY = y;
+            posZ = z;
+        }
+
+        public virtual void Init(int x, int y, int z, CubeModel model)
+        {
+            this.posX = x;
+            this.posY = y;
+            posZ = z;
         }
 
         public virtual bool IsEmpty()
