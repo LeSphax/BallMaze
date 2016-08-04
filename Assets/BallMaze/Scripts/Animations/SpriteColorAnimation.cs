@@ -1,34 +1,37 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Material))]
-public class SpriteColorAnimation : MyAnimation
+namespace CustomAnimations
 {
 
-    Color startColor;
-    Color endColor;
-    Image myRenderer;
-
-    public void Init(Color startColor, Color endColor, float duration)
+    [RequireComponent(typeof(Material))]
+    public class SpriteColorAnimation : MyAnimation
     {
-        myRenderer = GetComponent<Image>();
-        this.startColor = startColor;
-        this.endColor = endColor;
-        this.duration = duration;
+
+        Color startColor;
+        Color endColor;
+        Image myRenderer;
+
+        public virtual void Init(Color startColor, Color endColor, float duration)
+        {
+            myRenderer = GetComponent<Image>();
+            this.startColor = startColor;
+            this.endColor = endColor;
+            this.duration = duration;
+        }
+
+        protected override void Animate(float completion)
+        {
+            myRenderer.color = startColor * (1 - completion) + endColor * completion;
+        }
+
+        public static SpriteColorAnimation CreateSpriteColorAnimation(GameObject animatedObject, Color startColor, Color targetColor, float duration)
+        {
+            SpriteColorAnimation animation = animatedObject.AddComponent<SpriteColorAnimation>();
+            animation.Init(startColor, targetColor, duration);
+            return animation;
+        }
+
+
     }
-
-    protected override void Animate(float completion)
-    {
-        
-        myRenderer.color = startColor * (1 - completion) + endColor * completion;
-    }
-
-    public static SpriteColorAnimation CreateSpriteColorAnimation(GameObject animatedObject, Color startColor, Color targetColor, float duration)
-    {
-        SpriteColorAnimation animation = animatedObject.AddComponent<SpriteColorAnimation>();
-        animation.Init(startColor, targetColor, duration);
-        return animation;
-    }
-
-
 }

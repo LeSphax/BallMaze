@@ -1,6 +1,6 @@
-﻿using BallMaze.GameMechanics.LevelCreation;
-using BallMaze.LevelCreation;
+﻿using BallMaze.LevelCreation;
 using System.Xml.Serialization;
+using UnityEngine;
 
 namespace BallMaze.Data
 {

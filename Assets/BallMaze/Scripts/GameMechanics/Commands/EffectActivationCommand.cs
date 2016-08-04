@@ -5,12 +5,12 @@ namespace BallMaze.GameMechanics.Commands
 {
     internal class EffectActivationCommand : AbstractBallCommand
     {
-        IBallModel ball;
-        TileModel tile;
+        IBallController ball;
+        TileController tile;
         bool wasUseful;
         bool previousActivation;
 
-        public EffectActivationCommand(IBallModel ball, TileModel tile)
+        public EffectActivationCommand(IBallController ball, TileController tile)
         {
             this.ball = ball;
             this.tile = tile;

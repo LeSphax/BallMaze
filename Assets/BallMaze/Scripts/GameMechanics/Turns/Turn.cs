@@ -3,6 +3,7 @@ using BallMaze.GameMechanics.Tiles;
 using BallMaze.Inputs;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace BallMaze.GameMechanics.Turns
 {
@@ -23,13 +24,13 @@ namespace BallMaze.GameMechanics.Turns
         }
 
         private State state;
-        private BoardModel model;
+        private Board model;
         private Stack<BallMoveCommand> moveCommands;
         private Stack<BallFillObjectiveCommand> objectiveCommands;
         private Stack<EffectActivationCommand> effectActivationCommands;
         private List<AbstractBallCommand> executingCommands;
 
-        public Turn(BoardModel model)
+        public Turn(Board model)
         {
             state = State.CREATED;
             this.model = model;
@@ -282,8 +283,8 @@ namespace BallMaze.GameMechanics.Turns
             {
                 for (int y = 0; y < model.Height; y++)
                 {
-                    IBallModel ball = model.GetBrick(x, y);
-                    TileModel tile = model.GetTile(x, y);
+                    IBallController ball = model.GetBrick(x, y);
+                    TileController tile = model.GetTile(x, y);
                     if (tile.HasEffect())
                     {
                         EffectActivationCommand command = new EffectActivationCommand(ball, tile);
@@ -300,8 +301,8 @@ namespace BallMaze.GameMechanics.Turns
             {
                 for (int y = 0; y < model.Height; y++)
                 {
-                    IBallModel ball = model.GetBrick(x, y);
-                    TileModel tile = model.GetTile(x, y);
+                    IBallController ball = model.GetBrick(x, y);
+                    TileController tile = model.GetTile(x, y);
                     if (ball.GetObjectiveType() != ObjectiveType.NONE && ball.GetObjectiveType() == tile.GetObjectiveType())
                     {
                         BallFillObjectiveCommand command = new BallFillObjectiveCommand(ball, tile);
@@ -314,6 +315,7 @@ namespace BallMaze.GameMechanics.Turns
 
         public bool WasUseful()
         {
+            
             foreach (AbstractBallCommand command in moveCommands)
             {
                 if (command.WasUseful())
@@ -336,6 +338,7 @@ namespace BallMaze.GameMechanics.Turns
                 {
                     return true;
                 }
+
             }
             return false;
         }

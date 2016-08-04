@@ -1,17 +1,19 @@
-﻿namespace BallMaze.GameMechanics.Tiles
-{
-    internal abstract class ATileEffectStrategy
-    {
-        protected TileModel tileModel;
+﻿using UnityEngine;
 
-        public ATileEffectStrategy(TileModel tile)
+namespace BallMaze.GameMechanics.Tiles
+{
+    public abstract class ATileEffectStrategy : MonoBehaviour
+    {
+        protected TileController tileModel;
+
+        void Awake()
         {
-            tileModel = tile;
+            tileModel = GetComponent<TileController>();
         }
 
         public abstract void Init();
 
-        public virtual bool ActivateEffect(IBallModel ball)
+        public virtual bool ActivateEffect(IBallController ball)
         {
             return false;
         }
@@ -30,7 +32,7 @@
             return false;
         }
 
-        public virtual void SetState(TileModel.State state)
+        public virtual void SetState(TileController.State state)
         {
 
         }

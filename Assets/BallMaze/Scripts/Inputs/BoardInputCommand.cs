@@ -12,7 +12,7 @@ namespace BallMaze.Inputs
     public abstract class BoardInputCommand : InputCommand
     {
 
-        protected PlayBoardModel model;
+        protected PlayBoard model;
 
         public BoardInputCommand()
         {
@@ -25,10 +25,10 @@ namespace BallMaze.Inputs
 
         protected override void PrepareExecution()
         {
-            model = GameObject.FindGameObjectWithTag(Tags.LevelController).GetComponent<PlayBoardModel>();
+            model = GameObject.FindGameObjectWithTag(Tags.LevelController).GetComponent<PlayBoard>();
         }
 
-        public void SetModel(PlayBoardModel model)
+        public void SetModel(PlayBoard model)
         {
             this.model = model;
         }

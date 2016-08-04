@@ -1,11 +1,11 @@
 ﻿namespace BallMaze.GameMechanics.Tiles
 {
-    class SyncedTileModel : TileModel
+    class SyncedTileModel : TileController
     {
 
         protected override void InitEffectManager()
         {
-            effectManager = new SyncedTileEffectStrategy(this);
+            effectManager = gameObject.AddComponent<SyncedTileEffectStrategy>();
             effectManager.Init();
         }
     }

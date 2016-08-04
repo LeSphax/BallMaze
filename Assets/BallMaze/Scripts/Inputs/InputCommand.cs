@@ -6,7 +6,7 @@ namespace BallMaze.Inputs
 {
     [Serializable]
     [XmlInclude(typeof(BoardInputCommand))]
-    [XmlInclude(typeof(QuitCommand))]
+   // [XmlInclude(typeof(QuitCommand))]
     [XmlInclude(typeof(PreviousLevelCommand))]
     public abstract class InputCommand
     {

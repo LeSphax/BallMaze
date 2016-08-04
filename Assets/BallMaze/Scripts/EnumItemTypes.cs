@@ -28,7 +28,9 @@ public static class MyExtensions
 {
     public static Enum Next<Enum>(this Enum src) where Enum : struct
     {
+#if !UNITY_WP_8_1
         if (!typeof(Enum).IsEnum) throw new ArgumentException(String.Format("Argumnent {0} is not an Enum", typeof(Enum).FullName));
+#endif
 
         Enum[] Arr = (Enum[])System.Enum.GetValues(src.GetType());
         int j = Array.IndexOf<Enum>(Arr, src) + 1;
@@ -37,7 +39,9 @@ public static class MyExtensions
 
     public static Enum Previous<Enum>(this Enum src) where Enum : struct
     {
+#if !UNITY_WP_8_1
         if (!typeof(Enum).IsEnum) throw new ArgumentException(String.Format("Argumnent {0} is not an Enum", typeof(Enum).FullName));
+#endif
 
         Enum[] Arr = (Enum[])System.Enum.GetValues(src.GetType());
         int j = Array.IndexOf<Enum>(Arr, src) -1;

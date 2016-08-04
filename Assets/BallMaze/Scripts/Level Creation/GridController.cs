@@ -24,7 +24,7 @@ namespace BallMaze.LevelCreation.Grid
             {
                 for (int j = 0; j < gridSizeY; j++)
                 {
-                    GameObject tile = (GameObject)Instantiate(emptyTile, new Vector3(i * BoardModel.SIZE_TILE_X, 0, j * BoardModel.SIZE_TILE_Y), Quaternion.identity);
+                    GameObject tile = (GameObject)Instantiate(emptyTile, new Vector3(i * Board.BASE_TILE_SIZE_X, 0, j * Board.BASE_TILE_SIZE_Y), Quaternion.identity);
                     tile.transform.SetParent(transform.Find("GridBlocks"), false);
                     GridTile script = tile.AddComponent<GridTile>();
                     tiles[i, j] = script;

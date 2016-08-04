@@ -1,8 +1,11 @@
 ﻿
 using BallMaze.Exceptions;
+using BallMaze.GameMechanics.ObjectiveBall;
+using CustomAnimations.BallMazeAnimations;
 using UnityEngine;
+using UnityEngine.Assertions;
 
-namespace BallMaze.GameMechanics
+namespace BallMaze.GameMechanics.Balls
 {
     class BallCreator
     {
@@ -60,45 +63,54 @@ namespace BallMaze.GameMechanics
         }
 
 
-        internal static IBallModel NextBall(BallData ballData)
+        internal static IBallController GetBall(BallData ballData, float sizeRatio)
         {
-            GameObject ball;
-            IBallModel ballModel;
+            GameObject mesh = null;
+            IBallController ballController;
             switch (ballData.BallType)
             {
                 case BallType.EMPTY:
-                    ballModel = new EmptyBall();
+                    ballController = new EmptyBallController();
                     break;
                 case BallType.NORMAL:
-                    switch (ballData.ObjectiveType)
-                    {
-                        case ObjectiveType.NONE:
-                            ball = Object.Instantiate(NoObjectiveBallPrefab);
-                            break;
-                        case ObjectiveType.OBJECTIVE1:
-                            ball = Object.Instantiate(Objective1BallPrefab);
-                            break;
-                        case ObjectiveType.OBJECTIVE2:
-                            ball = Object.Instantiate(Objective2BallPrefab);
-                            break;
-                        default:
-                            throw new UnhandledSwitchCaseException(ballData.ObjectiveType);
-                    }
-                    FloatingAnimation.AddFloatingAnimation(ball, 1, 0.4f);
-                    ballModel = ball.AddComponent<ObjectiveBallModel>();
-                    ball.AddComponent<ObjectiveBallView>();
-                    break;
                 case BallType.WALL:
-                    ball = Object.Instantiate(WallPrefab);
-                    ballModel = ball.AddComponent<BallModel>();
-                    ball.AddComponent<BallView>();
+                    GameObject ball = new GameObject();
+                    if (ballData.BallType == BallType.NORMAL)
+                    {
+                        switch (ballData.ObjectiveType)
+                        {
+                            case ObjectiveType.NONE:
+                                mesh = Object.Instantiate(NoObjectiveBallPrefab);
+                                break;
+                            case ObjectiveType.OBJECTIVE1:
+                                mesh = Object.Instantiate(Objective1BallPrefab);
+                                break;
+                            case ObjectiveType.OBJECTIVE2:
+                                mesh = Object.Instantiate(Objective2BallPrefab);
+                                break;
+                            default:
+                                throw new UnhandledSwitchCaseException(ballData.ObjectiveType);
+                        }
+                        FloatingAnimation.AddFloatingAnimation(mesh, 1, 0.4f);
+                        ballController = ball.AddComponent<ObjectiveBallController>();
+                    }
+                    else
+                    {
+                        mesh = Object.Instantiate(WallPrefab);
+                        ballController = ball.AddComponent<WallController>();
+                    }
+                    Assert.IsNotNull(mesh);
+                    ballController.SetMesh(mesh);
+
                     break;
                 default:
                     throw new UnhandledSwitchCaseException(ballData.BallType);
 
             }
-            ballModel.InitObjectiveType(ballData.ObjectiveType);
-            return ballModel;
+            if (mesh != null)
+                mesh.transform.localScale *= sizeRatio;
+            ballController.InitObjectiveType(ballData.ObjectiveType);
+            return ballController;
 
         }
     }

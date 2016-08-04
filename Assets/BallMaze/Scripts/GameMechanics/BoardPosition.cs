@@ -5,15 +5,15 @@ namespace BallMaze.GameMechanics
 {
     public class BoardPosition
     {
-        internal TileModel tile;
-        internal IBallModel ball;
+        internal TileController tile;
+        internal IBallController ball;
 
         public BoardPosition()
         {
 
         }
 
-        internal BoardPosition(TileModel tile, IBallModel ball)
+        internal BoardPosition(TileController tile, IBallController ball)
         {
             this.tile = tile;
             this.ball = ball;

@@ -7,11 +7,11 @@ namespace BallMaze.GameMechanics.Commands
     internal class BallFillObjectiveCommand : AbstractBallCommand
     {
 
-        private IBallModel ball;
-        private TileModel tile;
+        private IBallController ball;
+        private TileController tile;
         private bool wasUseful = false;
 
-        public BallFillObjectiveCommand(IBallModel ball, TileModel tile)
+        public BallFillObjectiveCommand(IBallController ball, TileController tile)
         {
             this.ball = ball;
             this.tile = tile;
@@ -21,10 +21,10 @@ namespace BallMaze.GameMechanics.Commands
         {
             if (tile.TryFillTile())
             {
+                wasUseful = true;
                 ball.FinishedAnimating += new EmptyEventHandler(RaiseFinishedExecuting);
                 GameObject.FindGameObjectWithTag(Tags.LevelController).GetComponent<LevelManager>().NotifyFilledObjective(tile.GetObjectiveType());
                 ball.FillObjective();
-                wasUseful = true;
             }
             else
             {
@@ -35,9 +35,9 @@ namespace BallMaze.GameMechanics.Commands
         protected override void ExecuteUndo()
         {
             ball.FinishedAnimating += new EmptyEventHandler(RaiseFinishedExecuting);
+            GameObject.FindGameObjectWithTag(Tags.LevelController).GetComponent<LevelManager>().NotifyUnFilledObjective(ball.GetObjectiveType());
             tile.UnFillTile();
             ball.UnFillObjective();
-            GameObject.FindGameObjectWithTag(Tags.LevelController).GetComponent<LevelManager>().NotifyUnFilledObjective(ball.GetObjectiveType());
         }
 
         protected override void TakeOffListener()

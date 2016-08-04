@@ -44,6 +44,7 @@ namespace BallMaze.LevelCreation
                 switch (_state)
                 {
                     case State.CREATE_GRID:
+                        boardData.DestroyBoard();
                         gridController.SetVisible(true);
                         break;
                     case State.EDIT_GRID:
@@ -68,19 +69,26 @@ namespace BallMaze.LevelCreation
         {
             grid = GameObject.FindGameObjectWithTag(Tags.Grid);
             gridController = grid.GetComponent<GridController>();
-            boardData = new EditableBoardData(grid.GetComponent<EditorBoardModel>());
+            boardData = new EditableBoardData(grid.GetComponent<EditorBoard>());
             levelLoader = ballMaze.GetComponentInChildren<LevelLoader>();
         }
 
         void Update()
         {
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(KeyCode.S))
-            {
-                SaveData();
-            }
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(KeyCode.B))
-            {
-                state = State.CREATE_GRID;
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt)){
+                if (Input.GetKeyDown(KeyCode.S))
+                {
+                    SaveData();
+                }
+                if (Input.GetKeyDown(KeyCode.B))
+                {
+                    state = State.CREATE_GRID;
+                }
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    boardData.ResetBoard();
+                    state = State.CREATE_GRID;
+                }
             }
         }
 

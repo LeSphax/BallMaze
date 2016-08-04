@@ -19,7 +19,7 @@ namespace BallMaze.GameManagement
 
         internal void NotifyFilledObjective(ObjectiveType objectiveEntered)
         {
-            if (objectivesFilled < objectivesOrder.Length && objectivesOrder[objectivesFilled] != objectiveEntered)
+            if (objectivesFilled < objectivesOrder.Length && objectivesOrder[objectivesFilled] != objectiveEntered && objectivesOrder[objectivesFilled] != ObjectiveType.NONE)
             {
                 Invoke("StartBlinking", 8.0f);
             }

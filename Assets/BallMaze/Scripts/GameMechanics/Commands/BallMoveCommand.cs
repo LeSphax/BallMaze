@@ -9,12 +9,12 @@ namespace BallMaze.GameMechanics.Commands
     {
         private Direction direction;
 
-        private IBallModel ball;
+        private IBallController ball;
 
         private Vector2 oldBallPosition;
         private Vector2 newBallPosition;
 
-        public BallMoveCommand(IBallModel ball, Direction direction)
+        public BallMoveCommand(IBallController ball, Direction direction)
         {
             this.ball = ball;
             this.direction = direction;

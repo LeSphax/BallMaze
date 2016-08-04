@@ -2,8 +2,6 @@
 using System.IO;
 using System.Xml.Serialization;
 using UnityEngine;
-using System;
-using System.Xml;
 
 namespace BallMaze.Data
 {
@@ -67,18 +65,24 @@ namespace BallMaze.Data
 
         public bool Save(string fileName, bool force = false)
         {
-#if UNITY_WEBGL || UNITY_WEBPLAYER
+#if UNITY_EDITOR
+            SaveToResources(fileName, force);
+
+#elif UNITY_WEBGL || UNITY_WEBPLAYER
             _tempLevelData = this;
             return true;
-#else
-            return SaveToStreamingAssets(fileName, force);
 #endif
-
+            return SaveToStreamingAssets(fileName, force);
         }
 
-        private bool SaveToStreamingAssets(string fileName, bool force)
+        private bool SaveToResources(string fileName, bool force)
         {
-            string path = GetApplicationPath() + fileName + ".xml";
+            string path = Application.dataPath + Paths.FOLDER_SEPARATOR + Paths.RESOURCES + Paths.LEVEL_FILES + fileName + ".xml";
+            return SaveFile(fileName, force, path);
+        }
+
+        private bool SaveFile(string fileName, bool force, string path)
+        {
             if (!force && File.Exists(path))
             {
                 return false;
@@ -92,13 +96,18 @@ namespace BallMaze.Data
             return true;
         }
 
+        private bool SaveToStreamingAssets(string fileName, bool force)
+        {
+            string path = GetApplicationPath() + fileName + ".xml";
+            return SaveFile(fileName, force, path);
+        }
+
         private static string GetApplicationPath()
         {
-
-#if UNITY_WEBGL || UNITY_WEBPLAYER
+#if (UNITY_WEBGL || UNITY_WEBPLAYER) && ! UNITY_EDITOR
             return Paths.LEVEL_FILES;
 #else
-            return Application.streamingAssetsPath + Paths.FOLDER_SEPARATOR + "Resources"+ Paths.FOLDER_SEPARATOR + Paths.LEVEL_FILES;
+            return Application.streamingAssetsPath +  Paths.FOLDER_SEPARATOR + Paths.LEVEL_FILES;
 #endif
 
         }
@@ -115,7 +124,7 @@ namespace BallMaze.Data
 
         public static bool TryLoad(string fileName, out LevelData levelData)
         {
-#if UNITY_WEBGL || UNITY_WEBPLAYER
+#if (UNITY_WEBGL || UNITY_WEBPLAYER) && ! UNITY_EDITOR
             if (fileName == LevelCreatorController.TEMP_LEVEL_NAME)
             {
                 levelData = _tempLevelData;
@@ -132,7 +141,7 @@ namespace BallMaze.Data
 
         private static bool LoadFromResources(string fileName, out LevelData levelData)
         {
-            string path = GetApplicationPath() + fileName ;
+            string path = GetApplicationPath() + fileName;
             TextAsset textAsset = (TextAsset)Resources.Load(path);
             if (textAsset == null ){
                 levelData = null;
@@ -163,7 +172,7 @@ namespace BallMaze.Data
                 else
                 {
                     Debug.LogError("The boardData isn't valid ! The filename was " + fileName);
-                    return false;
+                    return true;
                 }
             }
             else

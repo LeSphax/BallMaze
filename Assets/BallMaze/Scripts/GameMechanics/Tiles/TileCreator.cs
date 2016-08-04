@@ -1,5 +1,4 @@
-﻿
-using BallMaze.Exceptions;
+﻿using BallMaze.Exceptions;
 using UnityEngine;
 
 namespace BallMaze.GameMechanics.Tiles
@@ -45,20 +44,22 @@ namespace BallMaze.GameMechanics.Tiles
             }
         }
 
-        internal static TileModel CreateTile(TileData tileData, Vector3 position)
+        internal static TileController CreateTile(TileData tileData, Vector3 position, float sizeRatio)
         {
-            GameObject tile;
-            TileModel tileModel = null;
+            GameObject mesh;
+            GameObject tile = new GameObject();
+            tile.transform.localPosition = position;
+            TileController tileController = null;
             switch (tileData.ObjectiveType)
             {
                 case ObjectiveType.NONE:
-                    tile = (GameObject)Object.Instantiate(TilePrefab, position, TilePrefab.transform.localRotation);
+                    mesh = (GameObject)Object.Instantiate(TilePrefab);
                     break;
                 case ObjectiveType.OBJECTIVE1:
-                    tile = (GameObject)Object.Instantiate(Objective1TilePrefab, position, Objective1TilePrefab.transform.localRotation);
+                    mesh = (GameObject)Object.Instantiate(Objective1TilePrefab);
                     break;
                 case ObjectiveType.OBJECTIVE2:
-                    tile = (GameObject)Object.Instantiate(Objective2TilePrefab, position, Objective2TilePrefab.transform.localRotation);
+                    mesh = (GameObject)Object.Instantiate(Objective2TilePrefab);
                     break;
                 default:
                     throw new UnhandledSwitchCaseException(tileData.ObjectiveType);
@@ -66,19 +67,21 @@ namespace BallMaze.GameMechanics.Tiles
             switch (tileData.TileType)
             {
                 case TileType.NORMAL:
-                    tileModel = tile.AddComponent<TileModel>();
+                    tileController = tile.AddComponent<TileController>();
                     break;
                 case TileType.SYNCED:
-                    tileModel = tile.AddComponent<SyncedTileModel>();
-                    tile.tag = Tags.ObjectiveTile;
+                    tileController = tile.AddComponent<SyncedTileModel>();
+                    tile.tag = Tags.SyncedTile;
                     break;
                 default:
                     throw new UnhandledSwitchCaseException(tileData.TileType);
             }
-            tileModel.Init(tileData);
-
-            return tile.GetComponent<TileModel>();
+            tileController.Init(tileData);
+            mesh.transform.localScale *= sizeRatio;
+            tileController.SetMesh(mesh);
+            return tileController;
         }
 
     }
 }
+

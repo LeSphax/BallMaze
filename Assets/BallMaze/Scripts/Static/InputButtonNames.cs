@@ -7,6 +7,7 @@ class InputButtonNames
     public const string RIGHT = "RIGHT";
     public const string LEFT = "LEFT";
     internal static string RESET = "RESET";
-    internal static string RETURN = "CANCEL";
+    internal static string CANCEL = "Cancel";
+    internal static string RETURN = "RETURN";
 }
 

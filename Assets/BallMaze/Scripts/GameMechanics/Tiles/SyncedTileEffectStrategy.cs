@@ -8,16 +8,17 @@ namespace BallMaze.GameMechanics.Tiles
         private List<SyncedTileModel> otherSyncedTiles;
         private bool effectActivated = false;
 
-        public SyncedTileEffectStrategy(TileModel tile) : base(tile)
-        {
-        }
-
         public override void Init()
         {
             base.Init();
+            
             tileModel.SetOpen(false);
+        }
+
+        void Start()
+        {
             otherSyncedTiles = new List<SyncedTileModel>();
-            foreach (GameObject tile in GameObject.FindGameObjectsWithTag(Tags.ObjectiveTile))
+            foreach (GameObject tile in GameObject.FindGameObjectsWithTag(Tags.SyncedTile))
             {
                 if (tile.GetComponent<SyncedTileModel>() != null && tile != tileModel.gameObject)
                 {
@@ -26,7 +27,7 @@ namespace BallMaze.GameMechanics.Tiles
             }
         }
 
-        public override bool ActivateEffect(IBallModel ball)
+        public override bool ActivateEffect(IBallController ball)
         {
             if (ball.GetObjectiveType() == tileModel.GetObjectiveType() && !effectActivated)
             {
@@ -43,6 +44,7 @@ namespace BallMaze.GameMechanics.Tiles
 
         public override void ActivateEffect(bool activate)
         {
+            Debug.Log(otherSyncedTiles.Count);
             if (activate)
             {
                 effectActivated = true;

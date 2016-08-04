@@ -1,13 +1,13 @@
-﻿using UnityEngine;
+﻿using BallMaze.GameManagement;
 using BallMaze.GameMechanics;
 using BallMaze.Saving;
-using BallMaze.GameManagement;
+using UnityEngine;
 
 namespace BallMaze.Inputs
 {
     internal class InputManager : MonoBehaviour
     {
-        private BoardModel board;
+        private Board board;
         private LevelLoader loader;
         private SaveManager saveManager;
 
@@ -34,7 +34,7 @@ namespace BallMaze.Inputs
 
         void Update()
         {
-            if (Input.GetButtonDown(InputButtonNames.RETURN) || Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetButtonDown(InputButtonNames.CANCEL) || Input.GetKeyDown(KeyCode.Escape))
             {
                 Cancel();
             }
@@ -214,7 +214,7 @@ namespace BallMaze.Inputs
             return Direction.NONE;
         }
 
-        public void SetBoard(BoardModel board)
+        public void SetBoard(Board board)
         {
             this.board = board;
         }

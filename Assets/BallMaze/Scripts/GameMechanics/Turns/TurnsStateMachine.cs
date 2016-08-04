@@ -1,4 +1,4 @@
-﻿using GenericStatePattern;
+﻿using GenericStateMachine;
 using UnityEngine;
 
 namespace BallMaze.GameMechanics.Turns
@@ -12,15 +12,13 @@ namespace BallMaze.GameMechanics.Turns
             this.turn = turn;
         }
 
-        protected override void DefineFirst()
+        internal override State<TurnsStateMachine, TurnEvent> DefineFirst()
         {
-            first = new Created(this);
+            return new Created(this);
         }
     }
     internal abstract class TurnState : State<TurnsStateMachine, TurnEvent>
     {
-        internal new TurnsStateMachine stateMachine;
-
         public TurnState(TurnsStateMachine stateMachine) : base(stateMachine)
         {
         }

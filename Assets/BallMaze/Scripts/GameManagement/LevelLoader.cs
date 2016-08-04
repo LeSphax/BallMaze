@@ -25,6 +25,10 @@ namespace BallMaze.GameManagement
         void Awake()
         {
             inputManager = GetComponent<InputManager>();
+            //if (NavigationManager.firstLevelName != "")
+            //{
+            //    firstLevelName = NavigationManager.firstLevelName;
+            //}
             if (!CreatorMode)
                 LoadLevel(firstLevelName);
         }
@@ -36,7 +40,7 @@ namespace BallMaze.GameManagement
             {
                 levelNameField.text = currentData.name;
                 currentLevel = this.InstantiateAsChildren(levelPrefab);
-                BoardModel boardModel = currentLevel.GetComponent<BoardModel>();
+                Board boardModel = currentLevel.GetComponent<Board>();
                 boardModel.SetData(currentData.boardData);
 
                 LevelManager levelManager = currentLevel.GetComponent<LevelManager>();
@@ -64,6 +68,7 @@ namespace BallMaze.GameManagement
             }
             else
             {
+                if (!CreatorMode)
                 EndOfGame();
             }
         }

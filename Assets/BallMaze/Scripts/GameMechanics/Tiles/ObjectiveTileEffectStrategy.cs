@@ -7,10 +7,6 @@ namespace BallMaze.GameMechanics.Tiles
         private ParticleSystem.EmissionModule dust;
         private GameObject dustObject;
 
-        public ObjectiveTileEffectStrategy(TileModel tile) : base(tile)
-        {
-        }
-
         public override void Init()
         {
             tileModel.SetOpen(true);
@@ -20,17 +16,17 @@ namespace BallMaze.GameMechanics.Tiles
             dust = dustObject.GetComponent<ParticleSystem>().emission;
         }
 
-        public override void SetState(TileModel.State newState)
+        public override void SetState(TileController.State newState)
         {
             switch (newState)
             {
-                case TileModel.State.CLOSED:
+                case TileController.State.CLOSED:
                     dust.enabled = false;
                     break;
-                case TileModel.State.OPEN:
+                case TileController.State.OPEN:
                     dust.enabled = true;
                     break;
-                case TileModel.State.FILLED:
+                case TileController.State.FILLED:
                     dust.enabled = false;
                     break;
                 default:

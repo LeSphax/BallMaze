@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 
-public class BallView : MonoBehaviour
+namespace BallMaze.GameMechanics
 {
-
-    protected const float BALL_HALF_HEIGHT = 0.3f;
-
-    public void SetPosition(Vector3 position)
+    public class BallView : GameObjectWithMesh
     {
-        transform.localPosition = position + Vector3.up * BALL_HALF_HEIGHT;
+
+        protected const float BALL_HALF_HEIGHT = 0.3f;
+
+        public void SetPosition(Vector3 position)
+        {
+            transform.localPosition = position + Vector3.up * BALL_HALF_HEIGHT;
+        }
     }
 }

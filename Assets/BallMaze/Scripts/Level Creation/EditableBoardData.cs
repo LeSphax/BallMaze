@@ -1,5 +1,7 @@
 ﻿
 using BallMaze.Data;
+using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace BallMaze.LevelCreation
 {
@@ -7,23 +9,61 @@ namespace BallMaze.LevelCreation
     {
         private const int WIDTH_MAX = 10;
         private const int HEIGHT_MAX = 10;
-        internal EditorBoardModel boardModel;
+        internal EditorBoard boardModel;
+
+        private TileData[,] oldTiles = new TileData[0,0];
+        private BallData[,] oldBalls = new BallData[0, 0];
 
         public EditableBoardData()
         {
 
         }
 
-        internal EditableBoardData(EditorBoardModel model)
+        internal EditableBoardData(EditorBoard model)
         {
             boardModel = model;
 
         }
 
+        public void DestroyBoard()
+        {
+            SaveBoard();
+            ResetBoard();
+        }
+
+        private void SaveBoard()
+        {
+            oldBalls = balls;
+            oldTiles = tiles;
+        }
+
+        public void ResetBoard()
+        {
+            tiles = TileData.GetEmptyTileDataMatrix(0, 0);
+            balls = BallData.GetEmptyBallDataMatrix(0, 0);
+        }
+
         public void CreateBoard(int width, int height)
         {
-            tiles = TileData.GetEmptyTileDataMatrix(width, height);
-            balls = BallData.GetEmptyBallDataMatrix(width, height);
+            Assert.IsTrue(oldTiles.GetLength(0) == oldBalls.GetLength(0) && oldTiles.GetLength(1) == oldBalls.GetLength(1));
+            tiles = new TileData[width, height];
+            balls = new BallData[width, height];
+            for (int i=0; i<width; i++)
+            {
+                for (int j=0; j<height; j++)
+                {
+                    if (oldBalls.GetLength(0) > i && oldBalls.GetLength(1) > j)
+                    {
+                        tiles[i, j] = oldTiles[i, j];
+                        balls[i, j] = oldBalls[i, j];
+                    }
+                    else
+                    {
+                        tiles[i, j] = TileData.GetNormalTile();
+                        balls[i, j] = BallData.GetEmptyBall();
+                    }
+                }
+            }
             UpdateModel();
         }
 
