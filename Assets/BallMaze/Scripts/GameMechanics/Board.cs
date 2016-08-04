@@ -38,7 +38,7 @@ namespace BallMaze.GameMechanics
 
         protected BoardData boardData;
 
-        protected Position[,] board;
+        protected BoardPosition[,] board;
 
         public int Width
         {

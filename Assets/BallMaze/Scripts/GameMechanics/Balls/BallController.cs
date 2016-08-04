@@ -1,6 +1,7 @@
 ﻿using BallMaze.Inputs;
 using System;
 using UnityEngine;
+
 namespace BallMaze.GameMechanics
 {
     [Serializable]
@@ -102,7 +103,7 @@ namespace BallMaze.GameMechanics
         {
             if (boardModel == null)
             {
-                return cubeModel.GetWorldPosition(posX,posY,posZ);
+                return cubeModel.GetBallPosition(posX,posY,posZ);
             }
             return boardModel.GetWorldPosition(posX, posY);
         }

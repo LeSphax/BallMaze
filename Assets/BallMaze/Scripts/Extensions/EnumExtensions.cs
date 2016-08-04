@@ -22,27 +22,6 @@ public static class EnumExtensions
         int j = Array.IndexOf<Enum>(Arr, src) - 1;
         return (0 > j) ? Arr[Arr.Length - 1] : Arr[j];
     }
-
-    public static CubeFace GetOpposite(this CubeFace plane)
-    {
-        switch (plane)
-        {
-            case CubeFace.X:
-                return CubeFace.MX;
-            case CubeFace.Y:
-                return CubeFace.MY;
-            case CubeFace.Z:
-                return CubeFace.MZ;
-            case CubeFace.MX:
-                return CubeFace.X;
-            case CubeFace.MY:
-                return CubeFace.Y;
-            case CubeFace.MZ:
-                return CubeFace.Z;
-            default:
-                throw new UnhandledSwitchCaseException(plane);
-        }
-    }
 }
 
 

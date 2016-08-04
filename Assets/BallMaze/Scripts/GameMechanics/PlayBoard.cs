@@ -104,7 +104,7 @@ namespace BallMaze.GameMechanics
         public override void SetData(BoardData data)
         {
             BoardData boardData = data;
-            board = new Position[boardData.Width, boardData.Height];
+            board = new BoardPosition[boardData.Width, boardData.Height];
             for (int x = 0; x < boardData.Width; x++)
             {
                 for (int y = 0; y < boardData.Height; y++)
@@ -117,7 +117,7 @@ namespace BallMaze.GameMechanics
                     IBallController ball = BallCreator.GetBall(boardData.balls[x, y], SizeRatio);
                     ball.Init(x, y, 0, this);
 
-                    board[x, y] = new Position(tile, ball);
+                    board[x, y] = new BoardPosition(tile, ball);
                 }
             }
         }

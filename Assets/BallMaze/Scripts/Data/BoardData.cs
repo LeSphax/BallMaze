@@ -1,6 +1,5 @@
 ﻿using BallMaze.LevelCreation;
 using System.Xml.Serialization;
-using UnityEngine;
 
 namespace BallMaze.Data
 {
@@ -31,11 +30,11 @@ namespace BallMaze.Data
         {
             get
             {
-                return MatrixToJaggedArray(tiles);
+                return tiles.ToJaggedArray();
             }
             set
             {
-                tiles = JaggedArrayToMatrix(value);
+                tiles = value.ToMatrix();
             }
         }
 
@@ -43,40 +42,12 @@ namespace BallMaze.Data
         {
             get
             {
-                return MatrixToJaggedArray(balls);
+                return balls.ToJaggedArray();
             }
             set
             {
-                balls = JaggedArrayToMatrix(value);
+                balls = value.ToMatrix();
             }
-        }
-
-        private T[][] MatrixToJaggedArray<T>(T[,] matrix)
-        {
-            T[][] jaggedArray = new T[matrix.GetLength(0)][];
-            for (int i = 0; i < matrix.GetLength(0); i++)
-            {
-                jaggedArray[i] = new T[matrix.GetLength(1)];
-
-                for (int j = 0; j < matrix.GetLength(1); j++)
-                    jaggedArray[i][j] = matrix[i, j];
-            }
-            return jaggedArray;
-        }
-
-        private T[,] JaggedArrayToMatrix<T>(T[][] jaggedArray)
-        {
-            if (jaggedArray.Length > 0)
-            {
-                T[,] matrix = new T[jaggedArray.Length, jaggedArray[0].Length];
-                for (int i = 0; i < jaggedArray.Length; i++)
-                {
-                    for (int j = 0; j < jaggedArray[0].Length; j++)
-                        matrix[i, j] = jaggedArray[i][j];
-                }
-                return matrix;
-            }
-            else return new T[0, 0];
         }
 
         private void TrimTiles()
