@@ -1,5 +1,4 @@
-﻿namespace BallMaze.GameMechanics.Turns
-{
+﻿
     internal abstract class TurnEvent
     {
     }
@@ -8,4 +7,4 @@
     {
 
     }
-}
+

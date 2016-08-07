@@ -13,22 +13,21 @@ namespace BallMaze.GameMechanics
 
         public event EmptyEventHandler FinishedAnimating;
 
-        public virtual Vector3 GetPosition()
+        public virtual Vector2 GetPosition()
         {
-            return new Vector3(posX, posY, posZ);
+            return new Vector2(posX, posY);
         }
 
-        public virtual void Init(int x, int y, int z, Board model)
+        public virtual void Init(int x, int y, Board model)
         {
-            this.posX = x;
-            this.posY = y;
-            posZ = z;
+            posX = x;
+            posY = y;
         }
 
-        public virtual void Init(int x, int y, int z, CubeModel model)
+        public void Init(int x, int y, int z, CubeView model)
         {
-            this.posX = x;
-            this.posY = y;
+            posX = x;
+            posY = y;
             posZ = z;
         }
 
@@ -83,6 +82,10 @@ namespace BallMaze.GameMechanics
         public void SetMesh(GameObject mesh)
         {
             throw new Exception("Empty balls don't have a mesh");
+        }
+
+        public void SetPosition(Vector3 position)
+        {
         }
     }
 }

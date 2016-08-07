@@ -39,7 +39,7 @@ namespace BallMaze.LevelCreation
                         tile.transform.SetParent(transform, false);
 
                         IBallController ball = BallCreator.GetBall(data.balls[x, y], 1);
-                        ball.Init(x, y,0, this);
+                        ball.Init(x, y, this);
 
                         board[x, y] = new BoardPosition(tile, ball);
                     }

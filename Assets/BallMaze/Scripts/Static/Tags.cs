@@ -14,5 +14,7 @@ namespace BallMaze
 
         public const string GameData = "GameData";
         public const string WorldController = "Player";
+
+        public const string CameraController = "CameraController";
     }
 }

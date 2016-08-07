@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-class Functions
+public static class Functions
 {
 
     public static bool RaycastMouse(out RaycastHit hit)
@@ -10,6 +10,11 @@ class Functions
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             return true;
         return false;
+    }
+
+    public static float mod(this float x, float m)
+    {
+        return (x % m + m) % m;
     }
 
 }

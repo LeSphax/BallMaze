@@ -24,10 +24,10 @@ namespace BallMaze.GameMechanics.ObjectiveBall
             state = State.IDLE;
         }
 
-        protected override void InitView()
+        protected override void InitView(bool cube = false)
         {
             view.FinishedAnimating += new EmptyEventHandler(ViewReachedTarget);
-            view.SetPosition(GetWorldPosition());
+            view.SetPosition(GetWorldPosition(), cube);
         }
 
         public void SetPosition(int newPosX, int newPosY)
@@ -53,7 +53,7 @@ namespace BallMaze.GameMechanics.ObjectiveBall
                 {
                     for (int i = posY + 1; i < boardModel.Height; i++)
                     {
-                        if (boardModel.IsTileEmpty(posX, i))
+                        if (boardModel.IsEmpty(posX, i))
                         {
                             newBoardTarget = new Vector2(posX, i);
                         }
@@ -67,7 +67,7 @@ namespace BallMaze.GameMechanics.ObjectiveBall
                 {
                     for (int i = posY - 1; i >= 0; i--)
                     {
-                        if (boardModel.IsTileEmpty(posX, i))
+                        if (boardModel.IsEmpty(posX, i))
                         {
                             newBoardTarget = new Vector2(posX, i);
                         }
@@ -81,7 +81,7 @@ namespace BallMaze.GameMechanics.ObjectiveBall
                 {
                     for (int i = posX + 1; i < boardModel.Width; i++)
                     {
-                        if (boardModel.IsTileEmpty(i, posY))
+                        if (boardModel.IsEmpty(i, posY))
                         {
                             newBoardTarget = new Vector2(i, posY);
                         }
@@ -95,7 +95,7 @@ namespace BallMaze.GameMechanics.ObjectiveBall
                 {
                     for (int i = posX - 1; i >= 0; i--)
                     {
-                        if (boardModel.IsTileEmpty(i, posY))
+                        if (boardModel.IsEmpty(i, posY))
                         {
                             newBoardTarget = new Vector2(i, posY);
                         }

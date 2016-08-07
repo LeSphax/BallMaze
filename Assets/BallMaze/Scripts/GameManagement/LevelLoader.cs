@@ -35,18 +35,23 @@ namespace BallMaze.GameManagement
 
         public void LoadLevel(string levelName)
         {
-            Destroy(currentLevel);
             if (LevelData.TryLoad(levelName, out currentData))
             {
                 levelNameField.text = currentData.name;
-                currentLevel = this.InstantiateAsChildren(levelPrefab);
-                Board boardModel = currentLevel.GetComponent<Board>();
-                boardModel.SetData(currentData.boardData);
-
+                SetData(currentData.boardData);
                 LevelManager levelManager = currentLevel.GetComponent<LevelManager>();
                 levelManager.SetObjectiveOrder(currentData.firstObjective);
-                inputManager.SetBoard(boardModel);
             }
+        }
+
+        public void SetData(BoardData data)
+        {
+            Destroy(currentLevel);
+            currentLevel = this.InstantiateAsChildren(levelPrefab);
+            Board boardModel = currentLevel.GetComponent<Board>();
+            boardModel.SetData(data);
+
+            inputManager.SetBoard(boardModel);
         }
 
         public void LoadNextLevel()
@@ -69,7 +74,7 @@ namespace BallMaze.GameManagement
             else
             {
                 if (!CreatorMode)
-                EndOfGame();
+                    EndOfGame();
             }
         }
 

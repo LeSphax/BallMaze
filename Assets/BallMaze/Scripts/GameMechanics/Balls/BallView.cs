@@ -7,9 +7,17 @@ namespace BallMaze.GameMechanics
 
         protected const float BALL_HALF_HEIGHT = 0.3f;
 
-        public void SetPosition(Vector3 position)
+        public virtual void SetPosition(Vector3 position, bool cube = false)
         {
-            transform.localPosition = position + Vector3.up * BALL_HALF_HEIGHT;
+            if (cube)
+            {
+                transform.localPosition = position;
+            }
+            else
+            {
+                transform.localPosition = position + Vector3.up * BALL_HALF_HEIGHT;
+            }
         }
+
     }
 }

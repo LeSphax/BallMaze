@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace BallMaze.Inputs
 {
-    internal class InputManager : MonoBehaviour
+    public class InputManager : MonoBehaviour
     {
         private Board board;
         private LevelLoader loader;
@@ -32,7 +32,7 @@ namespace BallMaze.Inputs
             swipeState = SwipeState.IDLE;
         }
 
-        void Update()
+        protected virtual void Update()
         {
             if (Input.GetButtonDown(InputButtonNames.CANCEL) || Input.GetKeyDown(KeyCode.Escape))
             {

@@ -24,7 +24,6 @@ namespace BallMaze.GameMechanics
             {
                 return BASE_TILE_SIZE_Y * SizeRatio;
             }
-
         }
         private const float BASE_BOARD_SIZE = 3;
 
@@ -90,7 +89,7 @@ namespace BallMaze.GameMechanics
             board[x, y].ball = brickModel;
         }
 
-        internal bool IsTileEmpty(int x, int y)
+        internal bool IsEmpty(int x, int y)
         {
             return board[x, y].ball.IsEmpty();
         }

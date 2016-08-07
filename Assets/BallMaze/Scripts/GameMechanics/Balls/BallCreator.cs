@@ -62,19 +62,19 @@ namespace BallMaze.GameMechanics.Balls
             }
         }
 
-
-        internal static IBallController GetBall(BallData ballData, float sizeRatio)
+        internal static IBallController GetBall(BallData ballData, float sizeRatio, out GameObject gameObject)
         {
             GameObject mesh = null;
             IBallController ballController;
             switch (ballData.BallType)
             {
                 case BallType.EMPTY:
+                    gameObject = new GameObject("EmptyBall");
                     ballController = new EmptyBallController();
                     break;
                 case BallType.NORMAL:
                 case BallType.WALL:
-                    GameObject ball = new GameObject();
+                    gameObject = new GameObject();
                     if (ballData.BallType == BallType.NORMAL)
                     {
                         switch (ballData.ObjectiveType)
@@ -92,12 +92,12 @@ namespace BallMaze.GameMechanics.Balls
                                 throw new UnhandledSwitchCaseException(ballData.ObjectiveType);
                         }
                         FloatingAnimation.AddFloatingAnimation(mesh, 1, 0.4f);
-                        ballController = ball.AddComponent<ObjectiveBallController>();
+                        ballController = gameObject.AddComponent<ObjectiveBallController>();
                     }
                     else
                     {
                         mesh = Object.Instantiate(WallPrefab);
-                        ballController = ball.AddComponent<WallController>();
+                        ballController = gameObject.AddComponent<WallController>();
                     }
                     Assert.IsNotNull(mesh);
                     ballController.SetMesh(mesh);
@@ -111,7 +111,12 @@ namespace BallMaze.GameMechanics.Balls
                 mesh.transform.localScale *= sizeRatio;
             ballController.InitObjectiveType(ballData.ObjectiveType);
             return ballController;
+        }
 
+        internal static IBallController GetBall(BallData ballData, float sizeRatio)
+        {
+            GameObject trash;
+            return GetBall(ballData, sizeRatio, out trash);
         }
     }
 }

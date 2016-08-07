@@ -153,7 +153,7 @@ namespace BallMaze.GameMechanics.Turns
 
         private void MoveBrick(Direction direction, int x, int y)
         {
-            if (!model.IsTileEmpty(x, y) && model.GetBrick(x, y).IsMoving())
+            if (!model.IsEmpty(x, y) && model.GetBrick(x, y).IsMoving())
             {
                 BallMoveCommand moveCommand = new BallMoveCommand(model.GetBrick(x, y), direction);
                 PrepareBrickMove(moveCommand);

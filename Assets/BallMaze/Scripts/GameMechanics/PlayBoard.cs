@@ -115,7 +115,7 @@ namespace BallMaze.GameMechanics
                     tile.transform.SetParent(transform, false);
 
                     IBallController ball = BallCreator.GetBall(boardData.balls[x, y], SizeRatio);
-                    ball.Init(x, y, 0, this);
+                    ball.Init(x, y, this);
 
                     board[x, y] = new BoardPosition(tile, ball);
                 }
@@ -130,7 +130,7 @@ namespace BallMaze.GameMechanics
 
         internal override void MoveBrick(int posX, int posY, int newPosX, int newPosY)
         {
-            if (IsTileEmpty(newPosX, newPosY))
+            if (IsEmpty(newPosX, newPosY))
             {
                 board[newPosX, newPosY].ball = board[posX, posY].ball;
                 RemoveBrick(posX, posY);
@@ -156,7 +156,7 @@ namespace BallMaze.GameMechanics
             turn.UnPlay();
         }
 
-        private bool CheckIfWon()
+        protected virtual bool CheckIfWon()
         {
             bool won = true;
             for (int x = 0; x < Width; x++)
