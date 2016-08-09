@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BallMaze.GameMechanics
 {
-    public class CameraTurnAround : MonoBehaviour
+    public class CameraTurnAround : ACameraTurnAround
     {
         private new Camera camera;
         public GameObject center;
@@ -65,23 +65,23 @@ namespace BallMaze.GameMechanics
             transform.localRotation = Quaternion.Euler((heightAngle -Mathf.PI/2) * Mathf.Rad2Deg, planeAngle * Mathf.Rad2Deg, 0);
         }
 
-        internal void TurnInDirection(Direction direction)
+        internal override void TurnInDirection(Direction direction)
         {
             if (!moving)
             {
                 switch (direction)
                 {
                     case Direction.UP:
-                        targetHeightAngle = heightAngle + 90 * Mathf.Deg2Rad;
-                        break;
-                    case Direction.DOWN:
                         targetHeightAngle = heightAngle - 90 * Mathf.Deg2Rad;
                         break;
+                    case Direction.DOWN:
+                        targetHeightAngle = heightAngle + 90 * Mathf.Deg2Rad;
+                        break;
                     case Direction.RIGHT:
-                        targetPlaneAngle = planeAngle + 90 * Mathf.Deg2Rad;
+                        targetPlaneAngle = planeAngle - 90 * Mathf.Deg2Rad;
                         break;
                     case Direction.LEFT:
-                        targetPlaneAngle = planeAngle - 90 * Mathf.Deg2Rad;
+                        targetPlaneAngle = planeAngle + 90 * Mathf.Deg2Rad;
                         break;
                     case Direction.NONE:
                         break;

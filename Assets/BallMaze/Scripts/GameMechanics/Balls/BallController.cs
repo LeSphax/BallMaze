@@ -96,7 +96,7 @@ namespace BallMaze.GameMechanics
 
 
 
-        protected Vector2 GetWorldPosition()
+        protected Vector3 GetWorldPosition()
         {
 
             if (cube != null)

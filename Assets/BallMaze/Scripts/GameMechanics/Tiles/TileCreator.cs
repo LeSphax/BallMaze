@@ -1,5 +1,4 @@
-﻿using BallMaze.Exceptions;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BallMaze.GameMechanics.Tiles
 {

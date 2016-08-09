@@ -1,6 +1,4 @@
-﻿using BallMaze.Data;
-using BallMaze.Exceptions;
-using BallMaze.GameManagement;
+﻿using BallMaze.GameManagement;
 using BallMaze.GameMechanics.Balls;
 using BallMaze.GameMechanics.Tiles;
 using System;

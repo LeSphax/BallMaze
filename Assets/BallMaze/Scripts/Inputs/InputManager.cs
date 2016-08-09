@@ -26,9 +26,9 @@ namespace BallMaze.Inputs
 
         void Start()
         {
-            loader = GameObject.FindGameObjectWithTag(Tags.BallMazeController).GetComponent<LevelLoader>();
-            if (GameObject.FindGameObjectWithTag(Tags.GameData))
-                saveManager = GameObject.FindGameObjectWithTag(Tags.GameData).GetComponent<SaveManager>();
+            //loader = GameObject.FindGameObjectWithTag(Tags.BallMazeController).GetComponent<LevelLoader>();
+            //if (GameObject.FindGameObjectWithTag(Tags.GameData))
+            //    saveManager = GameObject.FindGameObjectWithTag(Tags.GameData).GetComponent<SaveManager>();
             swipeState = SwipeState.IDLE;
         }
 

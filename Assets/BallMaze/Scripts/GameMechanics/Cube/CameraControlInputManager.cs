@@ -4,7 +4,7 @@ namespace BallMaze.Inputs
 {
     public class CameraControlInputManager : InputManager
     {
-        public CameraTurnAround cameraController;
+        public ACameraTurnAround cameraController;
 
         protected override void Update()
         {

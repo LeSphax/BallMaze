@@ -1,6 +1,4 @@
-﻿using BallMaze.Exceptions;
-using BallMaze.Inputs;
-using System;
+﻿using System;
 
 
 public static class EnumExtensions

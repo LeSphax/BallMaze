@@ -1,6 +1,4 @@
 ﻿using BallMaze.Data;
-using BallMaze.Exceptions;
-using BallMaze.GameMechanics.LevelCreation;
 using BallMaze.LevelCreation;
 using System;
 using System.Xml.Serialization;

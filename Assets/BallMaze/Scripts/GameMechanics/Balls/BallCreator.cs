@@ -1,6 +1,4 @@
-﻿
-using BallMaze.Exceptions;
-using BallMaze.GameMechanics.ObjectiveBall;
+﻿using BallMaze.GameMechanics.ObjectiveBall;
 using CustomAnimations.BallMazeAnimations;
 using UnityEngine;
 using UnityEngine.Assertions;

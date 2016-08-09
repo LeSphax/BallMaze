@@ -32,7 +32,6 @@ namespace BallMaze.GameMechanics.ObjectiveBall
 
         public void SetPosition(int newPosX, int newPosY)
         {
-           // Debug.Log(gameObject.name + "   SetPosition");
             boardModel.MoveBrick(posX, posY, newPosX, newPosY);
             posX = newPosX;
             posY = newPosY;
@@ -133,7 +132,6 @@ namespace BallMaze.GameMechanics.ObjectiveBall
             else
             {
                 state = State.ANIMATING;
-
                 SetPosition(oldPosX, oldPosY);
             }
         }
