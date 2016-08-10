@@ -97,7 +97,7 @@ namespace BallMaze.GameMechanics
             }
         }
 
-        public int GetCurrentFace()
+        public CubeFace GetCurrentFace()
         {
             if (Mathf.Approximately(0, targetHeightAngle.mod(Mathf.PI * 2)))
             {

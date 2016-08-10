@@ -60,14 +60,15 @@ namespace BallMaze.GameMechanics.Balls
             }
         }
 
-        internal static IBallController GetBall(BallData ballData, float sizeRatio, out GameObject gameObject)
+        internal static IBallController GetBall(BallData ballData, float sizeRatio)
         {
             GameObject mesh = null;
+            GameObject gameObject;
             IBallController ballController;
             switch (ballData.BallType)
             {
                 case BallType.EMPTY:
-                    gameObject = new GameObject("EmptyBall");
+                    //gameObject = new GameObject("EmptyBall");
                     ballController = new EmptyBallController();
                     break;
                 case BallType.NORMAL:
@@ -111,11 +112,11 @@ namespace BallMaze.GameMechanics.Balls
             return ballController;
         }
 
-        internal static IBallController GetBall(BallData ballData, float sizeRatio)
-        {
-            GameObject trash;
-            return GetBall(ballData, sizeRatio, out trash);
-        }
+        //internal static IBallController GetBall(BallData ballData, float sizeRatio)
+        //{
+        //    GameObject trash;
+        //    return GetBall(ballData, sizeRatio, out trash);
+        //}
     }
 }
 

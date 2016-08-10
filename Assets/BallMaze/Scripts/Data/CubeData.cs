@@ -2,6 +2,8 @@
 using BallMaze.LevelCreation;
 using System;
 using System.Xml.Serialization;
+using UnityEngine;
+using UnityEngine.Assertions;
 
 [XmlInclude(typeof(EditableBoardData))]
 public class CubeData
@@ -121,60 +123,109 @@ public class CubeData
         return board;
     }
 
-    public BoardData GetBoardAtFace(int faceNumber)
+    public BoardData GetBoardAtFace(Vector3 rotation)
     {
         BoardData data = new BoardData();
-        data.tiles = tiles.Get(faceNumber);
-        switch (faceNumber)
+        CubeFace face = CameraTurnAround3.GetFace(rotation);
+        TileData[,] faceTiles = tiles.Get((int)face);
+        switch (face)
         {
             case CubeFace.X:
-                data = GetBoardData(data, Z_SIZE, false, Y_SIZE, false, X_SIZE, true, (model, f, s, t) => model.balls[t, s, f]);
+                if (Mathf.RoundToInt(rotation.z) % 360 == 0)
+                    data = GetBoardData(data, faceTiles,Z_SIZE, false, Y_SIZE, false, X_SIZE, true, (model, z, y, x) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.z) == 90)
+                    data = GetBoardData(data, faceTiles, Y_SIZE, false, Z_SIZE, true, X_SIZE, true, (model, y, z, x) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.z) == 180)
+                    data = GetBoardData(data, faceTiles, Z_SIZE, true, Y_SIZE, true, X_SIZE, true, (model, z, y, x) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.z) == 270)
+                    data = GetBoardData(data, faceTiles, Y_SIZE, true, Z_SIZE, false, X_SIZE, true, (model, y, z, x) => model.balls[x, y, z]);
                 break;
             case CubeFace.MX:
-                data = GetBoardData(data, Z_SIZE, true, Y_SIZE, false, X_SIZE, false, (model, f, s, t) => model.balls[t, s, f]);
+                if (Mathf.RoundToInt(rotation.z) % 360 == 0)
+                    data = GetBoardData(data, faceTiles, Z_SIZE, true, Y_SIZE, false, X_SIZE, false, (model, z, y, x) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.z) == 90)
+                    data = GetBoardData(data, faceTiles, Y_SIZE, false, Z_SIZE, false, X_SIZE, false, (model, y, z, x) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.z) == 180)
+                    data = GetBoardData(data, faceTiles, Z_SIZE, false, Y_SIZE, true, X_SIZE, false, (model, z, y, x) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.z) == 270)
+                    data = GetBoardData(data, faceTiles, Y_SIZE, true, Z_SIZE, true, X_SIZE, false, (model, y, z, x) => model.balls[x, y, z]);
                 break;
             case CubeFace.Y:
-                data = GetBoardData(data, X_SIZE, false, Z_SIZE, false, Y_SIZE, true, (model, f, s, t) => model.balls[f, t, s]);
+                if (Mathf.RoundToInt(rotation.y) % 360 == 0)
+                    data = GetBoardData(data, faceTiles, X_SIZE, false, Z_SIZE, false, Y_SIZE, true, (model, x, z, y) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.y) == 90)
+                    data = GetBoardData(data, faceTiles, Z_SIZE, false, X_SIZE, false, Y_SIZE, true, (model, z, x, y) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.y) == 180)
+                    data = GetBoardData(data, faceTiles, X_SIZE, true, Z_SIZE, true, Y_SIZE, true, (model, x, z, y) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.y) == 270)
+                    data = GetBoardData(data, faceTiles, Z_SIZE, true, X_SIZE, true, Y_SIZE, true, (model, z, x, y) => model.balls[x, y, z]);
                 break;
             case CubeFace.MY:
-                data = GetBoardData(data, X_SIZE, false, Z_SIZE, true, Y_SIZE, false, (model, f, s, t) => model.balls[f, t, s]);
+                if (Mathf.RoundToInt(rotation.y) % 360 == 0)
+                    data = GetBoardData(data, faceTiles, X_SIZE, false, Z_SIZE, true, Y_SIZE, false, (model, x, z, y) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.y) == 90)
+                    data = GetBoardData(data, faceTiles, Z_SIZE, true, X_SIZE, true, Y_SIZE, false, (model, z, x, y) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.y) == 180)
+                    data = GetBoardData(data, faceTiles, X_SIZE, true, Z_SIZE, false, Y_SIZE, false, (model, x, z, y) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.y) == 270)
+                    data = GetBoardData(data, faceTiles, Z_SIZE, false, X_SIZE, false, Y_SIZE, false, (model, z, x, y) => model.balls[x, y, z]);
                 break;
             case CubeFace.Z:
-                data = GetBoardData(data, X_SIZE, true, Y_SIZE, false, Z_SIZE, true, (model, f, s, t) => model.balls[f, s, t]);
+                if (Mathf.RoundToInt(rotation.z) % 360 == 0)
+                    data = GetBoardData(data, faceTiles, X_SIZE, true, Y_SIZE, false, Z_SIZE, true, (model, x, y, z) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.z) == 90)
+                    data = GetBoardData(data, faceTiles, Y_SIZE, false, X_SIZE, false, Z_SIZE, true, (model, y, x, z) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.z) == 180)
+                    data = GetBoardData(data, faceTiles, X_SIZE, false, Y_SIZE, true, Z_SIZE, true, (model, x, y, z) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.z) == 270)
+                    data = GetBoardData(data, faceTiles, Y_SIZE, true, X_SIZE, true, Z_SIZE, true, (model, y, x, z) => model.balls[x, y, z]);
+
                 break;
             case CubeFace.MZ:
-                data = GetBoardData(data, X_SIZE, false, Y_SIZE, false, Z_SIZE, false, (model, f, s, t) => model.balls[f, s, t]);
+                if (Mathf.RoundToInt(rotation.z) % 360 == 0)
+                    data = GetBoardData(data, faceTiles, X_SIZE, false, Y_SIZE, false, Z_SIZE, false, (model, x, y, z) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.z) == 90)
+                    data = GetBoardData(data, faceTiles, Y_SIZE, false, X_SIZE, true, Z_SIZE, false, (model, y, x, z) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.z) == 180)
+                    data = GetBoardData(data, faceTiles, X_SIZE, true, Y_SIZE, true, Z_SIZE, false, (model, x, y, z) => model.balls[x, y, z]);
+                else if (Mathf.RoundToInt(rotation.z) == 270)
+                    data = GetBoardData(data, faceTiles, Y_SIZE, true, X_SIZE, false, Z_SIZE, false, (model, y, x, z) => model.balls[x, y, z]);
+
                 break;
             default:
-                throw new UnhandledSwitchCaseException(faceNumber);
+                throw new UnhandledSwitchCaseException(face);
         }
+        Assert.IsNotNull(data.balls);
         return data;
     }
 
-    private BoardData GetBoardData(BoardData data, int sizeFirst, bool inverseFirst, int sizeSecond, bool inverseSecond, int sizeThird, bool inverseThird, Func<CubeData, int, int, int, BallData> GetBall)
+    private BoardData GetBoardData(BoardData data, TileData[,] tiles, int xSize, bool inverseX, int ySize, bool inverseY, int zSize, bool inverseZ, Func<CubeData, int, int, int, BallData> GetBall)
     {
-        data.balls = new BallData[sizeFirst, sizeSecond];
-        for (int first = 0; first < sizeFirst; first++)
+        data.balls = new BallData[xSize, ySize];
+        data.tiles = new TileData[xSize, ySize];
+        for (int first = 0; first < xSize; first++)
         {
-            for (int second = 0; second < sizeSecond; second++)
+            for (int second = 0; second < ySize; second++)
             {
                 int third = 0;
-                int iFirst = Inverse(first, sizeFirst, inverseFirst);
-                int iSecond = Inverse(second, sizeSecond, inverseSecond);
-                while (third < sizeThird)
+                int iFirst = Inverse(first, xSize, inverseX);
+                int iSecond = Inverse(second, ySize, inverseY);
+                data.tiles[first, second] = tiles[iFirst, iSecond];
+                while (third < zSize)
                 {
-                    int iThird = Inverse(third, sizeThird, inverseThird);
+                    int iThird = Inverse(third, zSize, inverseZ);
 
-                    BallData ball = GetBall(this,iFirst, iSecond, iThird);
+                    BallData ball = GetBall(this, iFirst, iSecond, iThird);
                     if (ball.BallType != BallType.EMPTY)
                     {
+                        DebugExtensions.Log(iFirst, iSecond, third);
                         data.balls[first, second] = ball;
                         data.tiles[first, second] = TileData.GetNormalTile();
                         break;
                     }
                     third++;
                 }
-                if (third >= sizeThird)
+                if (third >= zSize)
                 {
                     data.balls[first, second] = BallData.GetEmptyBall();
                 }

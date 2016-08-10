@@ -108,7 +108,7 @@ namespace BallMaze.GameMechanics
             transform.localPosition = new Vector3(x, y, z);
         }
 
-        private Quaternion GetTargetRotation(int face)
+        private Quaternion GetTargetRotation(CubeFace face)
         {
             switch (face)
             {
@@ -157,7 +157,7 @@ namespace BallMaze.GameMechanics
             }
         }
 
-        public int GetCurrentFace()
+        public CubeFace GetCurrentFace()
         {
             if (Mathf.Approximately(0, targetHeightAngle.mod(Mathf.PI * 2)))
             {

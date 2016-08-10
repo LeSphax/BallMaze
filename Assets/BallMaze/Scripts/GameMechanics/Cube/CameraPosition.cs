@@ -3,13 +3,12 @@ using UnityEngine;
 
 public class CameraPosition
 {
-    public int face;
-    public string yolo;
-    public int oppositeFace;
-    public int rightFace;
-    public int leftFace;
-    public int topFace;
-    public int downFace;
+    public CubeFace face;
+    public CubeFace oppositeFace;
+    public CubeFace rightFace;
+    public CubeFace leftFace;
+    public CubeFace topFace;
+    public CubeFace downFace;
 
     public void InitNormal()
     {
@@ -23,8 +22,8 @@ public class CameraPosition
 
     public void GoRight()
     {
-        int oldFace = face;
-        int oldOpposite = oppositeFace;
+        CubeFace oldFace = face;
+        CubeFace oldOpposite = oppositeFace;
         face = rightFace;
         oppositeFace = leftFace;
         rightFace = oldOpposite;
@@ -33,8 +32,8 @@ public class CameraPosition
 
     public void GoLeft()
     {
-        int oldFace = face;
-        int oldOpposite = oppositeFace;
+        CubeFace oldFace = face;
+        CubeFace oldOpposite = oppositeFace;
         face = leftFace;
         oppositeFace = rightFace;
         rightFace = oldFace;
@@ -43,8 +42,8 @@ public class CameraPosition
 
     public void GoUp()
     {
-        int oldFace = face;
-        int oldOpposite = oppositeFace;
+        CubeFace oldFace = face;
+        CubeFace oldOpposite = oppositeFace;
         face = topFace;
         oppositeFace = downFace;
         topFace = oldOpposite;
@@ -53,8 +52,8 @@ public class CameraPosition
 
     public void GoDown()
     {
-        int oldFace = face;
-        int oldOpposite = oppositeFace;
+        CubeFace oldFace = face;
+        CubeFace oldOpposite = oppositeFace;
         face = downFace;
         oppositeFace = topFace;
         topFace = oldFace;
@@ -136,7 +135,7 @@ public class CameraPosition
         return headAngle;
     }
 
-    private float SetPlaneAngle(int face, int downFace = -1)
+    private float SetPlaneAngle(CubeFace face, CubeFace downFace = CubeFace.NONE)
     {
         switch (face)
         {
@@ -149,12 +148,12 @@ public class CameraPosition
             case CubeFace.MZ:
                 return -Mathf.PI / 2;
             case CubeFace.Y:
-                if (downFace != -1)
+                if (downFace != CubeFace.NONE)
                     return SetPlaneAngle(downFace);
                 else
                     throw new Exception("This face combination isn't possible " + ToString());
             case CubeFace.MY:
-                if (downFace != -1)
+                if (downFace != CubeFace.NONE)
                     return SetPlaneAngle(topFace);
                 else
                     throw new Exception("This face combination isn't possible "+ToString());
