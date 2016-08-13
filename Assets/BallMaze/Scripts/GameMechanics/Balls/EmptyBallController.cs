@@ -9,7 +9,6 @@ namespace BallMaze.GameMechanics
 
         private int posX;
         private int posY;
-        private int posZ;
 
         public event EmptyEventHandler FinishedAnimating;
 
@@ -28,7 +27,6 @@ namespace BallMaze.GameMechanics
         {
             posX = x;
             posY = y;
-            posZ = z;
         }
 
         public virtual bool IsEmpty()

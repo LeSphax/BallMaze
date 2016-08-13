@@ -18,4 +18,44 @@
     //public const int MZ = 5;
 
 }
+public static class CubeFaceExtensions
+{
 
+    public static bool IsYReversed(this CubeFace face)
+    {
+        switch (face)
+        {
+            case CubeFace.X:
+            case CubeFace.Y:
+            case CubeFace.Z:
+                return true;
+            case CubeFace.MX:
+            case CubeFace.MY:
+            case CubeFace.MZ:
+                return false;
+            case CubeFace.NONE:
+                return false;
+            default:
+                throw new UnhandledSwitchCaseException(face);
+        }
+    }
+
+    public static bool IsXReversed(this CubeFace face)
+    {
+        switch (face)
+        {
+            case CubeFace.X:
+            case CubeFace.Y:
+            case CubeFace.Z:
+            case CubeFace.MX:
+            case CubeFace.MZ:
+                return false;
+            case CubeFace.MY:
+                return true;
+            case CubeFace.NONE:
+                return false;
+            default:
+                throw new UnhandledSwitchCaseException(face);
+        }
+    }
+}

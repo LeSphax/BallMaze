@@ -17,4 +17,14 @@ public static class Functions
         return (x % m + m) % m;
     }
 
+
+    public static int Inverse(int value, int size, bool inverse)
+    {
+        if (inverse)
+        {
+            value = size - 1 - value;
+        }
+        return value;
+    }
+
 }

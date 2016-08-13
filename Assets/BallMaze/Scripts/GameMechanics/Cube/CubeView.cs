@@ -62,6 +62,7 @@ namespace BallMaze.GameMechanics
         {
             float width;
             float height;
+
             switch (faceNumber)
             {
                 case CubeFace.X:
@@ -178,7 +179,9 @@ namespace BallMaze.GameMechanics
                 {
                     for (int y = 0; y < heightFace; y++)
                     {
-                        exterior[faceNumber][x, y] = TileCreator.CreateTile(data.tiles[faceNumber, x, y], GetTilePosition((CubeFace)faceNumber, x, y), 1);
+                        int inverseX = Functions.Inverse(x, widthFace, ((CubeFace)faceNumber).IsXReversed());
+                        int inverseY = Functions.Inverse(y, heightFace, ((CubeFace)faceNumber).IsYReversed());
+                        exterior[faceNumber][x, y] = TileCreator.CreateTile(data.faces[faceNumber, inverseX, inverseY], GetTilePosition((CubeFace)faceNumber, x, y), 1);
                         exterior[faceNumber][x, y].transform.SetParent(face.transform, false);
                     }
                 }
@@ -194,7 +197,7 @@ namespace BallMaze.GameMechanics
                     for (int z = 0; z < data.Z_SIZE; z++)
                     {
                         IBallController ball = BallCreator.GetBall(data.balls[x, y, z], 1);
-                        ball.Init(x, y, z,this);
+                        ball.Init(x, y, z, this);
 
 
 

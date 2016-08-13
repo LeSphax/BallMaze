@@ -171,6 +171,11 @@ public class TileData
     {
         return new TileData(ObjectiveType.OBJECTIVE1, TileType.NORMAL);
     }
+
+    internal static TileData GetObjective2Tile()
+    {
+        return new TileData(ObjectiveType.OBJECTIVE2, TileType.NORMAL);
+    }
 }
 
 

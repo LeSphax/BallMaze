@@ -8,7 +8,7 @@ namespace BallMaze.GameManagement
 {
     class Level3DManager : LevelManager
     {
-
+        [SerializeField]
         public GameObject levelPrefab;
 
         private GameObject currentSlice;

@@ -1,4 +1,7 @@
-﻿public static class MatrixExtensions
+﻿using System;
+using UnityEngine;
+
+public static class MatrixExtensions
 {
 
 
@@ -73,5 +76,46 @@
             for (int j = 0; j < matrix.GetLength(2); j++)
                 result[i,j] = matrix[number,i, j];
         return result;
+    }
+
+    public static T[,] Rotate<T>(this T[,] matrix, int rotation)
+    {
+        rotation = rotation % 360;
+        int width = matrix.GetLength(0);
+        int height = matrix.GetLength(1);
+        switch (rotation)
+        {
+            case 0:
+                break;
+            case 90:
+                matrix = Apply(matrix, height, false, width, true, (mat, y, x) => mat[x, y]);
+                break;
+            case 180:
+                matrix = Apply(matrix, width, true, height, true, (mat, x,y) => mat[x, y]);
+                break;
+            case 270:
+                matrix = Apply(matrix, height, true, width, false, (mat, y, x) => mat[x, y]);
+                break;
+            default:
+                Debug.LogError("The rotation should be at a right angle");
+                break;
+
+        }
+        return matrix;
+    }
+
+    private static T[,] Apply<T>(T[,] matrix, int sizeX, bool inverseX, int sizeY, bool inverseY, Func<T[,],int,int,T> getter)
+    {
+        T[,] result = new T[sizeX, sizeY];
+        for (int x = 0; x < sizeX; x++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                int iX = Functions.Inverse(x, sizeX, inverseX);
+                int iY = Functions.Inverse(y, sizeY, inverseY);
+                result[x, y] = getter(matrix,iX, iY);
+            }
+        }
+        return result; 
     }
 }
