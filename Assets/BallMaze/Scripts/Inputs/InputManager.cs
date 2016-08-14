@@ -5,11 +5,13 @@ using UnityEngine;
 
 namespace BallMaze.Inputs
 {
+
+
     public class InputManager : MonoBehaviour
     {
+        public delegate void DirectionEventHandler(Direction direction, bool moveBoard);
         private Board board;
         private LevelLoader loader;
-        private SaveManager saveManager;
 
         private enum SwipeState
         {
@@ -24,16 +26,15 @@ namespace BallMaze.Inputs
         Vector2 secondPressPos;
         Vector2 currentSwipe;
 
+        public event DirectionEventHandler DirectionEvent;
+
+        private bool moveBoard = false;
+
         void Start()
         {
-            bool x = false;
-            //Avoiding compiler warnings
-            if (x)
-            {
-                loader = GameObject.FindGameObjectWithTag(Tags.BallMazeController).GetComponent<LevelLoader>();
-                if (GameObject.FindGameObjectWithTag(Tags.GameData))
-                    saveManager = GameObject.FindGameObjectWithTag(Tags.GameData).GetComponent<SaveManager>();
-            }
+            //loader = GameObject.FindGameObjectWithTag(Tags.BallMazeController).GetComponent<LevelLoader>();
+            //if (GameObject.FindGameObjectWithTag(Tags.GameData))
+            //    saveManager = GameObject.FindGameObjectWithTag(Tags.GameData).GetComponent<SaveManager>();
             swipeState = SwipeState.IDLE;
         }
 
@@ -51,23 +52,23 @@ namespace BallMaze.Inputs
             {
                 Direction direction = GetDirection();
                 if (direction != Direction.NONE)
-                    board.ReceiveInputCommand(new MoveCommand(saveManager, direction));
+                    DirectionEvent.Invoke(direction, moveBoard);
             }
         }
 
         public void Cancel()
         {
-            board.ReceiveInputCommand(new CancelCommand(saveManager));
+            board.ReceiveInputCommand(new CancelCommand());
         }
 
         public void Reset()
         {
-            board.ReceiveInputCommand(new ResetCommand(saveManager));
+            board.ReceiveInputCommand(new ResetCommand());
         }
 
         public void LoadPreviousLevel()
         {
-            new PreviousLevelCommand(saveManager, loader).Execute();
+            new PreviousLevelCommand(loader).Execute();
         }
 
         public void Quit()
@@ -198,8 +199,9 @@ namespace BallMaze.Inputs
                 return DetectMouseSwipe();
         }
 
-        private static Direction GetDirectionWithButtons()
+        private Direction GetDirectionWithButtons()
         {
+            moveBoard = true;
             if (Input.GetButtonDown(InputButtonNames.UP))
             {
                 return Direction.UP;
@@ -213,6 +215,23 @@ namespace BallMaze.Inputs
                 return Direction.RIGHT;
             }
             else if (Input.GetButtonDown(InputButtonNames.LEFT))
+            {
+                return Direction.LEFT;
+            }
+            moveBoard = false;
+            if (Input.GetButtonDown(InputButtonNames.RotateUp))
+            {
+                return Direction.UP;
+            }
+            else if (Input.GetButtonDown(InputButtonNames.RotateDown))
+            {
+                return Direction.DOWN;
+            }
+            else if (Input.GetButtonDown(InputButtonNames.RotateRight))
+            {
+                return Direction.RIGHT;
+            }
+            else if (Input.GetButtonDown(InputButtonNames.RotateLeft))
             {
                 return Direction.LEFT;
             }

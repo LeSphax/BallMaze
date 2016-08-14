@@ -88,16 +88,36 @@ public static class MatrixExtensions
             case 0:
                 break;
             case 90:
-                matrix = Apply(matrix, height, false, width, true, (mat, y, x) => mat[x, y]);
+                matrix = Apply<T>(matrix, height, false, width, true, (mat, y, x) => mat[x, y]);
                 break;
             case 180:
-                matrix = Apply(matrix, width, true, height, true, (mat, x,y) => mat[x, y]);
+                matrix = Apply<T>(matrix, width, true, height, true, (mat, x,y) => mat[x, y]);
                 break;
             case 270:
-                matrix = Apply(matrix, height, true, width, false, (mat, y, x) => mat[x, y]);
+                matrix = Apply<T>(matrix, height, true, width, false, (mat, y, x) => mat[x, y]);
                 break;
             default:
                 Debug.LogError("The rotation should be at a right angle");
+                break;
+
+        }
+        return matrix;
+    }
+
+    public static T[,] Mirror<T>(this T[,] matrix, int axis)
+    {
+        int width = matrix.GetLength(0);
+        int height = matrix.GetLength(1);
+        switch (axis)
+        {
+            case 0:
+                matrix = Apply<T>(matrix, width, true, height, false, (mat, x,y) => mat[x, y]);
+                break;
+            case 1:
+                matrix = Apply<T>(matrix, width, false, height, true, (mat, x,y) => mat[x, y]);
+                break;
+            default:
+                Debug.LogError("The axis should be 0 or 1 : " + axis);
                 break;
 
         }

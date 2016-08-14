@@ -11,13 +11,14 @@ namespace BallMaze.GameManagement
         [SerializeField]
         public GameObject levelPrefab;
 
-        private GameObject currentSlice;
+        [HideInInspector]
+        public GameObject currentSlice;
         private InputManager inputManager;
 
 
         void Awake()
         {
-            inputManager = GetComponent<InputManager>();
+            inputManager = GameObjects.GetInputManager();
         }
 
 
@@ -25,7 +26,7 @@ namespace BallMaze.GameManagement
         {
             Destroy(currentSlice);
             currentSlice = this.InstantiateAsChildren(levelPrefab);
-            Board boardModel = currentSlice.GetComponent<Board>();
+            SliceBoard boardModel = currentSlice.GetComponent<SliceBoard>();
             boardModel.SetData(data);
 
             inputManager.SetBoard(boardModel);

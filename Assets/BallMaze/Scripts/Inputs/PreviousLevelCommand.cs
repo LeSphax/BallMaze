@@ -14,7 +14,7 @@ namespace BallMaze.Inputs
 
         }
 
-        public PreviousLevelCommand(SaveManager saveManager, LevelLoader loader) : base(saveManager)
+        public PreviousLevelCommand(LevelLoader loader, SaveManager saveManager = null) : base(saveManager)
         {
             this.loader = loader;
         }

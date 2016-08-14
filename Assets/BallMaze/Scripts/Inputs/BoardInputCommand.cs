@@ -14,12 +14,7 @@ namespace BallMaze.Inputs
 
         protected PlayBoard model;
 
-        public BoardInputCommand()
-        {
-
-        }
-
-        public BoardInputCommand(SaveManager saveManager) : base(saveManager)
+        public BoardInputCommand(SaveManager saveManager = null) : base(saveManager)
         {
         }
 

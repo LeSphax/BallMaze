@@ -13,7 +13,7 @@ namespace BallMaze.Inputs
 
         }
 
-        public MoveCommand(SaveManager saveManager, Direction direction) : base(saveManager)
+        public MoveCommand(Direction direction, SaveManager saveManager = null ) : base(saveManager)
         {
             this.direction = direction;
         }

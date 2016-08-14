@@ -65,8 +65,9 @@ namespace BallMaze.GameMechanics
             InitVariables();
         }
 
-        void Start()
+        protected override void Start()
         {
+            base.Start();
             state = State.IDLE;
             FitBoardToCamera();
         }

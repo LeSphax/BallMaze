@@ -8,6 +8,13 @@ namespace BallMaze.GameMechanics
 {
     public abstract class Board : MonoBehaviour
     {
+
+        protected virtual void Start()
+        {
+            InputManager inputManager = GameObjects.GetInputManager();
+            inputManager.DirectionEvent += ReceiveDirection;
+        }
+
         public const float BASE_TILE_SIZE_X = 1.1f;
         public const float BASE_TILE_SIZE_Y = 1.1f;
         public float TileXSize
@@ -55,6 +62,12 @@ namespace BallMaze.GameMechanics
             }
         }
 
+        internal void ReceiveDirection(Direction direction, bool moveBoard)
+        {
+            if (moveBoard)
+                ReceiveInputCommand(new MoveCommand(direction));
+        }
+
         internal virtual void ReceiveInputCommand(BoardInputCommand inputCommand)
         {
 
@@ -97,6 +110,12 @@ namespace BallMaze.GameMechanics
         internal virtual void MoveBrick(int posX, int posY, int newPosX, int newPosY)
         {
 
+        }
+
+        void OnDestroy()
+        {
+            InputManager inputManager = GameObjects.GetInputManager();
+            inputManager.DirectionEvent -= ReceiveDirection;
         }
     }
 }

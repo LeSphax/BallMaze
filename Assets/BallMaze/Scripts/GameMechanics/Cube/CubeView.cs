@@ -13,8 +13,7 @@ namespace BallMaze.GameMechanics
         protected IBallController[,,] interior;
         protected TileController[][,] exterior = new TileController[6][,];
 
-        private CubeData model;
-        private Level3DManager loader;
+        public CubeModel cubeModel;
 
         public float TileSize
         {
@@ -29,33 +28,19 @@ namespace BallMaze.GameMechanics
         {
             get
             {
-                return BASE_BOARD_SIZE / Mathf.Max(model.X_SIZE, Math.Max(model.Y_SIZE, model.Z_SIZE));
+                return BASE_BOARD_SIZE / Mathf.Max(cubeModel.X_SIZE, Math.Max(cubeModel.Y_SIZE, cubeModel.Z_SIZE));
             }
         }
 
 
         void Start()
         {
-            RefreshView(CubeData.GetDummyCubeData());
-            CameraTurnAround3 cameraController = GameObject.FindGameObjectWithTag(Tags.CameraController).GetComponent<CameraTurnAround3>();
-            cameraController.RotationChanged += RotationChanged;
-            loader = GameObject.FindGameObjectWithTag(Tags.BallMazeController).GetComponent<Level3DManager>();
-
-            cameraController.SendRotation();
-        }
-
-        public void RotationChanged(Vector3 rotation)
-        {
-            loader.CreateSlice(model.GetBoardAtFace(rotation));
-        }
-
-        void Update()
-        {
+            RefreshView(cubeModel);
         }
 
         internal Vector3 GetBallPosition(int posX, int posY, int posZ)
         {
-            return new Vector3(posX - (float)(model.X_SIZE - 1) / 2, posY - (float)(model.Y_SIZE - 1) / 2, posZ - (float)(model.Z_SIZE - 1) / 2) * TileSize;
+            return new Vector3(posX - (float)(cubeModel.X_SIZE - 1) / 2, posY - (float)(cubeModel.Y_SIZE - 1) / 2, posZ - (float)(cubeModel.Z_SIZE - 1) / 2) * TileSize;
         }
 
         internal Vector3 GetTilePosition(CubeFace faceNumber, int sideIndex, int upIndex)
@@ -67,18 +52,18 @@ namespace BallMaze.GameMechanics
             {
                 case CubeFace.X:
                 case CubeFace.MX:
-                    width = model.Z_SIZE;
-                    height = model.Y_SIZE;
+                    width = cubeModel.Z_SIZE;
+                    height = cubeModel.Y_SIZE;
                     break;
                 case CubeFace.Y:
                 case CubeFace.MY:
-                    width = model.X_SIZE;
-                    height = model.Z_SIZE;
+                    width = cubeModel.X_SIZE;
+                    height = cubeModel.Z_SIZE;
                     break;
                 case CubeFace.Z:
                 case CubeFace.MZ:
-                    width = model.X_SIZE;
-                    height = model.Y_SIZE;
+                    width = cubeModel.X_SIZE;
+                    height = cubeModel.Y_SIZE;
                     break;
                 default:
                     throw new UnhandledSwitchCaseException(faceNumber);
@@ -92,22 +77,22 @@ namespace BallMaze.GameMechanics
             switch (faceNumber)
             {
                 case CubeFace.X:
-                    result = Vector3.left * (float)model.X_SIZE / 2;
+                    result = Vector3.left * (float)cubeModel.X_SIZE / 2;
                     break;
                 case CubeFace.MX:
-                    result = Vector3.right * (float)model.X_SIZE / 2;
+                    result = Vector3.right * (float)cubeModel.X_SIZE / 2;
                     break;
                 case CubeFace.Y:
-                    result = Vector3.down * (float)model.Y_SIZE / 2;
+                    result = Vector3.down * (float)cubeModel.Y_SIZE / 2;
                     break;
                 case CubeFace.MY:
-                    result = Vector3.up * (float)model.Y_SIZE / 2;
+                    result = Vector3.up * (float)cubeModel.Y_SIZE / 2;
                     break;
                 case CubeFace.Z:
-                    result = Vector3.back * (float)model.Z_SIZE / 2;
+                    result = Vector3.back * (float)cubeModel.Z_SIZE / 2;
                     break;
                 case CubeFace.MZ:
-                    result = Vector3.forward * (float)model.Z_SIZE / 2;
+                    result = Vector3.forward * (float)cubeModel.Z_SIZE / 2;
                     break;
                 default:
                     throw new UnhandledSwitchCaseException(faceNumber);
@@ -120,15 +105,15 @@ namespace BallMaze.GameMechanics
             switch (faceNumber)
             {
                 case CubeFace.X:
-                    return Quaternion.Euler(0, 0, -90);
+                    return Quaternion.Euler(-90, 0, -90);
                 case CubeFace.MX:
-                    return Quaternion.Euler(0, 0, 90);
+                    return Quaternion.Euler(-90, 0, 90);
                 case CubeFace.Y:
                     return Quaternion.Euler(0, 0, 0);
                 case CubeFace.MY:
-                    return Quaternion.Euler(0, 0, 180);
+                    return Quaternion.Euler(0, 180, 180);
                 case CubeFace.Z:
-                    return Quaternion.Euler(90, 0, 0);
+                    return Quaternion.AngleAxis(180, Vector3.forward) * Quaternion.AngleAxis(90,Vector3.right);
                 case CubeFace.MZ:
                     return Quaternion.Euler(-90, 0, 0);
                 default:
@@ -136,15 +121,14 @@ namespace BallMaze.GameMechanics
             }
         }
 
-        public void RefreshView(CubeData model)
+        public void RefreshView(CubeModel model)
         {
-            this.model = model;
             interior = new IBallController[model.X_SIZE, model.Y_SIZE, model.Z_SIZE];
             CreateBalls(model);
             CreateTiles(model);
         }
 
-        private void CreateTiles(CubeData data)
+        private void CreateTiles(CubeModel data)
         {
             int widthFace;
             int heightFace;
@@ -179,16 +163,14 @@ namespace BallMaze.GameMechanics
                 {
                     for (int y = 0; y < heightFace; y++)
                     {
-                        int inverseX = Functions.Inverse(x, widthFace, ((CubeFace)faceNumber).IsXReversed());
-                        int inverseY = Functions.Inverse(y, heightFace, ((CubeFace)faceNumber).IsYReversed());
-                        exterior[faceNumber][x, y] = TileCreator.CreateTile(data.faces[faceNumber, inverseX, inverseY], GetTilePosition((CubeFace)faceNumber, x, y), 1);
+                        exterior[faceNumber][x, y] = TileCreator.CreateTile(data.faces[faceNumber, x, y], GetTilePosition((CubeFace)faceNumber, x, y), 1);
                         exterior[faceNumber][x, y].transform.SetParent(face.transform, false);
                     }
                 }
             }
         }
 
-        private void CreateBalls(CubeData data)
+        private void CreateBalls(CubeModel data)
         {
             for (int x = 0; x < data.X_SIZE; x++)
             {
