@@ -4,8 +4,9 @@ using UnityEngine.UI;
 
 public class GetComponentsFadeAnimation : MyAnimation
 {
-    public const float timeCube = 0.5f;
+    public const float timeCube = 0.2f;
     public bool cube;
+    public bool disableWhenInvisible;
 
     Renderer[] renderersInChildren;
     Graphic[] graphicsInChildren;
@@ -51,6 +52,29 @@ public class GetComponentsFadeAnimation : MyAnimation
     {
         base.StartAnimating(reset);
         //Debug.Log(gameObject.name + "  ANIM  " + duration);
+    }
+
+    protected override void StartAnimation(bool reset)
+    {
+        base.StartAnimation(reset);
+        if (disableWhenInvisible)
+        {
+            gameObject.SetActive(true);
+        }
+    }
+
+    protected override void FinishAnimation()
+    {
+        bool disable = false;
+        if (state == State.REVERSEANIMATING && disableWhenInvisible)
+        {
+            disable = true;
+        }
+        base.FinishAnimation();
+        if (disable)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     protected override void Animate(float completion)

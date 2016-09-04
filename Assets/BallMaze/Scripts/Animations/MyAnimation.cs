@@ -38,7 +38,7 @@ namespace CustomAnimations
         public virtual void StartAnimating(bool reset = false)
         {
             state = State.WAITING_FOR_ANIMATION;
-            Init(reset);
+            StartAnimation(reset);
         }
 
         /**
@@ -48,10 +48,10 @@ namespace CustomAnimations
         public virtual void StartReverseAnimating(bool reset = false)
         {
             state = State.WAITING_FOR_REVERSEANIMATION;
-            Init(reset);
+            StartAnimation(reset);
         }
 
-        private void Init(bool reset)
+        protected virtual void StartAnimation(bool reset)
         {
             realDuration = _InitRealDuration(reset);
             startingTime = Time.time;

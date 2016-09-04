@@ -7,7 +7,7 @@ public delegate void RotationChangeHandler(Vector3 newRotation);
 
 public class CameraTurnAround : MonoBehaviour
 {
-    private const float turningSpeed = 2f;
+    private const float turningSpeed = 3f;
     private bool moving;
 
     // The object that keeps the current rotation matrix
@@ -43,7 +43,6 @@ public class CameraTurnAround : MonoBehaviour
     {
         if (moving)
         {
-            Debug.Log(time);
             time += turningSpeed * Time.deltaTime;
             if (time > 1)
             {
@@ -63,7 +62,6 @@ public class CameraTurnAround : MonoBehaviour
         ApplyRotationsAndReset();
         SendRotationChangedEvent();
         SetOrtho();
-        slice.transform.LookAt(Camera.transform);
     }
 
     //Add the last rotation to the current rotation matrix then resets the objects that are used during the movement
@@ -153,7 +151,6 @@ public class CameraTurnAround : MonoBehaviour
 
     private void StartMove()
     {
-        Debug.Log("Move");
         SendRotationChangeStartedEvent();
         Invoke("SetPerspective", GetComponentsFadeAnimation.timeCube);
     }

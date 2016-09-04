@@ -68,6 +68,11 @@ namespace BallMaze.Inputs
            // new PreviousLevelCommand(loader).Execute();
         }
 
+        public void LoadNextLevel()
+        {
+            // new PreviousLevelCommand(loader).Execute();
+        }
+
         public void Quit()
         {
             //new QuitCommand(saveManager, GameObject.FindGameObjectWithTag(Subject4087.Tags.Player).GetComponent<PlayerController>()).Execute();

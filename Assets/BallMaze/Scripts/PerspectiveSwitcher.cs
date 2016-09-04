@@ -5,8 +5,8 @@ public delegate void PerspectiveSwitched();
 [RequireComponent(typeof(MatrixBlender))]
 public class PerspectiveSwitcher : MonoBehaviour
 {
-    private const float animationTime = 0.5f;
-    private new Camera camera;
+    private const float animationTime = 0.2f;
+    private Camera m_Camera;
 
     private Matrix4x4 ortho,
                         perspective;
@@ -27,13 +27,13 @@ public class PerspectiveSwitcher : MonoBehaviour
 
     void Start()
     {
-        camera = GetComponent<Camera>();
+        m_Camera = GetComponent<Camera>();
 
         aspect = ((float)Screen.width / Screen.height);
 
         ortho = Matrix4x4.Ortho(-orthographicSize * aspect, orthographicSize * aspect, -orthographicSize, orthographicSize, near, far);
         perspective = Matrix4x4.Perspective(fov, aspect, near, far);
-        camera.projectionMatrix = ortho;
+        m_Camera.projectionMatrix = ortho;
         orthoOn = true;
         
     }
@@ -56,7 +56,7 @@ public class PerspectiveSwitcher : MonoBehaviour
 
     private void Blend()
     {
-        if (camera != null)
+        if (m_Camera != null)
         {
             if (orthoOn)
                 blender.BlendToMatrix(ortho, animationTime, currentCallback);
