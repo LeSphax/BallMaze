@@ -138,4 +138,9 @@ public static class MatrixExtensions
         }
         return result; 
     }
+
+    public static void Set<T>(this T[,,] matrix, Coords coords, T value)
+    {
+        matrix[coords.x, coords.y, coords.z] = value;
+    }
 }

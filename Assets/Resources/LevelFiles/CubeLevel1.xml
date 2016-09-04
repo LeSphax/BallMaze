@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<LevelData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <previousLevelName>CubeLevel1</previousLevelName>
+  <nextLevelName>CubeLevel2</nextLevelName>
+  <numberMoves>0</numberMoves>
+  <firstObjective>NONE</firstObjective>
+</LevelData>

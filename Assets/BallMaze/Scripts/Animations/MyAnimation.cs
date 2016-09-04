@@ -22,7 +22,7 @@ namespace CustomAnimations
         protected float delay;
 
         //The time the animation will really last when taking into account how much of the animation was already completed at the startingTime
-        private float realDuration;
+        protected float realDuration;
         //The time when the StartAnimating method was called
         private float startingTime;
 
@@ -137,7 +137,7 @@ namespace CustomAnimations
 
         protected virtual float InitRealDuration()
         {
-            if (lastCompletion > 1 || lastCompletion < 0)
+            if (lastCompletion >= 1 || lastCompletion <= 0)
                 return duration;
             else
                 return duration * lastCompletion;

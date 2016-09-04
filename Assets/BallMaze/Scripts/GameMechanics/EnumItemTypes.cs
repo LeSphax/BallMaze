@@ -1,4 +1,6 @@
 ﻿using System;
+using UnityEngine;
+using UnityEngine.Assertions;
 
 [Serializable]
 public enum ObjectiveType
@@ -121,6 +123,29 @@ public class BallData
             default:
                 return new BallData(BallType.Previous());
         }
+    }
+
+    public override int GetHashCode()
+    {
+        return BallType.GetHashCode() + ObjectiveType.GetHashCode();
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj.GetType() == typeof(BallData))
+        {
+            BallData other = (BallData)obj;
+            if (other.BallType == BallType && other.ObjectiveType == ObjectiveType)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public override string ToString()
+    {
+        return "BallData : "+ BallType + "    " + ObjectiveType;
     }
 }
 

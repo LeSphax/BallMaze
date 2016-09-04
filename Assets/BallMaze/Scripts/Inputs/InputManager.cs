@@ -1,6 +1,4 @@
-﻿using BallMaze.GameManagement;
-using BallMaze.GameMechanics;
-using BallMaze.Saving;
+﻿using BallMaze.GameMechanics;
 using UnityEngine;
 
 namespace BallMaze.Inputs
@@ -11,7 +9,6 @@ namespace BallMaze.Inputs
     {
         public delegate void DirectionEventHandler(Direction direction, bool moveBoard);
         private Board board;
-        private LevelLoader loader;
 
         private enum SwipeState
         {
@@ -68,7 +65,7 @@ namespace BallMaze.Inputs
 
         public void LoadPreviousLevel()
         {
-            new PreviousLevelCommand(loader).Execute();
+           // new PreviousLevelCommand(loader).Execute();
         }
 
         public void Quit()

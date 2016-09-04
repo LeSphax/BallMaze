@@ -23,7 +23,7 @@ namespace BallMaze.GameMechanics.Commands
             {
                 wasUseful = true;
                 ball.FinishedAnimating += new EmptyEventHandler(RaiseFinishedExecuting);
-                GameObject.FindGameObjectWithTag(Tags.LevelController).GetComponent<LevelManager>().NotifyFilledObjective(tile.GetObjectiveType());
+                //GameObject.FindGameObjectWithTag(Tags.LevelController).GetComponent<LevelManager>().NotifyFilledObjective(tile.GetObjectiveType());
                 ball.FillObjective();
             }
             else

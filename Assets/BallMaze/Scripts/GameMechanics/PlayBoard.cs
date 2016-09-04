@@ -104,7 +104,7 @@ namespace BallMaze.GameMechanics
 
         public override void SetData(BoardData data)
         {
-            BoardData boardData = data;
+            boardData = data;
             board = new BoardPosition[boardData.Width, boardData.Height];
             for (int x = 0; x < boardData.Width; x++)
             {

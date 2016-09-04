@@ -1,17 +1,27 @@
 ﻿using BallMaze.LevelCreation;
+using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using UnityEngine;
+using UnityEngine.Assertions;
+using Utilities;
 
 namespace BallMaze.Data
 {
-    public class LevelData
+    public abstract class LevelData
     {
         public string previousLevelName;
         [XmlIgnore]
         public string name;
         public string nextLevelName;
-        public BoardData boardData;
+        protected abstract PuzzleData puzzleData
+        {
+            get;
+            set;
+        }
         public int numberMoves;
 
         private static LevelData _tempLevelData;
@@ -34,19 +44,19 @@ namespace BallMaze.Data
 
         }
 
-        public LevelData(BoardData data, string name, string nextLevelName = "")
+        public LevelData(PuzzleData data, string name, string nextLevelName = "")
         {
             InitData(data, name, nextLevelName);
         }
 
-        private void InitData(BoardData data, string name, string nextLevelName)
+        private void InitData(PuzzleData data, string name, string nextLevelName)
         {
-            this.boardData = data;
+            this.puzzleData = data;
             this.name = name;
             this.nextLevelName = nextLevelName;
         }
 
-        public LevelData(BoardData data, string previousLevelName, string name, string nextLevelName)
+        public LevelData(PuzzleData data, string previousLevelName, string name, string nextLevelName)
         {
             this.previousLevelName = previousLevelName;
             InitData(data, name, nextLevelName);
@@ -77,7 +87,7 @@ namespace BallMaze.Data
 
         private bool SaveToResources(string fileName, bool force)
         {
-            string path = Application.dataPath + Paths.FOLDER_SEPARATOR + Paths.RESOURCES + Paths.LEVEL_FILES + fileName + ".xml";
+            string path = Application.dataPath + Paths.FOLDER_SEPARATOR + Paths.RESOURCES + Paths.LEVEL_FILES + fileName;
             return SaveFile(fileName, force, path);
         }
 
@@ -87,27 +97,25 @@ namespace BallMaze.Data
             {
                 return false;
             }
-            FileStream file = File.Create(path);
-
-            XmlSerializer xs = new XmlSerializer(typeof(LevelData));
-            xs.Serialize(file, this);
-            file.Close();
+            Serialize(path);
             Debug.Log(fileName + " was successfully saved !");
             return true;
         }
 
+        protected abstract void Serialize(string path);
+
         private bool SaveToStreamingAssets(string fileName, bool force)
         {
-            string path = GetApplicationPath() + fileName + ".xml";
+            string path = GetApplicationPath() + fileName;
             return SaveFile(fileName, force, path);
         }
 
         private static string GetApplicationPath()
         {
-#if (UNITY_WEBGL || UNITY_WEBPLAYER) && ! UNITY_EDITOR
+#if (UNITY_WEBGL || UNITY_WEBPLAYER) && !UNITY_EDITOR
             return Paths.LEVEL_FILES;
 #else
-            return Application.streamingAssetsPath +  Paths.FOLDER_SEPARATOR + Paths.LEVEL_FILES;
+            return Application.streamingAssetsPath + Paths.FOLDER_SEPARATOR + Paths.LEVEL_FILES;
 #endif
 
         }
@@ -142,15 +150,19 @@ namespace BallMaze.Data
         private static bool LoadFromResources(string fileName, out LevelData levelData)
         {
             string path = GetApplicationPath() + fileName;
+
+            Type type = GetFileType(fileName);
+
             TextAsset textAsset = (TextAsset)Resources.Load(path);
-            if (textAsset == null ){
+            if (textAsset == null)
+            {
                 levelData = null;
                 Debug.LogError("The file you are trying to load does not exist : (Path : " + path + " ) (FileName : " + fileName + " )");
                 return false;
             }
 
             StringReader reader = new StringReader(textAsset.text);
-            XmlSerializer xs = new XmlSerializer(typeof(LevelData));
+            XmlSerializer xs = new XmlSerializer(type);
             levelData = (LevelData)xs.Deserialize(reader);
             levelData.name = fileName;
             return true;
@@ -158,16 +170,27 @@ namespace BallMaze.Data
 
         private static bool LoadFromStreamingAssets(string fileName, out LevelData levelData)
         {
-            string path = GetApplicationPath() + fileName + ".xml";
-            if (File.Exists(path))
-            {
-                FileStream file = File.Open(path, FileMode.Open);
+            string path = GetApplicationPath() + fileName;
+            Type type = GetFileType(fileName);
+            bool successfullLoad = false;
+            levelData = null;
 
-                XmlSerializer xs = new XmlSerializer(typeof(LevelData));
-                levelData = (LevelData)xs.Deserialize(file);
-                levelData.name = fileName;
-                file.Close();
-                if (levelData.boardData.IsValid())
+            if (type == typeof(CubeLevelData))
+            {
+               successfullLoad =  Saving.TryLoad<CubeLevelData, LevelData>(path, out levelData);
+            }
+            else if (type == typeof(BoardLevelData))
+            {
+                successfullLoad=  Saving.TryLoad<BoardLevelData, LevelData>(path, out levelData);
+            }
+            else
+            {
+                Debug.LogError("The type of the file isn't valid " + type);
+            }
+
+            if (successfullLoad)
+            {
+                if (levelData.puzzleData.IsValid())
                     return true;
                 else
                 {
@@ -175,12 +198,28 @@ namespace BallMaze.Data
                     return true;
                 }
             }
-            else
+            levelData = null;
+            return false;
+        }
+
+        private static Type GetFileType(string fileName)
+        {
+            if (fileName[1] == '@')
             {
-                Debug.LogError("The file you are trying to load does not exist : (Path : " + path + " ) (FileName : "+ fileName +" )");
-                levelData = null;
-                return false;
+                if (fileName[0] == CubeLevelData.FILE_EXTENSION)
+                {
+                    return typeof(CubeLevelData);
+                }
+                else if (fileName[0] == BoardLevelData.FILE_EXTENSION)
+                {
+                    return typeof(BoardLevelData);
+                }
+                else
+                {
+                    return null;
+                }
             }
+            else { return null; }
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using BallMaze.GameManagement;
+using System;
 using System.Xml.Serialization;
-using BallMaze.Saving;
 
 namespace BallMaze.Inputs
 {
@@ -12,7 +12,6 @@ namespace BallMaze.Inputs
     {
 
         protected SaveManager saveManager;
-        private SaveManager saveManager1;
 
         public InputCommand()
         {

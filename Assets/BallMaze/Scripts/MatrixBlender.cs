@@ -8,7 +8,7 @@ public class MatrixBlender : MonoBehaviour
 {
     private new Camera camera;
 
-    void Start()
+    void Awake()
     {
         camera = GetComponent<Camera>();
     }
@@ -41,9 +41,9 @@ public class MatrixBlender : MonoBehaviour
         }
     }
 
-    public Coroutine BlendToMatrix(Matrix4x4 targetMatrix, float duration)
+    public Coroutine BlendToMatrix(Matrix4x4 targetMatrix, float duration,MatrixBlendEnded endCallback =null)
     {
         StopAllCoroutines();
-        return StartCoroutine(LerpFromTo(camera.projectionMatrix, targetMatrix, duration));
+        return StartCoroutine(LerpFromTo(camera.projectionMatrix, targetMatrix, duration, endCallback));
     }
 }

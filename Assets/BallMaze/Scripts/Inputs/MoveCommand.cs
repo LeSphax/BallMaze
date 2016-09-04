@@ -1,4 +1,4 @@
-﻿using BallMaze.Saving;
+﻿using BallMaze.GameManagement;
 using System.Xml.Serialization;
 
 namespace BallMaze.Inputs

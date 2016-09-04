@@ -7,7 +7,9 @@ namespace BallMaze
     {
         public static InputManager GetInputManager()
         {
-            return GameObject.FindGameObjectWithTag(Tags.InputManager).GetComponent<InputManager>();
+            if (GameObject.FindGameObjectWithTag(Tags.InputManager) != null)
+                return GameObject.FindGameObjectWithTag(Tags.InputManager).GetComponent<InputManager>();
+            return null;
         }
     }
 }

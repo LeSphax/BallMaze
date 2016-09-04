@@ -2,6 +2,7 @@
 using BallMaze.Extensions;
 using BallMaze.GameMechanics;
 using BallMaze.Inputs;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,24 +12,21 @@ namespace BallMaze.GameManagement
     public class LevelLoader : MonoBehaviour
     {
         public string firstLevelName;
-        public GameObject levelPrefab;
+        public GameObject boardLevelPrefab;
+        public GameObject cubeLevelPrefab;
         public GameObject endOfGameScreen;
         public Text levelNameField;
 
         private GameObject currentLevel;
         private LevelData currentData;
-        private InputManager inputManager;
+
+        private CubeController cubeController;
 
         public bool CreatorMode;
 
 
         void Awake()
         {
-            inputManager = GetComponent<InputManager>();
-            //if (NavigationManager.firstLevelName != "")
-            //{
-            //    firstLevelName = NavigationManager.firstLevelName;
-            //}
             if (!CreatorMode)
                 LoadLevel(firstLevelName);
         }
@@ -38,20 +36,48 @@ namespace BallMaze.GameManagement
             if (LevelData.TryLoad(levelName, out currentData))
             {
                 levelNameField.text = currentData.name;
-                SetData(currentData.boardData);
-                LevelManager levelManager = currentLevel.GetComponent<LevelManager>();
-                levelManager.SetObjectiveOrder(currentData.firstObjective);
+                SetData(currentData);
+            }
+            else
+            {
+                Debug.LogError("Didn't succed in loading the following level : " + levelName);
+            }
+        }
+
+        public void SetData(LevelData levelData)
+        {
+            if (levelData is BoardLevelData)
+            {
+                SetData(((BoardLevelData)levelData).data);
+            }
+            else if (levelData is CubeLevelData)
+            {
+                SetData(((CubeLevelData)levelData).data);
+            }
+            else
+            {
+                Debug.LogError("The levelData shouldn't have this type :" + levelData);
             }
         }
 
         public void SetData(BoardData data)
         {
             Destroy(currentLevel);
-            currentLevel = this.InstantiateAsChildren(levelPrefab);
+            currentLevel = this.InstantiateAsChildren(boardLevelPrefab);
             Board boardModel = currentLevel.GetComponent<Board>();
             boardModel.SetData(data);
+            LevelManager levelManager = currentLevel.GetComponent<LevelManager>();
+            levelManager.SetObjectiveOrder(currentData.firstObjective);
+        }
 
-            inputManager.SetBoard(boardModel);
+        public void SetData(CubeData data)
+        {
+            if (currentLevel == null)
+            {
+                currentLevel = this.InstantiateAsChildren(cubeLevelPrefab);
+                cubeController = currentLevel.GetComponent<CubeController>();
+            }
+            cubeController.SetData(data);
         }
 
         public void LoadNextLevel()

@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 
+public delegate void PerspectiveSwitched();
+
 [RequireComponent(typeof(MatrixBlender))]
 public class PerspectiveSwitcher : MonoBehaviour
 {
+    private const float animationTime = 0.5f;
     private new Camera camera;
 
     private Matrix4x4 ortho,
@@ -15,6 +18,13 @@ public class PerspectiveSwitcher : MonoBehaviour
     private MatrixBlender blender;
     private static bool orthoOn;
 
+    public MatrixBlendEnded currentCallback;
+
+    void Awake()
+    {
+        blender = GetComponent<MatrixBlender>();
+    }
+
     void Start()
     {
         camera = GetComponent<Camera>();
@@ -25,12 +35,14 @@ public class PerspectiveSwitcher : MonoBehaviour
         perspective = Matrix4x4.Perspective(fov, aspect, near, far);
         camera.projectionMatrix = ortho;
         orthoOn = true;
-        blender = (MatrixBlender)GetComponent(typeof(MatrixBlender));
+        
     }
 
-    public static void SetOrthographic(bool value)
+    public void SetOrthographic(bool value, MatrixBlendEnded endCallback)
     {
         orthoOn = value;
+        currentCallback = endCallback;
+        Blend();
     }
 
     void Update()
@@ -38,10 +50,22 @@ public class PerspectiveSwitcher : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             orthoOn = !orthoOn;
+            Blend();
+        }
+    }
+
+    private void Blend()
+    {
+        if (camera != null)
+        {
             if (orthoOn)
-                blender.BlendToMatrix(ortho, 0.3f);
+                blender.BlendToMatrix(ortho, animationTime, currentCallback);
             else
-                blender.BlendToMatrix(perspective, 0.3f);
+                blender.BlendToMatrix(perspective, animationTime, currentCallback);
+        }
+        else
+        {
+            Invoke("Blend", 0.1f);
         }
     }
 }

@@ -9,8 +9,9 @@ namespace BallMaze.LevelCreation
     public class EditorBoard : Board
     {
 
-        void Start()
+        protected override void Start()
         {
+            base.Start();
             board = new BoardPosition[0, 0];
         }
 

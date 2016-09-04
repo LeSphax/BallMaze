@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace BallMaze.Data
 {
     [XmlInclude(typeof(EditableBoardData))]
-    public class BoardData
+    public class BoardData : PuzzleData
     {
         [XmlIgnore]
         public BallData[,] balls;
@@ -55,7 +55,7 @@ namespace BallMaze.Data
 
         }
 
-        public bool IsValid()
+        public override bool IsValid()
         {
             if (balls.GetLength(0) != tiles.GetLength(0) || balls.GetLength(1) != tiles.GetLength(1))
                 return false;

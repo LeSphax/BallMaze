@@ -60,7 +60,7 @@ namespace BallMaze.GameMechanics.Balls
             }
         }
 
-        internal static IBallController GetBall(BallData ballData, float sizeRatio)
+        internal static IBallController GetBall(BallData ballData, float sizeRatio, bool floating = true)
         {
             GameObject mesh = null;
             GameObject gameObject;

@@ -1,13 +1,26 @@
 ﻿using BallMaze.Data;
+using BallMaze.GameMechanics;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+public delegate void CubeChanged(CubeModel model);
+
 public class CubeModel : MonoBehaviour
 {
     public BallData[,,] balls;
     public TileData[,,] faces;
+
+    public event CubeChanged HasChanged;
+
+    public int[] sizes
+    {
+        get
+        {
+            return new int[3] { X_SIZE, Y_SIZE, Z_SIZE };
+        }
+    }
 
     public int X_SIZE
     {
@@ -31,86 +44,16 @@ public class CubeModel : MonoBehaviour
         }
     }
 
-    public TileData[][][] serializedTiles
-    {
-        get
-        {
-            return faces.ToJaggedArray();
-        }
-        set
-        {
-            faces = value.ToMatrix();
-        }
-    }
-
-    public BallData[][][] serializedBalls
-    {
-        get
-        {
-            return balls.ToJaggedArray();
-        }
-        set
-        {
-            balls = value.ToMatrix();
-        }
-    }
-
-    public bool IsValid()
-    {
-        return CheckObjectives();
-    }
-
-    private bool CheckObjectives()
-    {
-        int numberObjectiveTypes = 2;
-        int[] ObjectiveTiles = new int[numberObjectiveTypes];
-        int[] ObjectiveBalls = new int[numberObjectiveTypes];
-
-        foreach (BallData ball in balls)
-        {
-            if (ball.ObjectiveType == ObjectiveType.OBJECTIVE1)
-            {
-                ObjectiveBalls[0] += 1;
-            }
-            else if (ball.ObjectiveType == ObjectiveType.OBJECTIVE2)
-            {
-                ObjectiveBalls[1] += 1;
-            }
-        }
-        foreach (TileData tile in faces)
-        {
-
-            if (tile.ObjectiveType == ObjectiveType.OBJECTIVE1)
-            {
-                ObjectiveTiles[0] += 1;
-            }
-            else if (tile.ObjectiveType == ObjectiveType.OBJECTIVE2)
-            {
-                ObjectiveTiles[1] += 1;
-            }
-
-        }
-
-        for (int i = 0; i < numberObjectiveTypes; i++)
-        {
-            if (ObjectiveBalls[i] != ObjectiveTiles[i])
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public void SetDummyCubeModel()
     {
         balls = BallData.GetEmptyBallDataMatrix(3, 3, 3);
         faces = TileData.GetEmptyTileDataMatrix(6, 3, 3);
         balls[0, 0, 0] = BallData.GetObjective1Ball();
-        balls[1, 1, 1] = BallData.GetWall();
-        balls[0, 1, 0] = BallData.GetWall();
         balls[0, 1, 1] = BallData.GetWall();
-        balls[0, 0, 2] = BallData.GetWall();
-        balls[2, 1, 2] = BallData.GetWall();
+        balls[1, 1, 1] = BallData.GetWall();
+        balls[2, 1, 1] = BallData.GetWall();
+        //balls[0, 0, 2] = BallData.GetWall();
+        //balls[2, 1, 2] = BallData.GetWall();
         //
         faces[5, 0, 2] = TileData.GetObjective1Tile();
         //faces[0, 2, 2] = TileData.GetObjective2Tile();
@@ -123,20 +66,33 @@ public class CubeModel : MonoBehaviour
         //faces[4, 2, 0] = TileData.GetObjective2Tile();
         //faces[5, 0, 1] = TileData.GetObjective1Tile();
         //faces[5, 0, 2] = TileData.GetObjective2Tile();
+        HasChanged.Invoke(this);
     }
 
-    public BoardData GetBoardAtFace(Vector3 rotation)
+    internal void SetData(CubeData data)
     {
-        BoardData data = new BoardData();
+        balls = data.balls;
+        faces = data.faces;
+
+        HasChanged.Invoke(this);
+    }
+
+    public void SetSliceBoard(ref SliceBoard slice, Vector3 rotation)
+    {
+        
         CubeFace face = CameraTurnAround.GetFace(rotation);
         TileData[,] faceTiles = faces.Get((int)face);
         BallData[,] ballData = GetPlaneBoardData(face);
         int faceRotation = GetFaceRotation(face, rotation);
 
+        BoardData data = new BoardData();
         data.balls = ballData.Rotate(faceRotation);
-        data.tiles = faceTiles.Rotate(faceRotation);
         Assert.IsNotNull(data.balls);
-        return data;
+        data.tiles = faceTiles.Rotate(faceRotation);
+
+        slice.rotation = faceRotation;
+        slice.face = face;
+        slice.SetData(data);
     }
 
     private static int GetFaceRotation(CubeFace face, Vector3 rotation)
@@ -159,76 +115,29 @@ public class CubeModel : MonoBehaviour
 
     private BallData[,] GetPlaneBoardData(CubeFace face)
     {
-        int[] sizes;
-        bool inverse = false;
-        int mirrorAxis = -1;
-        Func<BallData[,,], int, int, int, BallData> getter;
-        switch (face)
-        {
-            case CubeFace.X:
-            case CubeFace.MX:
-                sizes = new int[3] { Z_SIZE, Y_SIZE, X_SIZE };
-                getter = (model, z, y, x) => model[x, y, z];
-                break;
-            case CubeFace.Y:
-            case CubeFace.MY:
-                sizes = new int[3] { X_SIZE, Z_SIZE, Y_SIZE };
-                getter = (model, x, z, y) => model[x, y, z];
-                break;
-            case CubeFace.Z:
-            case CubeFace.MZ:
-                sizes = new int[3] { Y_SIZE, X_SIZE, Z_SIZE };
-                getter = (model, x, y, z) => model[x, y, z];
-                break;
-            default:
-                throw new UnhandledSwitchCaseException(face);
-        }
-        switch (face)
-        {
-            case CubeFace.X:
-            case CubeFace.Y:
-            case CubeFace.Z:
-                inverse = true;
-                break;
-            case CubeFace.MX:
-            case CubeFace.MZ:
-            case CubeFace.MY:
-                inverse = false;
-                break;
-        }
-        switch (face)
-        {
-            case CubeFace.MZ:
-            case CubeFace.X:
-            case CubeFace.Y:
-                break;
-            case CubeFace.Z:
-            case CubeFace.MX:
-                mirrorAxis = 0;
-                break;
-            case CubeFace.MY:
-                mirrorAxis = 1;
-                break;
-        }
-        if (mirrorAxis == -1)
-            return GetPlaneBoardData(balls, sizes[0], sizes[1], sizes[2], inverse, getter);
+        FaceModel faceModel = FaceModel.ModelsDictionary[face];
+
+        int[] faceSizes = faceModel.ReorderWithAxes(sizes);
+        if (faceModel.mirrorAxis == -1)
+            return GetPlaneBoardData(balls, faceSizes, faceModel.inverseZ, faceModel.Getter);
         else
-            return GetPlaneBoardData(balls, sizes[0], sizes[1], sizes[2], inverse, getter).Mirror(mirrorAxis);
+            return GetPlaneBoardData(balls, faceSizes, faceModel.inverseZ, faceModel.Getter).Mirror(faceModel.mirrorAxis);
     }
 
-    private BallData[,] GetPlaneBoardData(BallData[,,] model, int xSize, int ySize, int zSize, bool inverseZ, Func<BallData[,,], int, int, int, BallData> getter)
+    private BallData[,] GetPlaneBoardData(BallData[,,] model, int[] sizes, bool inverseZ, Func<BallData[,,], int[], BallData> getter)
     {
-        BallData[,] result = new BallData[xSize, ySize];
-        for (int first = 0; first < xSize; first++)
+        Assert.AreEqual(sizes.Length, 3);
+        BallData[,] result = new BallData[sizes[0], sizes[1]];
+        for (int first = 0; first < sizes[0]; first++)
         {
-            for (int second = 0; second < ySize; second++)
+            for (int second = 0; second < sizes[1]; second++)
             {
                 int third = 0;
-                while (third < zSize)
+                while (third < sizes[2])
                 {
-                    int iThird = Functions.Inverse(third, zSize, inverseZ);
+                    int iThird = Functions.Inverse(third, sizes[2], inverseZ);
 
-                    BallData ball = getter(model, first, second, iThird);
+                    BallData ball = getter(model, new int[3] { first, second, iThird });
                     if (ball.BallType != BallType.EMPTY)
                     {
                         result[first, second] = ball;
@@ -236,7 +145,7 @@ public class CubeModel : MonoBehaviour
                     }
                     third++;
                 }
-                if (third >= zSize)
+                if (third >= sizes[2])
                 {
                     result[first, second] = BallData.GetEmptyBall();
                 }
@@ -245,7 +154,7 @@ public class CubeModel : MonoBehaviour
         return result;
     }
 
-    public void SetNewBallPositions(Dictionary<BallData, Coords> newPositions)
+    public void SetNewBallPositions(SliceBoard slice)
     {
         Dictionary<BallData, Coords> currentPositions = new Dictionary<BallData, Coords>();
         for (int x = 0; x < X_SIZE; x++)
@@ -254,9 +163,35 @@ public class CubeModel : MonoBehaviour
                     if (balls[x, y, z].BallType == BallType.NORMAL)
                         currentPositions.Add(balls[x, y, z], new Coords(x, y, z));
 
-        foreach (var pair in newPositions)
+        FaceModel faceModel = FaceModel.ModelsDictionary[slice.face];
+        foreach (var pair in slice.GetBallsPositions())
         {
-            balls[pair.Value.x, pair.Value.y] =
+            Coords oldPosition;
+            if (currentPositions.TryGetValue(pair.Key, out oldPosition))
+            {
+                Coords realPosition = new Coords();
+                realPosition[faceModel.axes[0]] = pair.Value.x;
+                realPosition[faceModel.axes[1]] = pair.Value.y;
+                realPosition[faceModel.axes[2]] = oldPosition[faceModel.axes[2]];
+
+                balls.Set(oldPosition, BallData.GetEmptyBall());
+                balls.Set(realPosition, pair.Key);
+                
+            }
+            else
+            {
+                Debug.LogError("All the balls in the slice should also be in the ");
+            }
+        }
+        HasChanged.Invoke(this);
+    }
+
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(KeyCode.S))
+        {
+            CubeLevelData levelData = new CubeLevelData(new CubeData(balls,faces), "CubeLevel1","CubeLevel1", "CubeLevel2");
+            levelData.Save("CubeLevel1",true);
         }
     }
 }

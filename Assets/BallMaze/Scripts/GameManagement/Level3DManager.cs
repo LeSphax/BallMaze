@@ -9,28 +9,9 @@ namespace BallMaze.GameManagement
     class Level3DManager : LevelManager
     {
         [SerializeField]
-        public GameObject levelPrefab;
+        
 
         [HideInInspector]
-        public GameObject currentSlice;
-        private InputManager inputManager;
-
-
-        void Awake()
-        {
-            inputManager = GameObjects.GetInputManager();
-        }
-
-
-        public void CreateSlice(BoardData data)
-        {
-            Destroy(currentSlice);
-            currentSlice = this.InstantiateAsChildren(levelPrefab);
-            SliceBoard boardModel = currentSlice.GetComponent<SliceBoard>();
-            boardModel.SetData(data);
-
-            inputManager.SetBoard(boardModel);
-        }
 
         internal override void LevelFinished()
         {

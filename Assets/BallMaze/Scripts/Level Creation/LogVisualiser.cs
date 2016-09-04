@@ -1,4 +1,4 @@
-﻿using BallMaze.Saving;
+﻿using BallMaze.GameManagement;
 using UnityEngine;
 
 namespace BallMaze.GameMechanics.LevelCreation
@@ -6,9 +6,9 @@ namespace BallMaze.GameMechanics.LevelCreation
     public class LogVisualiser : MonoBehaviour
     {
 
-        SavingWP8.GamesLogs gamesLogs;
-        SaveManager.GameLogs gameCurrent;
-        SaveManager.Log logCurrent;
+        GamesLogs gamesLogs;
+        GameLogs gameCurrent;
+        Log logCurrent;
         int indexLogs;
 
         public string fileName;

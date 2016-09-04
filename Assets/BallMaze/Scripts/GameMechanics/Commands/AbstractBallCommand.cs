@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace BallMaze.GameMechanics.Commands
+﻿namespace BallMaze.GameMechanics.Commands
 {
     public delegate void BallCommandEventHandler(AbstractBallCommand sender);
 

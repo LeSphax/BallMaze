@@ -2,6 +2,7 @@
 using BallMaze.GameManagement;
 using BallMaze.LevelCreation.Grid;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 namespace BallMaze.LevelCreation
@@ -119,7 +120,8 @@ namespace BallMaze.LevelCreation
             state = State.EDIT_GRID;
             LevelData level;
             LevelData.TryLoad(TEMP_LEVEL_NAME, out level);
-            boardData.SetData(level.boardData);
+            Assert.IsTrue(level is BoardLevelData);
+            boardData.SetData(((BoardLevelData)level).data);
         }
 
         private void ActivatePopUp(bool open)
@@ -144,7 +146,7 @@ namespace BallMaze.LevelCreation
             }
             else
             {
-                LevelData levelData = CreateLevelData(levelName);
+                BoardLevelData levelData = CreateLevelData(levelName);
                 if (!levelData.Save(levelName, force))
                 {
                     ActivatePopUp(true);
@@ -154,9 +156,9 @@ namespace BallMaze.LevelCreation
             }
         }
 
-        private LevelData CreateLevelData(string levelName)
+        private BoardLevelData CreateLevelData(string levelName)
         {
-            LevelData levelData = new LevelData(boardData, previousLevelNameField.text, levelName, nextLevelNameField.text);
+            BoardLevelData levelData = new BoardLevelData(boardData, previousLevelNameField.text, levelName, nextLevelNameField.text);
             if (FirstObjective.value == 1)
             {
                 levelData.SetFirstObjective(ObjectiveType.OBJECTIVE1);
@@ -193,7 +195,8 @@ namespace BallMaze.LevelCreation
                         FirstObjective.value = 2;
                         break;
                 }
-                boardData.SetData(level.boardData);
+                Assert.IsTrue(level is BoardLevelData);
+                boardData.SetData(((BoardLevelData)level).data);
             }
 
         }

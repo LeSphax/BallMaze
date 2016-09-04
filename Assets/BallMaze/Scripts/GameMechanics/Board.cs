@@ -114,8 +114,10 @@ namespace BallMaze.GameMechanics
 
         void OnDestroy()
         {
+
             InputManager inputManager = GameObjects.GetInputManager();
-            inputManager.DirectionEvent -= ReceiveDirection;
+            if (inputManager != null)
+                inputManager.DirectionEvent -= ReceiveDirection;
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using BallMaze.Saving;
-using UnityEngine;
-
-namespace BallMaze.Inputs
+﻿namespace BallMaze.Inputs
 {
     //public class QuitCommand : InputCommand
     //{
