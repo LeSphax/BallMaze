@@ -1,8 +1,4 @@
-﻿using BallMaze.Data;
-using BallMaze.Extensions;
-using BallMaze.GameMechanics;
-using BallMaze.Inputs;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BallMaze.GameManagement
 {

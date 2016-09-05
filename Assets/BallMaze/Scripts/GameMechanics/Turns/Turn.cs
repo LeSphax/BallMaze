@@ -45,46 +45,52 @@ namespace BallMaze.GameMechanics.Turns
             if (state == State.CREATED)
             {
                 state = State.MOVING;
-                if (direction == Direction.UP)
+                switch (direction)
                 {
-                    for (int y = model.Height - 1; y >= 0; y--)
-                    {
-                        for (int x = 0; x < model.Width; x++)
+                    case Direction.UP:
+                        for (int y = model.Height - 1; y >= 0; y--)
                         {
-                            MoveBrick(direction, x, y);
+                            for (int x = 0; x < model.Width; x++)
+                            {
+                                MoveBrick(direction, x, y);
+                            }
                         }
-                    }
-                }
-                else if (direction == Direction.DOWN)
-                {
-                    for (int y = 0; y < model.Height; y++)
-                    {
-                        for (int x = 0; x < model.Width; x++)
-                        {
-                            MoveBrick(direction, x, y);
-                        }
-                    }
-                }
-                else if (direction == Direction.RIGHT)
-                {
-                    for (int x = model.Width - 1; x >= 0; x--)
-                    {
-                        for (int y = 0; y < model.Height; y++)
-                        {
-                            MoveBrick(direction, x, y);
-                        }
-                    }
-                }
-                else if (direction == Direction.LEFT)
-                {
-                    for (int x = 0; x < model.Width; x++)
-                    {
-                        for (int y = 0; y < model.Height; y++)
-                        {
+                        break;
 
-                            MoveBrick(direction, x, y);
+                    case Direction.DOWN:
+                        for (int y = 0; y < model.Height; y++)
+                        {
+                            for (int x = 0; x < model.Width; x++)
+                            {
+                                MoveBrick(direction, x, y);
+                            }
                         }
-                    }
+                        break;
+                    case Direction.RIGHT:
+                        for (int x = model.Width - 1; x >= 0; x--)
+                        {
+                            for (int y = 0; y < model.Height; y++)
+                            {
+                                MoveBrick(direction, x, y);
+                            }
+                        }
+                        break;
+                    case Direction.LEFT:
+                        for (int x = 0; x < model.Width; x++)
+                        {
+                            for (int y = 0; y < model.Height; y++)
+                            {
+
+                                MoveBrick(direction, x, y);
+                            }
+                        }
+                        break;
+                    case Direction.NONE:
+                        //Skip the movement
+                        break;
+                    default:
+                        throw new UnhandledSwitchCaseException(direction);
+
                 }
                 ExecuteCommands();
             }
@@ -315,7 +321,7 @@ namespace BallMaze.GameMechanics.Turns
 
         public bool WasUseful()
         {
-            
+
             foreach (AbstractBallCommand command in moveCommands)
             {
                 if (command.WasUseful())

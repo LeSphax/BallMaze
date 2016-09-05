@@ -24,11 +24,12 @@ public class CameraTurnAround : MonoBehaviour
 
     private Vector3 targetRotation = Vector3.zero;
 
-    public event RotationChangeHandler RotationChangeStart;
+    public event EmptyEventHandler RotationChangeStart;
     public event RotationChangeHandler RotationChanged;
 
     void Start()
     {
+        GameObjects.GetLevelLoader().LevelChanged += Init;
         InputManager inputManager = GameObject.FindGameObjectWithTag(Tags.InputManager).GetComponent<InputManager>();
         inputManager.DirectionEvent += TurnInDirection;
         moving = false;
@@ -36,6 +37,9 @@ public class CameraTurnAround : MonoBehaviour
 
     public void Init()
     {
+        Referent.transform.localRotation = Quaternion.identity;
+        YObject.transform.localRotation = Quaternion.identity;
+        targetRotation = Vector3.zero;
         EndMove();
     }
 
@@ -81,7 +85,7 @@ public class CameraTurnAround : MonoBehaviour
     public void SendRotationChangeStartedEvent()
     {
         if (RotationChangeStart != null)
-            RotationChangeStart.Invoke((Referent.transform.localRotation * Quaternion.Euler(targetRotation)).eulerAngles);
+            RotationChangeStart.Invoke();
     }
 
     internal void TurnInDirection(Direction direction, bool moveBoard)

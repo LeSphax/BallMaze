@@ -117,7 +117,7 @@ namespace BallMaze.GameMechanics.Tiles
             InitEffectManager();
         }
 
-        internal void SetMesh(GameObject mesh)
+        public virtual void SetMesh(GameObject mesh)
         {
             gameObject.name = mesh.name;
             mesh.transform.SetParent(transform, false);

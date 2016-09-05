@@ -1,6 +1,4 @@
 ﻿using BallMaze;
-using BallMaze.Data;
-using BallMaze.Extensions;
 using BallMaze.GameMechanics;
 using BallMaze.Inputs;
 using UnityEngine;
@@ -46,11 +44,12 @@ public class CubeController : MonoBehaviour
         currentSlice.GetComponent<GetComponentsFadeAnimation>().StartAnimating();
     }
 
-    public void DestroySlice(Vector3 rotation)
+    public void DestroySlice()
     {
         if (currentSlice != null)
         {
             model.SetNewBallPositions(currentSlice);
+
             currentSlice.GetComponent<GetComponentsFadeAnimation>().FinishedAnimating += DestroyCurrentSlice;
             currentView.GetComponent<GetComponentsFadeAnimation>().StartAnimating();
             currentSlice.GetComponent<GetComponentsFadeAnimation>().StartReverseAnimating();
@@ -59,7 +58,6 @@ public class CubeController : MonoBehaviour
 
     private void DestroyCurrentSlice(MonoBehaviour sender)
     {
-        Debug.Log("Destroy");
         Destroy(currentSlice.gameObject);
     }
 
@@ -76,6 +74,8 @@ public class CubeController : MonoBehaviour
 
     public void SetData(CubeData data)
     {
+        if (currentSlice != null)
+            DestroyCurrentSlice(this);
         model.SetData(data);
     }
 }

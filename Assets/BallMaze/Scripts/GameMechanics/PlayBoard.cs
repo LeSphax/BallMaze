@@ -70,6 +70,8 @@ namespace BallMaze.GameMechanics
             base.Start();
             state = State.IDLE;
             FitBoardToCamera();
+            //Fill the objectives if balls are already placed on them
+            PlayTurn(Direction.NONE);
         }
 
         private void FinishTurn()

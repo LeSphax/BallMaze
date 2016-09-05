@@ -15,7 +15,7 @@ namespace BallMaze.GameMechanics.ObjectiveBall
         private BallViewStateMachine stateMachine;
         private AnimationGroup completingAnimation;
 
-        void Start()
+        void Awake()
         {
             stateMachine = new BallViewStateMachine(this);
         }

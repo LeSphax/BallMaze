@@ -24,6 +24,8 @@ namespace BallMaze.GameManagement
 
         public bool CreatorMode;
 
+        public event EmptyEventHandler LevelChanged;
+
 
         void Awake()
         {
@@ -42,6 +44,8 @@ namespace BallMaze.GameManagement
             {
                 Debug.LogError("Didn't succed in loading the following level : " + levelName);
             }
+            if (LevelChanged != null)
+                LevelChanged.Invoke();
         }
 
         public void SetData(LevelData levelData)

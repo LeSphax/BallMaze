@@ -6,7 +6,7 @@ namespace BallMaze.GameMechanics
     {
         [SerializeField]
         private GameObject _Mesh;
-        public GameObject Mesh
+        public virtual GameObject Mesh
         {
             get
             {
