@@ -1,4 +1,5 @@
-﻿using BallMaze.GameMechanics.Balls;
+﻿using BallMaze.Data;
+using BallMaze.GameMechanics.Balls;
 using BallMaze.GameMechanics.Tiles;
 using System;
 using UnityEngine;
@@ -122,7 +123,7 @@ namespace BallMaze.GameMechanics
             CreateTiles(model);
         }
 
-        private void CreateTiles(CubeModel data)
+        private void CreateTiles(CubeModel model)
         {
             int widthFace;
             int heightFace;
@@ -136,18 +137,18 @@ namespace BallMaze.GameMechanics
                 {
                     case (int)CubeFace.X:
                     case (int)CubeFace.MX:
-                        widthFace = data.Z_SIZE;
-                        heightFace = data.Y_SIZE;
+                        widthFace = model.Z_SIZE;
+                        heightFace = model.Y_SIZE;
                         break;
                     case (int)CubeFace.Y:
                     case (int)CubeFace.MY:
-                        widthFace = data.X_SIZE;
-                        heightFace = data.Z_SIZE;
+                        widthFace = model.X_SIZE;
+                        heightFace = model.Z_SIZE;
                         break;
                     case (int)CubeFace.Z:
                     case (int)CubeFace.MZ:
-                        widthFace = data.X_SIZE;
-                        heightFace = data.Y_SIZE;
+                        widthFace = model.X_SIZE;
+                        heightFace = model.Y_SIZE;
                         break;
                     default:
                         throw new UnhandledSwitchCaseException(faceNumber);
@@ -157,8 +158,10 @@ namespace BallMaze.GameMechanics
                 {
                     for (int y = 0; y < heightFace; y++)
                     {
-                        exterior[faceNumber][x, y] = TileCreator.CreateTile(data.faces[faceNumber, x, y], GetTilePosition((CubeFace)faceNumber, x, y), 1);
+                        TileData tileData = model.faces[faceNumber, x, y];
+                        exterior[faceNumber][x, y] = TileCreator.CreateTile(tileData, GetTilePosition((CubeFace)faceNumber, x, y), 1);
                         exterior[faceNumber][x, y].transform.SetParent(face.transform, false);
+                        model.filledObjectives.TryFillTile(exterior[faceNumber][x, y]);
                     }
                 }
             }

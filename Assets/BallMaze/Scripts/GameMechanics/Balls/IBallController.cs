@@ -13,6 +13,7 @@ namespace BallMaze.GameMechanics
 
         void MoveBack(int oldPosX, int oldPosY);
         bool IsEmpty();
+        bool IsWall();
 
         void InitObjectiveType(ObjectiveType type);
         void Init(int x, int y, Board model);

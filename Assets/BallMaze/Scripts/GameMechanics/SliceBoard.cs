@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using BallMaze.Data;
+using BallMaze.GameMechanics.Tiles;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BallMaze.GameMechanics
@@ -22,6 +24,29 @@ namespace BallMaze.GameMechanics
             return false;
         }
 
+        public void SetData(BoardData data, List<ObjectiveType> filledObjectives)
+        {
+            base.SetData(data);
+            foreach(BoardPosition position in board)
+            {
+                filledObjectives.TryFillTile(position.tile);
+            }
+        }
+
+        public List<ObjectiveType> GetFilledTiles()
+        {
+            List<ObjectiveType> list = new List<ObjectiveType>();
+            foreach(BoardPosition position in board)
+            {
+                ObjectiveType objectiveType = position.tile.GetObjectiveType();
+                if (objectiveType != ObjectiveType.NONE && position.tile.IsFilled())
+                {
+                    list.Add(objectiveType);
+                }
+            }
+            return list;
+        }
+
         public Dictionary<BallData, Coords> GetBallsPositions()
         {
             BallData[,] realBalls = new BallData[Width,Height];
@@ -29,7 +54,7 @@ namespace BallMaze.GameMechanics
             {
                 for (int y = 0; y < Height; y++)
                 {
-                    if (board[x, y].ball.GetObjectiveType() != ObjectiveType.NONE)
+                    if (!board[x, y].ball.IsEmpty() && !board[x, y].ball.IsWall())
                     {
                         realBalls[x, y] = new BallData(BallType.NORMAL, board[x, y].ball.GetObjectiveType());
                     }

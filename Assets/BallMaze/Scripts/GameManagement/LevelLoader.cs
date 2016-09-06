@@ -1,8 +1,6 @@
 ﻿using BallMaze.Data;
 using BallMaze.Extensions;
 using BallMaze.GameMechanics;
-using BallMaze.Inputs;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,19 +31,23 @@ namespace BallMaze.GameManagement
                 LoadLevel(firstLevelName);
         }
 
-        public void LoadLevel(string levelName)
+        public bool LoadLevel(string levelName)
         {
-            if (LevelData.TryLoad(levelName, out currentData))
+            LevelData newData;
+            if (LevelData.TryLoad(levelName, out newData))
             {
-                levelNameField.text = currentData.name;
+                currentData = newData;
+                levelNameField.text = currentData.Name;
                 SetData(currentData);
             }
             else
             {
                 Debug.LogError("Didn't succed in loading the following level : " + levelName);
+                return false;
             }
             if (LevelChanged != null)
                 LevelChanged.Invoke();
+            return true;
         }
 
         public void SetData(LevelData levelData)
@@ -97,14 +99,14 @@ namespace BallMaze.GameManagement
 
         void _LoadNextLevel()
         {
+            bool loaded = false;
             if (currentData.HasNextLevel())
             {
-                LoadLevel(currentData.nextLevelName);
+                loaded = LoadLevel(currentData.nextLevelName);
             }
-            else
+            if (!CreatorMode && !loaded)
             {
-                if (!CreatorMode)
-                    EndOfGame();
+                EndOfGame();
             }
         }
 

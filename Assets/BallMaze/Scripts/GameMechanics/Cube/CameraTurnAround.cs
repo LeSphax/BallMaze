@@ -121,7 +121,7 @@ public class CameraTurnAround : MonoBehaviour
     public static CubeFace GetFace(Vector3 rotation)
     {
         Vector3 forward = Quaternion.Euler(rotation) * Vector3.forward;
-        float treshold = 0.1f;
+        float treshold = 1.0f;
         if (Vector3.Angle(forward, Vector3.right) < treshold)
         {
             return CubeFace.MX;
@@ -148,7 +148,7 @@ public class CameraTurnAround : MonoBehaviour
         }
         else
         {
-            Debug.LogError("The camera should be aligned with a face");
+            Debug.LogError("The camera should be aligned with a face, the angle is " + Vector3.Angle(forward, Vector3.forward));
             return CubeFace.NONE;
         }
     }

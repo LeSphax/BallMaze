@@ -180,7 +180,7 @@ namespace BallMaze.LevelCreation
             {
                 state = State.EDIT_GRID;
                 previousLevelNameField.text = level.previousLevelName;
-                levelNameField.text = level.name;
+                levelNameField.text = level.Name;
                 nextLevelNameField.text = level.nextLevelName;
                 numberMovesField.text = level.numberMoves.ToString();
                 switch (level.firstObjective)

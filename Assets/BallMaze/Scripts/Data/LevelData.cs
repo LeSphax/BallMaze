@@ -15,7 +15,19 @@ namespace BallMaze.Data
     {
         public string previousLevelName;
         [XmlIgnore]
-        public string name;
+        private string fileName;
+        public virtual string Name
+        {
+            get
+            {
+                return fileName;
+            }
+            set
+            {
+                fileName = value;
+            }
+        }
+
         public string nextLevelName;
         protected abstract PuzzleData puzzleData
         {
@@ -52,7 +64,7 @@ namespace BallMaze.Data
         private void InitData(PuzzleData data, string name, string nextLevelName)
         {
             this.puzzleData = data;
-            this.name = name;
+            this.fileName = name;
             this.nextLevelName = nextLevelName;
         }
 
@@ -164,7 +176,7 @@ namespace BallMaze.Data
             StringReader reader = new StringReader(textAsset.text);
             XmlSerializer xs = new XmlSerializer(type);
             levelData = (LevelData)xs.Deserialize(reader);
-            levelData.name = fileName;
+            levelData.Name = fileName;
             return true;
         }
 
@@ -190,6 +202,7 @@ namespace BallMaze.Data
 
             if (successfullLoad)
             {
+                levelData.Name = fileName;
                 if (levelData.puzzleData.IsValid())
                     return true;
                 else

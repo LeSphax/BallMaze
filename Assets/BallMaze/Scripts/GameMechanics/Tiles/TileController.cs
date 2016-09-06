@@ -59,6 +59,14 @@ namespace BallMaze.GameMechanics.Tiles
             return view.GetFillingAnimation(duration);
         }
 
+        public void Fill(bool fill = true)
+        {
+            if (fill)
+                GetFillingAnimation(0).StartAnimating();
+            else
+                GetFillingAnimation(0).StartReverseAnimating();
+        }
+
         public ObjectiveType GetObjectiveType()
         {
             return objectiveType;

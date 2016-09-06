@@ -34,6 +34,11 @@ namespace BallMaze.GameMechanics
             return true;
         }
 
+        public virtual bool IsWall()
+        {
+            return false;
+        }
+
         public virtual void Move(Direction direction)
         {
             throw new NotImplementedException();

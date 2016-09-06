@@ -12,6 +12,8 @@ public class CubeModel : MonoBehaviour
     public BallData[,,] balls;
     public TileData[,,] faces;
 
+    public List<ObjectiveType> filledObjectives;
+
     public event CubeChanged HasChanged;
 
     public int[] sizes
@@ -71,6 +73,7 @@ public class CubeModel : MonoBehaviour
 
     internal void SetData(CubeData data)
     {
+        filledObjectives = new List<ObjectiveType>();
         balls = data.balls;
         faces = data.faces;
 
@@ -92,7 +95,7 @@ public class CubeModel : MonoBehaviour
 
         slice.rotation = faceRotation;
         slice.face = face;
-        slice.SetData(data);
+        slice.SetData(data,filledObjectives);
     }
 
     private static int GetFaceRotation(CubeFace face, Vector3 rotation)
@@ -154,6 +157,9 @@ public class CubeModel : MonoBehaviour
         return result;
     }
 
+    //Get the new ball positions from the slice and place the balls to their new positions
+    // It relies on the fact that any balltype/objectiveType combiantion is only present once.
+    //If a level has two balls exactly similar, this function may not work anymore
     public void SetNewBallPositions(SliceBoard slice)
     {
         Dictionary<BallData, Coords> currentPositions = new Dictionary<BallData, Coords>();
@@ -164,24 +170,36 @@ public class CubeModel : MonoBehaviour
                         currentPositions.Add(balls[x, y, z], new Coords(x, y, z));
 
         FaceModel faceModel = FaceModel.ModelsDictionary[slice.face];
-        foreach (var pair in slice.GetBallsPositions())
+
+        var newPositions = slice.GetBallsPositions();
+        var filledTiles = slice.GetFilledTiles();
+        foreach (var pair in currentPositions)
         {
-            Coords oldPosition;
-            if (currentPositions.TryGetValue(pair.Key, out oldPosition))
+            Coords newPosition;
+            if (newPositions.TryGetValue(pair.Key, out newPosition))
             {
                 Coords realPosition = new Coords();
-                realPosition[faceModel.axes[0]] = pair.Value.x;
-                realPosition[faceModel.axes[1]] = pair.Value.y;
-                realPosition[faceModel.axes[2]] = oldPosition[faceModel.axes[2]];
+                realPosition[faceModel.axes[0]] = newPosition.x;
+                realPosition[faceModel.axes[1]] = newPosition.y;
+                realPosition[faceModel.axes[2]] = pair.Value[faceModel.axes[2]];
 
-                balls.Set(oldPosition, BallData.GetEmptyBall());
+                balls.Set(pair.Value, BallData.GetEmptyBall());
                 balls.Set(realPosition, pair.Key);
                 
             }
             else
             {
-                Debug.LogError("All the balls in the slice should also be in the ");
+                if (filledTiles.Contains(pair.Key.ObjectiveType))
+                {
+                    balls.Set(pair.Value, BallData.GetEmptyBall());
+                    filledObjectives.Add(pair.Key.ObjectiveType);
+                }
+                //else
+                //{
+                //    Debug.LogError("Balls without ObjectiveType shouldn't disappear | BallData:" + pair.Key+ " Coords " + pair.Value);
+                //}
             }
+            
         }
         HasChanged.Invoke(this);
     }

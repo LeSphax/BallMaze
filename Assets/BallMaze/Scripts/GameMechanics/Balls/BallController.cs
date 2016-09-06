@@ -89,6 +89,11 @@ namespace BallMaze.GameMechanics
             return false;
         }
 
+        public virtual bool IsWall()
+        {
+            return false;
+        }
+
         public virtual Vector2 GetPosition()
         {
             return new Vector2(posX, posY);

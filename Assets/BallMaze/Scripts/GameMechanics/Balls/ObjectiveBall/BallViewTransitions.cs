@@ -70,8 +70,6 @@ namespace BallMaze.GameMechanics.ObjectiveBall
 
         public override void action(MoveCommand evt)
         {
-            Debug.Log("StockMove");
-            Debug.Log(myState);
             #if !UNITY_WP_8_1
             Assert.IsTrue(myState.GetType().IsSubclassOf(typeof(BallViewState)));
 #endif

@@ -90,7 +90,7 @@ namespace BallMaze.GameMechanics.Balls
                             default:
                                 throw new UnhandledSwitchCaseException(ballData.ObjectiveType);
                         }
-                        FloatingAnimation.AddFloatingAnimation(mesh, 1, 0.4f);
+                        //FloatingAnimation.AddFloatingAnimation(mesh, 1, 0.4f);
                         ballController = gameObject.AddComponent<ObjectiveBallController>();
                     }
                     else
