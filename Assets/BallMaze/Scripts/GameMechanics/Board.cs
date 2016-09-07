@@ -11,7 +11,7 @@ namespace BallMaze.GameMechanics
 
         protected virtual void Start()
         {
-            InputManager inputManager = GameObjects.GetInputManager();
+            PCInputManager inputManager = GameObjects.GetInputManager();
             inputManager.DirectionEvent += ReceiveDirection;
         }
 
@@ -114,7 +114,7 @@ namespace BallMaze.GameMechanics
         void OnDestroy()
         {
 
-            InputManager inputManager = GameObjects.GetInputManager();
+            PCInputManager inputManager = GameObjects.GetInputManager();
             if (inputManager != null)
                 inputManager.DirectionEvent -= ReceiveDirection;
         }

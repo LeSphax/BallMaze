@@ -39,7 +39,7 @@ namespace BallMaze.Cube
 
         void Start()
         {
-            InputManager inputManager = GameObjects.GetInputManager();
+            PCInputManager inputManager = GameObjects.GetInputManager();
             inputManager.DirectionEvent += ChangeDirection;
             inputManager.ChangePerspectiveEvent += ChangePerspective;
             GameObjects.GetLevelLoader().LevelChanged += LevelChanged;

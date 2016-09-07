@@ -16,7 +16,7 @@ public class CubeController : MonoBehaviour
     public CubeModel model;
 
     public GameObject levelPrefab;
-    private InputManager inputManager;
+    private PCInputManager inputManager;
 
     public event EmptyEventHandler LevelCompleted;
     public event EmptyEventHandler SliceCompleted;

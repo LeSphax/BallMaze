@@ -6,9 +6,9 @@ namespace BallMaze
 {
     public static class GameObjects
     {
-        public static InputManager GetInputManager()
+        public static PCInputManager GetInputManager()
         {
-            return GetTaggedComponent<InputManager>(Tags.InputManager);
+            return GetTaggedComponent<PCInputManager>(Tags.InputManager);
         }
 
         public static LevelLoader GetLevelLoader()
