@@ -1,4 +1,5 @@
-﻿using BallMaze.Inputs;
+﻿using BallMaze.Cube;
+using BallMaze.Inputs;
 using System;
 using UnityEngine;
 

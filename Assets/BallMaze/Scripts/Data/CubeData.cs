@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 public class CubeData : PuzzleData
@@ -7,6 +8,31 @@ public class CubeData : PuzzleData
     public BallData[,,] balls;
     [XmlIgnore]
     public TileData[,,] faces;
+
+    [XmlIgnore]
+    public Dictionary<ObjectiveType, int> _objectives;
+    [XmlIgnore]
+    public Dictionary<ObjectiveType, int> Objectives
+    {
+        get
+        {
+            if (_objectives == null)
+            {
+                _objectives = new Dictionary<ObjectiveType, int>();
+                foreach (BallData ball in balls)
+                {
+                    if (ball.ObjectiveType != ObjectiveType.NONE)
+                    {
+                        if (_objectives.ContainsKey(ball.ObjectiveType))
+                            _objectives[ball.ObjectiveType] += 1;
+                        else
+                            _objectives.Add(ball.ObjectiveType, 1);
+                    }
+                }
+            }
+            return _objectives;
+        }
+    }
 
     //For Xml Serialisation
     public CubeData()

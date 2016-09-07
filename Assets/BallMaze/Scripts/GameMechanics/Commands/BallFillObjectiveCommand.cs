@@ -1,5 +1,6 @@
 ﻿using BallMaze.GameManagement;
 using BallMaze.GameMechanics.Tiles;
+using BallMaze.GameMechanics.Turns;
 using UnityEngine;
 
 namespace BallMaze.GameMechanics.Commands
@@ -9,18 +10,21 @@ namespace BallMaze.GameMechanics.Commands
 
         private IBallController ball;
         private TileController tile;
+        private Turn turn;
         private bool wasUseful = false;
 
-        public BallFillObjectiveCommand(IBallController ball, TileController tile)
+        public BallFillObjectiveCommand(Turn turn, IBallController ball, TileController tile)
         {
             this.ball = ball;
             this.tile = tile;
+            this.turn = turn;
         }
 
         public override void Execute()
         {
             if (tile.TryFillTile())
             {
+                turn.objectivesFilled.Add(ball.GetObjectiveType());
                 wasUseful = true;
                 ball.FinishedAnimating += new EmptyEventHandler(RaiseFinishedExecuting);
                 //GameObject.FindGameObjectWithTag(Tags.LevelController).GetComponent<LevelManager>().NotifyFilledObjective(tile.GetObjectiveType());

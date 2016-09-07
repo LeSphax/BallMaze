@@ -1,30 +1,38 @@
 ﻿using BallMaze.Data;
-using BallMaze.GameMechanics.Tiles;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace BallMaze.GameMechanics
 {
+    public delegate void ObjectiveListHandler(List<ObjectiveType> list);
+
     public class SliceBoard : PlayBoard
     {
+        public event ObjectiveListHandler NotifyObjectivesFilled;
+
         public CubeFace face;
+
         public int rotation
         {
             set;
             private get;
         }
 
-        public void PrintData()
+        protected override void FinishTurn()
         {
-            Debug.Log(boardData);
+            if (currentTurn.objectivesFilled.Count > 0)
+            {
+                NotifyObjectivesFilled.Invoke(currentTurn.objectivesFilled);
+            }
+            base.FinishTurn();
         }
 
-        protected override bool CheckIfWon()
+        protected override bool CheckLevelFinished()
         {
             return false;
         }
 
-        public void SetData(BoardData data, List<ObjectiveType> filledObjectives)
+        public void SetData(BoardData data, Dictionary<ObjectiveType, bool> filledObjectives)
         {
             base.SetData(data);
             foreach(BoardPosition position in board)
@@ -41,6 +49,7 @@ namespace BallMaze.GameMechanics
                 ObjectiveType objectiveType = position.tile.GetObjectiveType();
                 if (objectiveType != ObjectiveType.NONE && position.tile.IsFilled())
                 {
+                    Debug.Log(objectiveType + "    " + position.ball.GetPosition());
                     list.Add(objectiveType);
                 }
             }

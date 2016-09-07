@@ -3,11 +3,10 @@ using BallMaze.GameMechanics.Tiles;
 using BallMaze.Inputs;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace BallMaze.GameMechanics.Turns
 {
-    class Turn
+    public class Turn
     {
         public event EmptyEventHandler FinishedPlaying;
         private enum State
@@ -29,6 +28,8 @@ namespace BallMaze.GameMechanics.Turns
         private Stack<BallFillObjectiveCommand> objectiveCommands;
         private Stack<EffectActivationCommand> effectActivationCommands;
         private List<AbstractBallCommand> executingCommands;
+
+        public List<ObjectiveType> objectivesFilled = new List<ObjectiveType>();
 
         public Turn(Board model)
         {
@@ -311,7 +312,7 @@ namespace BallMaze.GameMechanics.Turns
                     TileController tile = model.GetTile(x, y);
                     if (ball.GetObjectiveType() != ObjectiveType.NONE && ball.GetObjectiveType() == tile.GetObjectiveType())
                     {
-                        BallFillObjectiveCommand command = new BallFillObjectiveCommand(ball, tile);
+                        BallFillObjectiveCommand command = new BallFillObjectiveCommand(this,ball, tile);
                         PrepareBrickFillObjective(command);
                     }
                 }

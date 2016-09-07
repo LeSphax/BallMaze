@@ -51,7 +51,7 @@ namespace BallMaze.GameManagement
 
         internal override void LevelFinished()
         {
-            GameObject.FindGameObjectWithTag(Tags.BallMazeController).GetComponent<LevelLoader>().LoadNextLevel();
+            GameObject.FindGameObjectWithTag(Tags.BallMazeController).GetComponent<LevelLoader>().LoadNextLevelDelayed();
         }
     }
 }

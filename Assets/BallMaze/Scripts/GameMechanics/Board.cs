@@ -62,10 +62,9 @@ namespace BallMaze.GameMechanics
             }
         }
 
-        internal void ReceiveDirection(Direction direction, bool moveBoard)
+        internal void ReceiveDirection(Direction direction)
         {
-            if (moveBoard)
-                ReceiveInputCommand(new MoveCommand(direction));
+            ReceiveInputCommand(new MoveCommand(direction));
         }
 
         internal virtual void ReceiveInputCommand(BoardInputCommand inputCommand)

@@ -6,9 +6,9 @@ namespace BallMaze.GameMechanics.ObjectiveBall
     {
         internal ObjectiveBallView view;
 
-        public BallViewStateMachine(ObjectiveBallView view) : base()
+        void Awake()
         {
-            this.view = view;
+            view = GetComponent<ObjectiveBallView>();
         }
 
         internal override State<BallViewStateMachine, BallViewEvent> DefineFirst()

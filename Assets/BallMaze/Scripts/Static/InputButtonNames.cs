@@ -13,5 +13,7 @@ class InputButtonNames
     internal static string RESET = "RESET";
     internal static string CANCEL = "Cancel";
     internal static string RETURN = "RETURN";
+
+    public const string CHANGE_PERSPECTIVE = "CHANGE_PERSPECTIVE";
 }
 

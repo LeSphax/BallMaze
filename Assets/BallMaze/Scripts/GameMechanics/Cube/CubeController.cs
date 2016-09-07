@@ -1,4 +1,5 @@
 ﻿using BallMaze;
+using BallMaze.Cube;
 using BallMaze.GameMechanics;
 using BallMaze.Inputs;
 using UnityEngine;
@@ -17,17 +18,20 @@ public class CubeController : MonoBehaviour
     public GameObject levelPrefab;
     private InputManager inputManager;
 
+    public event EmptyEventHandler LevelCompleted;
+    public event EmptyEventHandler SliceCompleted;
+
     void Awake()
     {
         model.HasChanged += RefreshView;
+        model.LevelCompleted += RaiseLevelCompleted;
     }
 
     void Start()
     {
         inputManager = GameObjects.GetInputManager();
-        model.SetDummyCubeModel();
-        CameraTurnAround cameraController = GameObject.FindGameObjectWithTag(Tags.CameraController).GetComponent<CameraTurnAround>();
-        cameraController.RotationChangeStart += DestroySlice;
+        CameraController cameraController = GameObject.FindGameObjectWithTag(Tags.CameraController).GetComponent<CameraController>();
+        cameraController.PerspectiveActivated += DestroySlice;
         cameraController.RotationChanged += CreateSlice;
         cameraController.Init();
     }
@@ -36,6 +40,7 @@ public class CubeController : MonoBehaviour
     {
         currentSlice = Instantiate(levelPrefab).GetComponent<SliceBoard>();
         currentSlice.transform.SetParent(slices.transform, false);
+        currentSlice.NotifyObjectivesFilled += model.ObjectivesFilledNotification;
 
         model.SetSliceBoard(ref currentSlice, rotation);
 
@@ -77,6 +82,11 @@ public class CubeController : MonoBehaviour
         if (currentSlice != null)
             DestroyCurrentSlice(this);
         model.SetData(data);
+    }
+
+    public void RaiseLevelCompleted()
+    {
+        LevelCompleted.Invoke();
     }
 }
 

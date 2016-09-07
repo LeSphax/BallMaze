@@ -45,15 +45,6 @@ public class PerspectiveSwitcher : MonoBehaviour
         Blend();
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            orthoOn = !orthoOn;
-            Blend();
-        }
-    }
-
     private void Blend()
     {
         if (m_Camera != null)

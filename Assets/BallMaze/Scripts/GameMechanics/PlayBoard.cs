@@ -23,9 +23,11 @@ namespace BallMaze.GameMechanics
         public const float TURN_DURATION = 0.2f;
 
         private Stack<Turn> history;
-        private Turn currentTurn;
+        protected Turn currentTurn;
 
         private Queue<BoardInputCommand> inputs;
+
+        public Dictionary<ObjectiveType, bool> objectivesFilled;
 
 
         internal override void ReceiveInputCommand(BoardInputCommand inputCommand)
@@ -74,7 +76,7 @@ namespace BallMaze.GameMechanics
             PlayTurn(Direction.NONE);
         }
 
-        private void FinishTurn()
+        protected virtual void FinishTurn()
         {
             if (state == State.PLAYING_TURN && currentTurn.WasUseful())
             {
@@ -82,7 +84,7 @@ namespace BallMaze.GameMechanics
             }
             state = State.IDLE;
             currentTurn = null;
-            if (!CheckIfWon() && inputs.Count > 0)
+            if (!CheckLevelFinished() && inputs.Count > 0)
             {
                 BoardInputCommand command = inputs.Dequeue();
                 command.SetModel(this);
@@ -159,7 +161,7 @@ namespace BallMaze.GameMechanics
             turn.UnPlay();
         }
 
-        protected virtual bool CheckIfWon()
+        protected virtual bool CheckLevelFinished()
         {
             bool won = true;
             for (int x = 0; x < Width; x++)
@@ -175,7 +177,6 @@ namespace BallMaze.GameMechanics
             if (won)
             {
                 state = State.WON;
-                GetComponent<LevelManager>().LevelFinished();
             }
             return won;
         }

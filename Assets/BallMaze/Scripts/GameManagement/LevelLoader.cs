@@ -28,7 +28,10 @@ namespace BallMaze.GameManagement
         void Awake()
         {
             if (!CreatorMode)
+            {
+                Debug.Log(firstLevelName);
                 LoadLevel(firstLevelName);
+            }
         }
 
         public bool LoadLevel(string levelName)
@@ -83,12 +86,14 @@ namespace BallMaze.GameManagement
                 currentLevel = this.InstantiateAsChildren(cubeLevelPrefab);
                 cubeController = currentLevel.GetComponent<CubeController>();
             }
+            cubeController.LevelCompleted -= LoadNextLevelDelayed;
+            cubeController.LevelCompleted += LoadNextLevelDelayed;
             cubeController.SetData(data);
         }
 
-        public void LoadNextLevel()
+        public void LoadNextLevelDelayed()
         {
-            Invoke("_LoadNextLevel", 0.5f);
+            Invoke("LoadNextLevel", 0.5f);
         }
 
         public void LoadPreviousLevel()
@@ -97,13 +102,15 @@ namespace BallMaze.GameManagement
                 LoadLevel(currentData.previousLevelName);
         }
 
-        void _LoadNextLevel()
+        public void LoadNextLevel()
         {
             bool loaded = false;
             if (currentData.HasNextLevel())
             {
+                Debug.Log(currentData.nextLevelName);
                 loaded = LoadLevel(currentData.nextLevelName);
             }
+            Debug.Log(loaded);
             if (!CreatorMode && !loaded)
             {
                 EndOfGame();

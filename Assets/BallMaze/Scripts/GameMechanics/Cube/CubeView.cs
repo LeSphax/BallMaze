@@ -1,10 +1,10 @@
-﻿using BallMaze.Data;
+﻿using BallMaze.GameMechanics;
 using BallMaze.GameMechanics.Balls;
 using BallMaze.GameMechanics.Tiles;
 using System;
 using UnityEngine;
 
-namespace BallMaze.GameMechanics
+namespace BallMaze.Cube
 {
     public class CubeView : MonoBehaviour
     {
@@ -161,7 +161,7 @@ namespace BallMaze.GameMechanics
                         TileData tileData = model.faces[faceNumber, x, y];
                         exterior[faceNumber][x, y] = TileCreator.CreateTile(tileData, GetTilePosition((CubeFace)faceNumber, x, y), 1);
                         exterior[faceNumber][x, y].transform.SetParent(face.transform, false);
-                        model.filledObjectives.TryFillTile(exterior[faceNumber][x, y]);
+                        model.objectivesFilled.TryFillTile(exterior[faceNumber][x, y]);
                     }
                 }
             }

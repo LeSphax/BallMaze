@@ -4,10 +4,10 @@ using UnityEngine;
 namespace BallMaze.Inputs
 {
 
+    public delegate void DirectionEventHandler(Direction direction);
 
     public class InputManager : MonoBehaviour
-    {
-        public delegate void DirectionEventHandler(Direction direction, bool moveBoard);
+    {  
         private Board board;
 
         private enum SwipeState
@@ -24,6 +24,7 @@ namespace BallMaze.Inputs
         Vector2 currentSwipe;
 
         public event DirectionEventHandler DirectionEvent;
+        public event EmptyEventHandler ChangePerspectiveEvent;
 
         private bool moveBoard = false;
 
@@ -45,11 +46,16 @@ namespace BallMaze.Inputs
             {
                 Reset();
             }
+            else if (Input.GetButtonDown(InputButtonNames.CHANGE_PERSPECTIVE))
+            {
+                if (ChangePerspectiveEvent != null)
+                    ChangePerspectiveEvent.Invoke();
+            }
             else
             {
                 Direction direction = GetDirection();
-                if (direction != Direction.NONE)
-                    DirectionEvent.Invoke(direction, moveBoard);
+                if (direction != Direction.NONE && !moveBoard)
+                    DirectionEvent.Invoke(direction);
             }
         }
 

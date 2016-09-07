@@ -319,8 +319,8 @@
       <ArrayOfArrayOfBallData>
         <ArrayOfBallData>
           <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
+            <BallType>NORMAL</BallType>
+            <ObjectiveType>OBJECTIVE2</ObjectiveType>
           </BallData>
           <BallData>
             <BallType>EMPTY</BallType>
@@ -363,8 +363,8 @@
       <ArrayOfArrayOfBallData>
         <ArrayOfBallData>
           <BallData>
-            <BallType>NORMAL</BallType>
-            <ObjectiveType>OBJECTIVE2</ObjectiveType>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
             <BallType>EMPTY</BallType>

@@ -43,7 +43,7 @@ namespace GenericStateMachine
             return false;
         }
 
-        protected State<StateMachineType, EventType> myState;
+        protected virtual State<StateMachineType, EventType> myState { get; set; }
 
         internal Transition(State<StateMachineType, EventType> myState)
         {

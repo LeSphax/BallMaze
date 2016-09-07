@@ -17,7 +17,7 @@ namespace BallMaze.GameMechanics.ObjectiveBall
 
         void Awake()
         {
-            stateMachine = new BallViewStateMachine(this);
+            stateMachine = gameObject.AddComponent<BallViewStateMachine>();
         }
 
         public void SetTarget(Vector3 target)
