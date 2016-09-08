@@ -311,7 +311,7 @@
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
-            <BallType>EMPTY</BallType>
+            <BallType>WALL</BallType>
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
         </ArrayOfBallData>
