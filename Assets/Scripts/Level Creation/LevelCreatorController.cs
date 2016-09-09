@@ -24,106 +24,67 @@ namespace BallMaze.LevelCreation
 
         private LevelLoader levelLoader;
 
-        private GameObject grid;
+        private int currentElevation = 0;
 
-
-        private enum State
-        {
-            CREATE_CUBE,
-            EDIT_CUBE,
-            PLAY_TEST,
-        }
-        private State _state;
-        private State state
-        {
-            get
-            {
-                return _state;
-            }
-            set
-            {
-                _state = value;
-                switch (_state)
-                {
-                    case State.CREATE_CUBE:
-                        boardData.DestroyBoard();
-                        gridController.SetVisible(true);
-                        break;
-                    case State.EDIT_CUBE:
-                        gridController.SetVisible(false);
-                        //ballMaze.SetActive(false);
-                        grid.SetActive(true);
-                        break;
-                    case State.PLAY_TEST:
-                        grid.SetActive(false);
-                        //ballMaze.SetActive(true);
-                        break;
-                }
-            }
-        }
+        //private State _state;
+        //private State state
+        //{
+        //    get
+        //    {
+        //        return _state;
+        //    }
+        //    set
+        //    {
+        //        _state = value;
+        //        switch (_state)
+        //        {
+        //            case State.CREATE_CUBE:
+        //                boardData.DestroyBoard();
+        //                break;
+        //            case State.EDIT_CUBE:
+        //                break;
+        //            case State.PLAY_TEST:
+        //                break;
+        //        }
+        //    }
+        //}
 
         public const string TEMP_LEVEL_NAME = "Temp File";
 
         private EditableCubeData boardData;
-        private GridController gridController;
 
         void Start()
         {
-            grid = GameObject.FindGameObjectWithTag(Tags.Grid);
-            gridController = grid.GetComponent<GridController>();
             boardData = new EditableCubeData(cubeController);
             levelLoader = GameObjects.GetLevelLoader();
+            boardData.CreateBoard(new IntVector3(3, 3, 3));
         }
 
         void Update()
         {
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt))
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                boardData.ChangeFaceSize(CubeFace.X, 3, 4);
+                boardData.NextBall(new IntVector3(0, 0, 0));
+            }
+            else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt))
             {
                 if (Input.GetKeyDown(KeyCode.S))
                 {
                     SaveData();
                 }
-                if (Input.GetKeyDown(KeyCode.B))
+                else if (Input.GetKeyDown(KeyCode.B))
                 {
-                    state = State.CREATE_CUBE;
                 }
-                if (Input.GetKeyDown(KeyCode.R))
+                else if (Input.GetKeyDown(KeyCode.R))
                 {
                     boardData.ResetBoard();
-                    state = State.CREATE_CUBE;
                 }
             }
-        }
-
-        public void PlayTestButtonHandler()
-        {
-            switch (state)
-            {
-                case State.CREATE_CUBE:
-                    break;
-                case State.EDIT_CUBE:
-                    StartPlayTest();
-                    break;
-                case State.PLAY_TEST:
-                    StopPlayTest();
-                    break;
-            }
-        }
-
-        private void StartPlayTest()
-        {
-            state = State.PLAY_TEST;
-            SaveDataForPlay();
-            levelLoader.LoadLevel(TEMP_LEVEL_NAME);
-        }
-
-        private void StopPlayTest()
-        {
-            state = State.EDIT_CUBE;
-            LevelData level;
-            LevelData.TryLoad(TEMP_LEVEL_NAME, out level);
-            Assert.IsTrue(level is CubeLevelData);
-            boardData.SetData(((CubeLevelData)level).data);
+            else if (Input.GetKeyDown(KeyCode.A))
+                currentElevation = Functions.mod(currentElevation - 1, 3);
+            else if (Input.GetKeyDown(KeyCode.E))
+                currentElevation = Functions.mod(currentElevation + 1, 3);
         }
 
         private void ActivatePopUp(bool open)
@@ -143,6 +104,7 @@ namespace BallMaze.LevelCreation
             string levelName = levelNameField.text;
             if (levelName == "")
             {
+                Debug.LogWarning("The level needs a name");
                 levelNameField.Select();
                 return false;
             }
@@ -180,9 +142,8 @@ namespace BallMaze.LevelCreation
             LevelData level;
             if (LevelData.TryLoad(levelName, out level))
             {
-                state = State.EDIT_CUBE;
                 previousLevelNameField.text = level.previousLevelName;
-                levelNameField.text = level.Name;
+                levelNameField.text = level.fileName;
                 nextLevelNameField.text = level.nextLevelName;
                 numberMovesField.text = level.numberMoves.ToString();
                 switch (level.firstObjective)
@@ -220,55 +181,59 @@ namespace BallMaze.LevelCreation
         //    }
         //}
 
-        //public void OnGridClick(int x, int y)
-        //{
-        //    switch (state)
-        //    {
-        //        case State.CREATE_CUBE:
-        //            state = State.EDIT_CUBE;
-        //            break;
-        //        case State.EDIT_CUBE:
-        //            if (x < boardData.X_SIZE && y < boardData.Y_SIZE)
-        //            {
-        //                MapClicksToCreation(x, y);
-        //            }
-        //            break;
-        //    }
-        //}
+        public void OnTileClick(CubeFace face, int x, int y)
+        {
+            Debug.Log("OnTileClick " + face + "    " + x + "   " + y);
 
-        //private void MapClicksToCreation(int x, int y)
-        //{
-        //    if (Input.GetMouseButton(0))
-        //    {
-        //        if (Input.GetKey(KeyCode.LeftControl))
-        //        {
-        //            boardData.NextBall(x, y);
-        //        }
-        //        else if (Input.GetKey(KeyCode.LeftAlt))
-        //        {
-        //            boardData.NextTileType(x, y);
-        //        }
-        //        else
-        //        {
-        //            boardData.NextTileObjective(x, y);
-        //        }
-        //    }
-        //    else if (Input.GetMouseButton(1))
-        //    {
-        //        if (Input.GetKey(KeyCode.LeftControl))
-        //        {
-        //            boardData.PreviousBall(x, y);
-        //        }
-        //        else if (Input.GetKey(KeyCode.LeftAlt))
-        //        {
-        //            boardData.PreviousTileType(x, y);
-        //        }
-        //        else
-        //        {
-        //            boardData.PreviousTileObjective(x, y);
-        //        }
-        //    }
-        //}
+            IntVector3 position = FaceModel.ModelsDictionary[face].GetRealCoords(new IntVector3(x, y, currentElevation), boardData.Sizes);
+            Debug.Log(position);
+            if (position.x < boardData.X_SIZE && position.y < boardData.Y_SIZE && position.z < boardData.Z_SIZE)
+            {
+                Debug.Log("InCube");
+                MapClicksToCreation(face, x, y, position);
+            }
+            else
+            {
+                Debug.Log(position.x < boardData.X_SIZE);
+                Debug.Log(position.y < boardData.Y_SIZE);
+                Debug.Log(position.z < boardData.Z_SIZE);
+            }
+
+        }
+
+        private void MapClicksToCreation(CubeFace face, int x, int y, IntVector3 position)
+        {
+            if (Input.GetMouseButton(0))
+            {
+                if (Input.GetKey(KeyCode.LeftControl))
+                {
+                    boardData.NextBall(position);
+                }
+                else if (Input.GetKey(KeyCode.LeftAlt))
+                {
+                    boardData.NextTileType((int)face, x, y);
+                }
+                else
+                {
+                    boardData.NextTileObjective((int)face, x, y);
+                }
+            }
+            else if (Input.GetMouseButton(1))
+            {
+                if (Input.GetKey(KeyCode.LeftControl))
+                {
+                    boardData.PreviousBall(position);
+                }
+                else if (Input.GetKey(KeyCode.LeftAlt))
+                {
+                    boardData.PreviousTileType((int)face, x, y);
+                }
+                else
+                {
+                    boardData.PreviousTileObjective((int)face, x, y);
+                }
+            }
+        }
 
         public void LoadPrevious()
         {

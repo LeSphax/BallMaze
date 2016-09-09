@@ -45,7 +45,6 @@ public class CubeLevelData : LevelData
 
     protected override void Serialize(string path)
     {
-        path += FILE_EXTENSION;
         Saving.Save(path, this);
     }
 }

@@ -151,12 +151,12 @@ namespace BallMaze.Cube
         //If a level has two balls exactly similar, this function may not work anymore
         public void SetNewBallPositions(SliceBoard slice)
         {
-            Dictionary<BallData, Coords> currentPositions = new Dictionary<BallData, Coords>();
+            Dictionary<BallData, IntVector3> currentPositions = new Dictionary<BallData, IntVector3>();
             for (int x = 0; x < X_SIZE; x++)
                 for (int y = 0; y < Y_SIZE; y++)
                     for (int z = 0; z < Z_SIZE; z++)
                         if (balls[x, y, z].BallType == BallType.NORMAL)
-                            currentPositions.Add(balls[x, y, z], new Coords(x, y, z));
+                            currentPositions.Add(balls[x, y, z], new IntVector3(x, y, z));
 
             FaceModel faceModel = FaceModel.ModelsDictionary[slice.face];
 
@@ -170,10 +170,10 @@ namespace BallMaze.Cube
             }
             foreach (var pair in currentPositions)
             {
-                Coords newPosition;
+                IntVector3 newPosition;
                 if (newPositions.TryGetValue(pair.Key, out newPosition))
                 {
-                    Coords realPosition = new Coords();
+                    IntVector3 realPosition = new IntVector3();
                     realPosition[faceModel.axes[0]] = newPosition.x;
                     realPosition[faceModel.axes[1]] = newPosition.y;
                     realPosition[faceModel.axes[2]] = pair.Value[faceModel.axes[2]];

@@ -47,6 +47,10 @@ namespace BallMaze.GameMechanics.Tiles
         {
             GameObject mesh;
             GameObject tile = new GameObject();
+            //if (GameObjects.GetGameState().LevelEditor)
+            //{
+            //    tile.AddComponent<MouseClickDetection>
+            //}
             tile.transform.localPosition = position;
             TileController tileController = null;
             switch (tileData.ObjectiveType)

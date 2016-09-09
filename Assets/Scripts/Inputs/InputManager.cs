@@ -44,7 +44,7 @@ namespace BallMaze.Inputs {
 
         public void Reset()
         {
-            board.ReceiveInputCommand(new ResetCommand());
+            //board.ReceiveInputCommand(new ResetCommand());
         }
 
         public void LoadPreviousLevel()

@@ -15,7 +15,7 @@ namespace BallMaze.Data
     {
         public string previousLevelName;
         [XmlIgnore]
-        private string fileName;
+        public string fileName;
         public virtual string Name
         {
             get
@@ -87,6 +87,7 @@ namespace BallMaze.Data
 
         public bool Save(string fileName, bool force = false)
         {
+            Debug.Log(fileName);
 #if UNITY_EDITOR
             SaveToResources(fileName, force);
 

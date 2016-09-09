@@ -10,6 +10,14 @@ namespace BallMaze.GameMechanics.Tiles
         protected TileView view;
         protected ATileEffectStrategy effectManager;
 
+        public GameObject Mesh
+        {
+            get
+            {
+                return view.Mesh;
+            }
+        }
+
         public bool IsOpen
         {
             get

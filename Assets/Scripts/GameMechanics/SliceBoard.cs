@@ -57,7 +57,7 @@ namespace BallMaze.GameMechanics
             return list;
         }
 
-        public Dictionary<BallData, Coords> GetBallsPositions()
+        public Dictionary<BallData, IntVector3> GetBallsPositions()
         {
             BallData[,] realBalls = new BallData[Width,Height];
             for (int x = 0; x < Width; x++)
@@ -80,14 +80,14 @@ namespace BallMaze.GameMechanics
 
             if (faceModel.mirrorAxis != -1)
                 realBalls = realBalls.Mirror(faceModel.mirrorAxis);
-            Dictionary<BallData, Coords> result = new Dictionary<BallData, Coords>();
+            Dictionary<BallData, IntVector3> result = new Dictionary<BallData, IntVector3>();
             for (int x = 0; x < Width; x++)
             {
                 for (int y = 0; y < Height; y++)
                 {
                     if (realBalls[x, y].BallType == BallType.NORMAL)
                     {
-                        Coords point = new Coords(x, y);
+                        IntVector3 point = new IntVector3(x, y);
                         result.Add(realBalls[x, y], point);
                     }
                 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <CubeLevelData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <previousLevelName>CubeLevel1</previousLevelName>
-  <nextLevelName>CubeLevel2</nextLevelName>
+  <previousLevelName />
+  <nextLevelName />
   <numberMoves>0</numberMoves>
   <firstObjective>NONE</firstObjective>
-  <data>
+  <data xsi:type="EditableCubeData">
     <serializedTiles>
       <ArrayOfArrayOfTileData>
         <ArrayOfTileData>
@@ -237,7 +237,7 @@
             <TileType>NORMAL</TileType>
           </TileData>
           <TileData>
-            <ObjectiveType>OBJECTIVE1</ObjectiveType>
+            <ObjectiveType>NONE</ObjectiveType>
             <TileType>NORMAL</TileType>
           </TileData>
         </ArrayOfTileData>
@@ -275,50 +275,6 @@
       <ArrayOfArrayOfBallData>
         <ArrayOfBallData>
           <BallData>
-            <BallType>NORMAL</BallType>
-            <ObjectiveType>OBJECTIVE1</ObjectiveType>
-          </BallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-        </ArrayOfBallData>
-        <ArrayOfBallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-          <BallData>
-            <BallType>WALL</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-        </ArrayOfBallData>
-        <ArrayOfBallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-        </ArrayOfBallData>
-      </ArrayOfArrayOfBallData>
-      <ArrayOfArrayOfBallData>
-        <ArrayOfBallData>
-          <BallData>
             <BallType>EMPTY</BallType>
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
@@ -337,7 +293,7 @@
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
-            <BallType>WALL</BallType>
+            <BallType>EMPTY</BallType>
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
@@ -381,7 +337,51 @@
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
-            <BallType>WALL</BallType>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+        </ArrayOfBallData>
+        <ArrayOfBallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+        </ArrayOfBallData>
+      </ArrayOfArrayOfBallData>
+      <ArrayOfArrayOfBallData>
+        <ArrayOfBallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+        </ArrayOfBallData>
+        <ArrayOfBallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
@@ -406,4 +406,5 @@
       </ArrayOfArrayOfBallData>
     </serializedBalls>
   </data>
+  <Name>qd@CubeLevel1</Name>
 </CubeLevelData>

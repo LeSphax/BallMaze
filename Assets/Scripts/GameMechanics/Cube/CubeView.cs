@@ -159,12 +159,26 @@ namespace BallMaze.Cube
                     for (int y = 0; y < heightFace; y++)
                     {
                         TileData tileData = model.faces[faceNumber][x, y];
-                        exterior[faceNumber][x, y] = TileCreator.CreateTile(tileData, GetTilePosition((CubeFace)faceNumber, x, y), 1);
-                        exterior[faceNumber][x, y].transform.SetParent(face.transform, false);
-                        model.objectivesFilled.TryFillTile(exterior[faceNumber][x, y]);
+                        TileController tile = TileCreator.CreateTile(tileData, GetTilePosition((CubeFace)faceNumber, x, y), SizeRatio);
+                        tile.transform.SetParent(face.transform, false);
+                        //
+                        if (GameObjects.GetGameState().LevelEditor)
+                        {
+                            EditorTile editorTile = tile.Mesh.AddComponent<EditorTile>();
+                            editorTile.Init((CubeFace)faceNumber, x, y);
+                            editorTile.GridTileClickEvent += GameObjects.GetLevelCreatorController().OnTileClick;
+                        }
+                        model.objectivesFilled.TryFillTile(tile);
+                        //
+                        exterior[faceNumber][x, y] = tile;
                     }
                 }
             }
+        }
+
+        public void TileClicked(CubeFace face, int posX, int posY)
+        {
+
         }
 
         private void CreateBalls(CubeModel data)
@@ -175,7 +189,7 @@ namespace BallMaze.Cube
                 {
                     for (int z = 0; z < data.Z_SIZE; z++)
                     {
-                        IBallController ball = BallCreator.GetBall(data.balls[x, y, z], 1, false);
+                        IBallController ball = BallCreator.GetBall(data.balls[x, y, z], SizeRatio, false);
                         ball.Init(x, y, z, this);
 
 

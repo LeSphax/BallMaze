@@ -75,18 +75,19 @@ public class CubeController : MonoBehaviour
         currentView.GetComponent<CubeView>().RefreshView(model);
     }
 
-    public void SetData(CubeData data)
+    public void SetData(CubeData data, bool cameraReset = true)
     {
         if (currentSlice != null)
             DestroyCurrentSlice(this);
         model.SetData(data);
-        Debug.Log("SetData");
-        cameraController.Init();
+        if (cameraReset)
+            cameraController.Init();
     }
 
     public void RaiseLevelCompleted()
     {
-        LevelCompleted.Invoke();
+        if (!GameObjects.GetGameState().LevelEditor)
+            LevelCompleted.Invoke();
     }
 }
 

@@ -81,5 +81,31 @@ namespace BallMaze.Cube
                     throw new UnhandledSwitchCaseException(face);
             }
         }
+
+        public IntVector3 GetRealSizes(int x, int y, int z)
+        {
+            IntVector3 result = new IntVector3();
+            result[axes[0]] = x;
+            result[axes[1]] = y;
+            result[axes[2]] = z;
+            return result;
+        }
+
+        public IntVector3 GetRealCoords(IntVector3 coords, IntVector3 sizes)
+        {
+            IntVector3 result = new IntVector3();
+            if (inverseZ)
+            {
+                coords.z = sizes[axes[2]] - coords.z - 1;
+            }
+            if (mirrorAxis != -1)
+            {
+                coords[mirrorAxis] = sizes[axes[mirrorAxis]] - coords[mirrorAxis] - 1;
+            }
+            result[axes[0]] = coords.x;
+            result[axes[1]] = coords.y;
+            result[axes[2]] = coords.z;
+            return result;
+        }
     }
 }

@@ -17,6 +17,12 @@ public static class Functions
         return (x % m + m) % m;
     }
 
+    public static int mod(this int x, int m)
+    {
+        return (x % m + m) % m;
+    }
+
+
 
     public static int Inverse(int value, int size, bool inverse)
     {

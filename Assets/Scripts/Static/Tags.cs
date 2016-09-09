@@ -17,5 +17,7 @@ namespace BallMaze
 
         public const string CameraController = "CameraController";
         public const string InputManager = "InputManager";
+
+        public const string EditorController = "EditorController";
     }
 }

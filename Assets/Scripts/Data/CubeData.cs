@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 
+[XmlInclude(typeof(EditableCubeData))]
 public class CubeData : PuzzleData
 {
     [XmlIgnore]
@@ -52,8 +53,9 @@ public class CubeData : PuzzleData
         get
         {
             TileData[][][] result = new TileData[6][][];
-            foreach (var item in faces.Select((value, i) => new { i, value })) {
-                result[item.i] = item.value.ToJaggedArray(); 
+            foreach (var item in faces.Select((value, i) => new { i, value }))
+            {
+                result[item.i] = item.value.ToJaggedArray();
             }
             return result;
         }
@@ -128,4 +130,3 @@ public class CubeData : PuzzleData
         return true;
     }
 }
-

@@ -1,6 +1,6 @@
 ﻿using Utilities;
 
-public struct Coords
+public struct IntVector3
 {
     private int[] coords;
 
@@ -40,7 +40,7 @@ public struct Coords
         }
     }
 
-    public Coords(int p1=0, int p2=0, int p3=0)
+    public IntVector3(int p1 = 0, int p2 = 0, int p3 = 0)
     {
         coords = new int[3];
         this[Axis.X] = p1;
@@ -54,7 +54,8 @@ public struct Coords
         {
             return coords[(int)i];
         }
-        set {
+        set
+        {
             if (coords == null)
             {
                 coords = new int[3];
@@ -63,8 +64,45 @@ public struct Coords
         }
     }
 
+    public int this[int i]
+    {
+        get
+        {
+            return coords[i];
+        }
+        set
+        {
+            if (coords == null)
+            {
+                coords = new int[3];
+            }
+            coords[i] = value;
+        }
+    }
+
     public override string ToString()
     {
         return coords.Print();
+    }
+
+    public static IntVector3 zero
+    {
+        get
+        {
+            return new IntVector3(0, 0, 0);
+        }
+    }
+
+    public static IntVector3 one
+    {
+        get
+        {
+            return new IntVector3(1,1,1);
+        }
+    }
+
+    public static IntVector3 operator *(IntVector3 vector, int y)
+    {
+        return new IntVector3(vector.x * y, vector.y * y, vector.z * y);
     }
 }

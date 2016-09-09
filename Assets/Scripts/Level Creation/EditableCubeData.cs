@@ -1,140 +1,180 @@
-﻿using BallMaze.Cube;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Assertions;
+﻿
+using BallMaze.Cube;
 
-namespace BallMaze.Cube
+public class EditableCubeData : CubeData
 {
-    public class EditableCubeData : CubeData
+    private const int XSize_MAX = 10;
+    private const int YSize_MAX = 10;
+
+    private bool initialised;
+    internal CubeController cubeController;
+
+    private TileData[][,] oldFaces = new TileData[6][,];
+    private BallData[,,] oldBalls = new BallData[0, 0, 0];
+
+    public IntVector3 Sizes
     {
-        private const int XSize_MAX = 10;
-        private const int YSize_MAX = 10;
-        internal CubeController cubeController;
-
-        private TileData[][,] oldFaces = new TileData[6][,];
-        private BallData[,,] oldBalls = new BallData[0, 0, 0];
-
-        public EditableCubeData()
+        get
         {
-
+            return new IntVector3(balls.GetLength(0), balls.GetLength(1), balls.GetLength(2));
         }
+    }
 
-        internal EditableCubeData(CubeController controller)
+    public int X_SIZE
+    {
+        get
         {
-            cubeController = controller;
-
+            return balls.GetLength(0);
         }
+    }
 
-        public void DestroyBoard()
+    public int Y_SIZE
+    {
+        get
         {
-            SaveBoard();
-            ResetBoard();
+            return balls.GetLength(1);
         }
+    }
 
-        private void SaveBoard()
+    public int Z_SIZE
+    {
+        get
         {
-            oldFaces = faces;
-            oldBalls = balls;
+            return balls.GetLength(1);
         }
+    }
+    public EditableCubeData()
+    {
+    }
 
-        public void ResetBoard()
+    internal EditableCubeData(CubeController controller)
+    {
+        cubeController = controller;
+        for (int i = 0; i < FaceModel.NUMBER_FACES; i++)
         {
-            faces = TileData.GetEmptyFaceArray(new int[] { 0, 0, 0 });
-            balls = BallData.GetEmptyBallDataMatrix(0, 0, 0);
+            oldFaces[i] = new TileData[0, 0];
         }
+    }
 
-        public void CreateBoard(int XSize, int YSize, int ZSize)
-        {
-            Assert.IsTrue(oldFaces.GetLength(0) == oldBalls.GetLength(0) && oldFaces.GetLength(1) == oldBalls.GetLength(1));
-            faces = TileData.GetEmptyFaceArray(new int[] { XSize, YSize, ZSize }, oldFaces);
-            balls = InitBalls(XSize, YSize, ZSize);
-            InitBalls(XSize, YSize, ZSize);
-            UpdateModel();
-        }
+    public void DestroyBoard()
+    {
+        SaveBoard();
+        ResetBoard();
+    }
 
-        private BallData[,,] InitBalls(int XSize, int YSize, int ZSize)
+    private void SaveBoard()
+    {
+        oldFaces = faces;
+        oldBalls = balls;
+    }
+
+    public void ResetBoard()
+    {
+        oldFaces = TileData.GetEmptyFaceArray(new IntVector3(0, 0, 0));
+        oldBalls = BallData.GetEmptyBallDataMatrix(0, 0, 0);
+        CreateBoard(IntVector3.one *3);
+        UpdateModel();
+    }
+
+    public void CreateBoard(IntVector3 sizes)
+    {
+        faces = TileData.GetEmptyFaceArray(sizes, oldFaces);
+        balls = InitBalls(sizes);
+        UpdateModel();
+    }
+
+    public void ChangeFaceSize(CubeFace face, int XSize, int YSize)
+    {
+        FaceModel faceModel = FaceModel.ModelsDictionary[face];
+        IntVector3 sizes = faceModel.GetRealSizes(XSize, YSize, balls.GetLength((int)faceModel.axes[2]));
+        CreateBoard(sizes);
+    }
+
+    private BallData[,,] InitBalls(IntVector3 sizes)
+    {
+        BallData[,,] result = new BallData[sizes.x, sizes.y, sizes.z];
+        for (int i = 0; i < sizes.x; i++)
         {
-            BallData[,,] result = new BallData[XSize, YSize, ZSize];
-            for (int i = 0; i < XSize; i++)
+            for (int j = 0; j < sizes.y; j++)
             {
-                for (int j = 0; j < YSize; j++)
+                for (int k = 0; k < sizes.z; k++)
                 {
-                    for (int k = 0; k < ZSize; k++)
+                    if (oldBalls.GetLength(0) > i && oldBalls.GetLength(1) > j && oldBalls.GetLength(2) > k)
                     {
-                        if (oldBalls.GetLength(0) > i && oldBalls.GetLength(1) > j && oldBalls.GetLength(2) > k)
-                        {
-                            balls[i, j, k] = oldBalls[i, j, k];
-                        }
-                        else
-                        {
-                            balls[i, j, k] = BallData.GetEmptyBall();
-                        }
+                        result[i, j, k] = oldBalls[i, j, k];
+                    }
+                    else
+                    {
+                        result[i, j, k] = BallData.GetEmptyBall();
                     }
                 }
             }
-            return result;
         }
+        return result;
+    }
 
-        public void NextBall(int posX, int posY, int posZ)
+    public void NextBall(IntVector3 position)
+    {
+        balls.Set(position, balls.Get(position).GetNext());
+        UpdateModel();
+    }
+
+    public void NextTileObjective(int face, int posX, int posY)
+    {
+        if (!TileExists(face, posX, posY))
+            faces[face][posX, posY].ObjectiveType = faces[face][posX, posY].ObjectiveType.Next();
+        UpdateModel();
+    }
+
+    public void NextTileType(int face, int posX, int posY)
+    {
+        if (!TileExists(face, posX, posY))
+            faces[face][posX, posY].TileType = faces[face][posX, posY].TileType.Next();
+        UpdateModel();
+    }
+
+    public void PreviousTileObjective(int face, int posX, int posY)
+    {
+        if (!TileExists(face, posX, posY))
+            faces[face][posX, posY].ObjectiveType = faces[face][posX, posY].ObjectiveType.Previous();
+        UpdateModel();
+    }
+
+    public void PreviousTileType(int face, int posX, int posY)
+    {
+        if (!TileExists(face, posX, posY))
+            faces[face][posX, posY].TileType = faces[face][posX, posY].TileType.Previous();
+        UpdateModel();
+    }
+
+    internal void SetData(CubeData cubeData)
+    {
+        faces = cubeData.faces;
+        balls = cubeData.balls;
+        UpdateModel();
+    }
+
+    public bool TileExists(int face, int posX, int posY)
+    {
+        if (faces[face][posX, posY] == null)
         {
-            balls[posX, posY, posZ] = balls[posX, posY, posZ].GetNext();
-            UpdateModel();
+            return true;
         }
+        return false;
+    }
 
-        public void NextTileObjective(int face, int posX, int posY)
-        {
-            if (!TileExists(face, posX, posY))
-                faces[face][posX, posY].ObjectiveType = faces[face][posX, posY].ObjectiveType.Next();
-            UpdateModel();
-        }
+    internal void PreviousBall(IntVector3 position)
+    {
+        balls.Set(position, balls.Get(position).GetPrevious());
+        UpdateModel();
+    }
 
-        public void NextTileType(int face, int posX, int posY)
+    private void UpdateModel()
+    {
+        cubeController.SetData(this, !initialised);
+        if (!initialised)
         {
-            if (!TileExists(face, posX, posY))
-                faces[face][posX, posY].TileType = faces[face][posX, posY].TileType.Next();
-            UpdateModel();
-        }
-
-        public void PreviousTileObjective(int face, int posX, int posY)
-        {
-            if (!TileExists(face, posX, posY))
-                faces[face][posX, posY].ObjectiveType = faces[face][posX, posY].ObjectiveType.Previous();
-            UpdateModel();
-        }
-
-        public void PreviousTileType(int face, int posX, int posY)
-        {
-            if (!TileExists(face, posX, posY))
-                faces[face][posX, posY].TileType = faces[face][posX, posY].TileType.Previous();
-            UpdateModel();
-        }
-
-        internal void SetData(CubeData cubeData)
-        {
-            faces = cubeData.faces;
-            balls = cubeData.balls;
-            UpdateModel();
-        }
-
-        public bool TileExists(int face, int posX, int posY)
-        {
-            if (faces[face][posX, posY] == null)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        internal void PreviousBall(int posX, int posY, int posZ)
-        {
-            balls[posX, posY, posZ] = balls[posX, posY, posZ].GetPrevious();
-            UpdateModel();
-        }
-
-        private void UpdateModel()
-        {
-            cubeController.SetData(this);
+            initialised = true;
         }
     }
 }

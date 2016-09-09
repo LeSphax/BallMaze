@@ -184,15 +184,14 @@ public class TileData
         return matrix;
     }
 
-    public static TileData[][,] GetEmptyFaceArray(int[] sizes, TileData[][,] oldFaces = null)
+    public static TileData[][,] GetEmptyFaceArray(IntVector3 sizes, TileData[][,] oldFaces = null)
     {
-        Assert.AreEqual(sizes.Length, 3);
         TileData[][,] result = new TileData[FaceModel.NUMBER_FACES][,];
         for (int i = 0; i < FaceModel.NUMBER_FACES; i++)
         {
             FaceModel face = FaceModel.ModelsDictionary[(CubeFace)i];
-            int XSize = sizes[(int)face.axes[0]];
-            int YSize = sizes[(int)face.axes[1]];
+            int XSize = sizes[face.axes[0]];
+            int YSize = sizes[face.axes[1]];
             result[i] = new TileData[XSize, YSize];
 
             for (int x = 0; x < XSize; x++)
