@@ -151,6 +151,7 @@ public class EditableCubeData : CubeData
     {
         faces = cubeData.faces;
         balls = cubeData.balls;
+        _objectives = null;
         UpdateModel();
     }
 

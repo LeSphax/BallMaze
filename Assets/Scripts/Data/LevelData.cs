@@ -1,12 +1,7 @@
-﻿using BallMaze.LevelCreation;
-using System;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using UnityEngine;
-using UnityEngine.Assertions;
 using Utilities;
 
 namespace BallMaze.Data
@@ -87,7 +82,6 @@ namespace BallMaze.Data
 
         public bool Save(string fileName, bool force = false)
         {
-            Debug.Log(fileName);
 #if UNITY_EDITOR
             SaveToResources(fileName, force);
 
@@ -125,7 +119,7 @@ namespace BallMaze.Data
 
         private static string GetApplicationPath()
         {
-#if (UNITY_WEBGL || UNITY_WEBPLAYER || NETFX_CORE) && !UNITY_EDITOR
+#if !UNITY_EDITOR
             return Paths.LEVEL_FILES;
 #else
             return Application.streamingAssetsPath + Paths.FOLDER_SEPARATOR + Paths.LEVEL_FILES;
@@ -145,7 +139,7 @@ namespace BallMaze.Data
 
         public static bool TryLoad(string fileName, out LevelData levelData)
         {
-#if (UNITY_WEBGL || UNITY_WEBPLAYER || NETFX_CORE) && ! UNITY_EDITOR
+#if ! UNITY_EDITOR
             if (fileName == LevelCreatorController.TEMP_LEVEL_NAME)
             {
                 levelData = _tempLevelData;

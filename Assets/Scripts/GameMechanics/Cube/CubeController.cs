@@ -49,6 +49,7 @@ public class CubeController : MonoBehaviour
 
     public void DestroySlice()
     {
+        Debug.Log("DestroySlice");
         if (currentSlice != null)
         {
             model.SetNewBallPositions(currentSlice);
@@ -75,12 +76,12 @@ public class CubeController : MonoBehaviour
         currentView.GetComponent<CubeView>().RefreshView(model);
     }
 
-    public void SetData(CubeData data, bool cameraReset = true)
+    public void SetData(CubeData data, bool cameraInit = true)
     {
         if (currentSlice != null)
             DestroyCurrentSlice(this);
         model.SetData(data);
-        if (cameraReset)
+        if (cameraInit)
             cameraController.Init();
     }
 

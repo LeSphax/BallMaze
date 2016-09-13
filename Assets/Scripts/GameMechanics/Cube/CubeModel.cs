@@ -83,7 +83,6 @@ namespace BallMaze.Cube
             }
             balls = data.balls;
             faces = data.faces;
-
             HasChanged.Invoke(this);
         }
 
@@ -151,6 +150,7 @@ namespace BallMaze.Cube
         //If a level has two balls exactly similar, this function may not work anymore
         public void SetNewBallPositions(SliceBoard slice)
         {
+            Debug.Log("SetNewPos");
             Dictionary<BallData, IntVector3> currentPositions = new Dictionary<BallData, IntVector3>();
             for (int x = 0; x < X_SIZE; x++)
                 for (int y = 0; y < Y_SIZE; y++)
@@ -185,8 +185,9 @@ namespace BallMaze.Cube
             }
             if (!CheckLevelCompleted())
             {
-                HasChanged.Invoke(this);
+                Debug.Log("HasChanged");
             }
+            HasChanged.Invoke(this);
         }
 
         public void ObjectivesFilledNotification(List<ObjectiveType> list)
@@ -221,15 +222,6 @@ namespace BallMaze.Cube
                 return true;
             }
             return false;
-        }
-
-        void Update()
-        {
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(KeyCode.S))
-            {
-                CubeLevelData levelData = new CubeLevelData(new CubeData(balls, faces), "CubeLevel1", "CubeLevel1", "CubeLevel2");
-                levelData.Save("CubeLevel1", true);
-            }
         }
     }
 }

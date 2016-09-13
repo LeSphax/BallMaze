@@ -3,8 +3,8 @@
   <previousLevelName>C@CubeLevel2</previousLevelName>
   <nextLevelName>C@CubeLevel4</nextLevelName>
   <numberMoves>0</numberMoves>
-  <firstObjective>OBJECTIVE2</firstObjective>
-  <data xsi:type="EditableCubeData">
+  <firstObjective>NONE</firstObjective>
+  <data>
     <serializedTiles>
       <ArrayOfArrayOfTileData>
         <ArrayOfTileData>
@@ -237,8 +237,8 @@
             <TileType>NORMAL</TileType>
           </TileData>
           <TileData>
-            <ObjectiveType>NONE</ObjectiveType>
-            <TileType>NORMAL</TileType>
+            <ObjectiveType>OBJECTIVE1</ObjectiveType>
+            <TileType>SYNCED</TileType>
           </TileData>
         </ArrayOfTileData>
         <ArrayOfTileData>
@@ -265,8 +265,8 @@
             <TileType>NORMAL</TileType>
           </TileData>
           <TileData>
-            <ObjectiveType>NONE</ObjectiveType>
-            <TileType>NORMAL</TileType>
+            <ObjectiveType>OBJECTIVE2</ObjectiveType>
+            <TileType>SYNCED</TileType>
           </TileData>
         </ArrayOfTileData>
       </ArrayOfArrayOfTileData>
@@ -275,8 +275,8 @@
       <ArrayOfArrayOfBallData>
         <ArrayOfBallData>
           <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
+            <BallType>NORMAL</BallType>
+            <ObjectiveType>OBJECTIVE1</ObjectiveType>
           </BallData>
           <BallData>
             <BallType>EMPTY</BallType>
@@ -293,7 +293,51 @@
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
+            <BallType>WALL</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+          <BallData>
             <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+        </ArrayOfBallData>
+        <ArrayOfBallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+        </ArrayOfBallData>
+      </ArrayOfArrayOfBallData>
+      <ArrayOfArrayOfBallData>
+        <ArrayOfBallData>
+          <BallData>
+            <BallType>NORMAL</BallType>
+            <ObjectiveType>OBJECTIVE2</ObjectiveType>
+          </BallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+        </ArrayOfBallData>
+        <ArrayOfBallData>
+          <BallData>
+            <BallType>EMPTY</BallType>
+            <ObjectiveType>NONE</ObjectiveType>
+          </BallData>
+          <BallData>
+            <BallType>WALL</BallType>
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
@@ -337,51 +381,7 @@
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-        </ArrayOfBallData>
-        <ArrayOfBallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-        </ArrayOfBallData>
-      </ArrayOfArrayOfBallData>
-      <ArrayOfArrayOfBallData>
-        <ArrayOfBallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-        </ArrayOfBallData>
-        <ArrayOfBallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
-            <ObjectiveType>NONE</ObjectiveType>
-          </BallData>
-          <BallData>
-            <BallType>EMPTY</BallType>
+            <BallType>WALL</BallType>
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
@@ -406,5 +406,4 @@
       </ArrayOfArrayOfBallData>
     </serializedBalls>
   </data>
-  <Name>CubeLevel3</Name>
 </CubeLevelData>

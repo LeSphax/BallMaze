@@ -12,7 +12,6 @@ namespace BallMaze.Cube
         public int PosY;
 
         public event TileClicked GridTileClickEvent;
-        public event TileClicked GridTileEnterEvent;
 
         void OnMouseOver()
         {

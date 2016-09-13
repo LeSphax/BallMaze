@@ -69,16 +69,7 @@ public static class MatrixExtensions
         else return new T[0, 0];
     }
 
-    //public static T[,] Get<T>(this T[,,] matrix, int number)
-    //{
-    //    T[,] result = new T[matrix.GetLength(1), matrix.GetLength(2)];
-    //    for (int i = 0; i < matrix.GetLength(1); i++)
-    //        for (int j = 0; j < matrix.GetLength(2); j++)
-    //            result[i,j] = matrix[number,i, j];
-    //    return result;
-    //}
-
-    public static T[,] Rotate<T>(this T[,] matrix, int rotation)
+    public static TileData[,] Rotate(this TileData[,] matrix, int rotation)
     {
         rotation = rotation % 360;
         int width = matrix.GetLength(0);
@@ -88,13 +79,13 @@ public static class MatrixExtensions
             case 0:
                 break;
             case 90:
-                matrix = Apply<T>(matrix, height, false, width, true, (mat, y, x) => mat[x, y]);
+                matrix = Apply(matrix, height, false, width, true, (mat, y, x) => mat[x, y]);
                 break;
             case 180:
-                matrix = Apply<T>(matrix, width, true, height, true, (mat, x,y) => mat[x, y]);
+                matrix = Apply(matrix, width, true, height, true, (mat, x, y) => mat[x, y]);
                 break;
             case 270:
-                matrix = Apply<T>(matrix, height, true, width, false, (mat, y, x) => mat[x, y]);
+                matrix = Apply(matrix, height, true, width, false, (mat, y, x) => mat[x, y]);
                 break;
             default:
                 Debug.LogError("The rotation should be at a right angle");
@@ -104,17 +95,17 @@ public static class MatrixExtensions
         return matrix;
     }
 
-    public static T[,] Mirror<T>(this T[,] matrix, int axis)
+    public static TileData[,] Mirror(this TileData[,] matrix, int axis)
     {
         int width = matrix.GetLength(0);
         int height = matrix.GetLength(1);
         switch (axis)
         {
             case 0:
-                matrix = Apply<T>(matrix, width, true, height, false, (mat, x,y) => mat[x, y]);
+                matrix = Apply(matrix, width, true, height, false, (mat, x, y) => mat[x, y]);
                 break;
             case 1:
-                matrix = Apply<T>(matrix, width, false, height, true, (mat, x,y) => mat[x, y]);
+                matrix = Apply(matrix, width, false, height, true, (mat, x, y) => mat[x, y]);
                 break;
             default:
                 Debug.LogError("The axis should be 0 or 1 : " + axis);
@@ -124,19 +115,80 @@ public static class MatrixExtensions
         return matrix;
     }
 
-    private static T[,] Apply<T>(T[,] matrix, int sizeX, bool inverseX, int sizeY, bool inverseY, Func<T[,],int,int,T> getter)
+    private static TileData[,] Apply(TileData[,] matrix, int sizeX, bool inverseX, int sizeY, bool inverseY, Func<TileData[,], int, int, TileData> getter)
     {
-        T[,] result = new T[sizeX, sizeY];
+        TileData[,] result = new TileData[sizeX, sizeY];
         for (int x = 0; x < sizeX; x++)
         {
             for (int y = 0; y < sizeY; y++)
             {
                 int iX = Functions.Inverse(x, sizeX, inverseX);
                 int iY = Functions.Inverse(y, sizeY, inverseY);
-                result[x, y] = getter(matrix,iX, iY);
+                result[x, y] = getter(matrix, iX, iY);
             }
         }
-        return result; 
+        return result;
+    }
+
+    public static BallData[,] Rotate(this BallData[,] matrix, int rotation)
+    {
+        rotation = rotation % 360;
+        int width = matrix.GetLength(0);
+        int height = matrix.GetLength(1);
+        switch (rotation)
+        {
+            case 0:
+                break;
+            case 90:
+                matrix = Apply(matrix, height, false, width, true, (mat, y, x) => mat[x, y]);
+                break;
+            case 180:
+                matrix = Apply(matrix, width, true, height, true, (mat, x, y) => mat[x, y]);
+                break;
+            case 270:
+                matrix = Apply(matrix, height, true, width, false, (mat, y, x) => mat[x, y]);
+                break;
+            default:
+                Debug.LogError("The rotation should be at a right angle " + rotation);
+                break;
+
+        }
+        return matrix;
+    }
+
+    public static BallData[,] Mirror(this BallData[,] matrix, int axis)
+    {
+        int width = matrix.GetLength(0);
+        int height = matrix.GetLength(1);
+        switch (axis)
+        {
+            case 0:
+                matrix = Apply(matrix, width, true, height, false, (mat, x, y) => mat[x, y]);
+                break;
+            case 1:
+                matrix = Apply(matrix, width, false, height, true, (mat, x, y) => mat[x, y]);
+                break;
+            default:
+                Debug.LogError("The axis should be 0 or 1 : " + axis);
+                break;
+
+        }
+        return matrix;
+    }
+
+    private static BallData[,] Apply(BallData[,] matrix, int sizeX, bool inverseX, int sizeY, bool inverseY, Func<BallData[,], int, int, BallData> getter)
+    {
+        BallData[,] result = new BallData[sizeX, sizeY];
+        for (int x = 0; x < sizeX; x++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                int iX = Functions.Inverse(x, sizeX, inverseX);
+                int iY = Functions.Inverse(y, sizeY, inverseY);
+                result[x, y] = getter(matrix, iX, iY);
+            }
+        }
+        return result;
     }
 
     public static T Get<T>(this T[,,] matrix, IntVector3 position)

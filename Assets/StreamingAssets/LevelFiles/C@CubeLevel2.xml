@@ -4,7 +4,7 @@
   <nextLevelName>C@CubeLevel3</nextLevelName>
   <numberMoves>0</numberMoves>
   <firstObjective>OBJECTIVE2</firstObjective>
-  <data>
+  <data xsi:type="EditableCubeData">
     <serializedTiles>
       <ArrayOfArrayOfTileData>
         <ArrayOfTileData>
@@ -279,11 +279,11 @@
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
-            <BallType>WALL</BallType>
+            <BallType>EMPTY</BallType>
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
-            <BallType>EMPTY</BallType>
+            <BallType>WALL</BallType>
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
         </ArrayOfBallData>
@@ -297,7 +297,7 @@
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
-            <BallType>EMPTY</BallType>
+            <BallType>WALL</BallType>
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
         </ArrayOfBallData>
@@ -337,11 +337,11 @@
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
-            <BallType>WALL</BallType>
+            <BallType>EMPTY</BallType>
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
-            <BallType>WALL</BallType>
+            <BallType>EMPTY</BallType>
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
         </ArrayOfBallData>
@@ -355,7 +355,7 @@
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
-            <BallType>EMPTY</BallType>
+            <BallType>WALL</BallType>
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
         </ArrayOfBallData>
@@ -395,7 +395,7 @@
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
-            <BallType>WALL</BallType>
+            <BallType>EMPTY</BallType>
             <ObjectiveType>NONE</ObjectiveType>
           </BallData>
           <BallData>
@@ -406,4 +406,5 @@
       </ArrayOfArrayOfBallData>
     </serializedBalls>
   </data>
+  <Name>CubeLevel2N</Name>
 </CubeLevelData>

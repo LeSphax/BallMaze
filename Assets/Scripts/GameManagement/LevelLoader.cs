@@ -24,7 +24,7 @@ namespace BallMaze.GameManagement
         public event EmptyEventHandler LevelChanged;
 
 
-        void Awake()
+        void Start()
         {
             if (!CreatorMode)
             {

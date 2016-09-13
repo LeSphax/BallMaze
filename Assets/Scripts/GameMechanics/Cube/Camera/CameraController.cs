@@ -43,7 +43,6 @@ namespace BallMaze.Cube
 
         public void Init()
         {
-            Debug.Log("Init");
             stateMachine.handleEvent(new E_LevelChanged());
         }
 

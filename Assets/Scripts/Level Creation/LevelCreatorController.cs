@@ -10,7 +10,7 @@ namespace BallMaze.LevelCreation
 {
     public class LevelCreatorController : MonoBehaviour
     {
-
+        public bool autoLoad;
         public InputField previousLevelNameField;
         public InputField levelNameField;
         public InputField nextLevelNameField;
@@ -21,8 +21,6 @@ namespace BallMaze.LevelCreation
 
         public GameObject PopUp;
         public CubeController cubeController;
-
-        private LevelLoader levelLoader;
 
         private int currentElevation = 0;
 
@@ -56,22 +54,20 @@ namespace BallMaze.LevelCreation
         void Start()
         {
             boardData = new EditableCubeData(cubeController);
-            levelLoader = GameObjects.GetLevelLoader();
             boardData.CreateBoard(new IntVector3(3, 3, 3));
+            if (autoLoad)
+            {
+                LoadLevel(Settings.GetFirstLevelName());
+            }
         }
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Return))
-            {
-                boardData.ChangeFaceSize(CubeFace.X, 3, 4);
-                boardData.NextBall(new IntVector3(0, 0, 0));
-            }
-            else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt))
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt))
             {
                 if (Input.GetKeyDown(KeyCode.S))
                 {
-                    SaveData();
+                   // SaveData();
                 }
                 else if (Input.GetKeyDown(KeyCode.B))
                 {
@@ -79,6 +75,18 @@ namespace BallMaze.LevelCreation
                 else if (Input.GetKeyDown(KeyCode.R))
                 {
                     boardData.ResetBoard();
+                }
+                else if (Input.GetKeyDown(KeyCode.K))
+                {
+                    LoadPrevious();
+                }
+                else if (Input.GetKeyDown(KeyCode.L))
+                {
+                    LoadCurrent();
+                }
+                else if (Input.GetKeyDown(KeyCode.M))
+                {
+                    LoadNext();
                 }
             }
             else if (Input.GetKeyDown(KeyCode.A))
@@ -183,17 +191,14 @@ namespace BallMaze.LevelCreation
 
         public void OnTileClick(CubeFace face, int x, int y)
         {
-            Debug.Log("OnTileClick " + face + "    " + x + "   " + y);
-
             IntVector3 position = FaceModel.ModelsDictionary[face].GetRealCoords(new IntVector3(x, y, currentElevation), boardData.Sizes);
-            Debug.Log(position);
             if (position.x < boardData.X_SIZE && position.y < boardData.Y_SIZE && position.z < boardData.Z_SIZE)
             {
-                Debug.Log("InCube");
                 MapClicksToCreation(face, x, y, position);
             }
             else
             {
+                Debug.LogWarning("OutOfCube");
                 Debug.Log(position.x < boardData.X_SIZE);
                 Debug.Log(position.y < boardData.Y_SIZE);
                 Debug.Log(position.z < boardData.Z_SIZE);
@@ -207,7 +212,7 @@ namespace BallMaze.LevelCreation
             {
                 if (Input.GetKey(KeyCode.LeftControl))
                 {
-                    boardData.NextBall(position);
+                    boardData.NextTileObjective((int)face, x, y);
                 }
                 else if (Input.GetKey(KeyCode.LeftAlt))
                 {
@@ -215,14 +220,14 @@ namespace BallMaze.LevelCreation
                 }
                 else
                 {
-                    boardData.NextTileObjective((int)face, x, y);
+                    boardData.NextBall(position);
                 }
             }
             else if (Input.GetMouseButton(1))
             {
                 if (Input.GetKey(KeyCode.LeftControl))
                 {
-                    boardData.PreviousBall(position);
+                    boardData.PreviousTileObjective((int)face, x, y);
                 }
                 else if (Input.GetKey(KeyCode.LeftAlt))
                 {
@@ -230,7 +235,7 @@ namespace BallMaze.LevelCreation
                 }
                 else
                 {
-                    boardData.PreviousTileObjective((int)face, x, y);
+                    boardData.PreviousBall(position);
                 }
             }
         }
