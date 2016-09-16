@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using Utilities;
 
 public static class Settings
 {
@@ -22,9 +20,14 @@ public static class Settings
         }
     }
 
-    public static string GetFirstLevelName()
+    public static string GetFirst2DLevelName()
     {
-        return data["FirstLevelName"];
+        return data["First2DLevelName"];
+    }
+
+    public static string GetFirst3DLevelName()
+    {
+        return data["First3DLevelName"];
     }
 
     private static Dictionary<string, string> ParseSettings(string settings)

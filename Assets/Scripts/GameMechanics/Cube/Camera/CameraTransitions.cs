@@ -2,7 +2,7 @@
 using GenericStateMachine;
 using UnityEngine.Assertions;
 
-namespace BallMaze.Cube
+namespace BallMaze.CameraSM
 {
     internal class T_Camera<EventType> : Transition<CameraStateMachine, E_Camera, EventType> where EventType : E_Camera
     {

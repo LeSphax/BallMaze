@@ -176,6 +176,11 @@ namespace BallMaze.GameMechanics.ObjectiveBall
             Debug.LogError("This ball has no corresponding tile !!");
             return null;
         }
+
+        public override BallType GetBallType()
+        {
+            return BallType.NORMAL;
+        }
     }
 }
 

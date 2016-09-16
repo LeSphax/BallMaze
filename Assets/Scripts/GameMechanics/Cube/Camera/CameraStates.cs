@@ -1,7 +1,7 @@
 ﻿
 using GenericStateMachine;
 
-namespace BallMaze.Cube
+namespace BallMaze.CameraSM
 {
     internal class S_Camera : State<CameraStateMachine, E_Camera>
     {
@@ -96,6 +96,12 @@ namespace BallMaze.Cube
         public S_Rotating(CameraStateMachine stateMachine) : base(stateMachine)
         {
             new T_FinishedRotating(this);
+        }
+
+        public override void leave()
+        {
+            base.leave();
+            CameraController.SendRotationChangedEvent();
         }
     }
 }

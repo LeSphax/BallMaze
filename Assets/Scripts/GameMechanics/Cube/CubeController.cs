@@ -31,7 +31,7 @@ public class CubeController : MonoBehaviour
     {
         inputManager = GameObjects.GetInputManager();
         cameraController.PerspectiveActivated += DestroySlice;
-        cameraController.RotationChanged += CreateSlice;
+        cameraController.SliceChanged += CreateSlice;
     }
 
     public void CreateSlice(Vector3 rotation)
@@ -49,7 +49,6 @@ public class CubeController : MonoBehaviour
 
     public void DestroySlice()
     {
-        Debug.Log("DestroySlice");
         if (currentSlice != null)
         {
             model.SetNewBallPositions(currentSlice);

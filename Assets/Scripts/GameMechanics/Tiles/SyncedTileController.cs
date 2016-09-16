@@ -2,7 +2,7 @@
 
 namespace BallMaze.GameMechanics.Tiles
 {
-    class SyncedTileModel : TileController
+    class SyncedTileController : TileController
     {
 
         private const float grey = 174.0f / 255;

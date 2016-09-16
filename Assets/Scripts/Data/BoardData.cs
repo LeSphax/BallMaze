@@ -1,4 +1,6 @@
-﻿using BallMaze.LevelCreation;
+﻿using BallMaze.GameMechanics;
+using BallMaze.GameMechanics.Tiles;
+using BallMaze.LevelCreation;
 using System.Xml.Serialization;
 
 namespace BallMaze.Data
@@ -11,14 +13,14 @@ namespace BallMaze.Data
         [XmlIgnore]
         public TileData[,] tiles;
 
-        public int Width
+        public int X_SIZE
         {
             get
             {
                 return balls.GetLength(0);
             }
         }
-        public int Height
+        public int Y_SIZE
         {
             get
             {
@@ -71,9 +73,9 @@ namespace BallMaze.Data
             int[] ObjectiveTiles = new int[numberObjectiveTypes];
             int[] ObjectiveBalls = new int[numberObjectiveTypes];
 
-            for (int i = 0; i < Width; i++)
+            for (int i = 0; i < X_SIZE; i++)
             {
-                for (int j = 0; j < Height; j++)
+                for (int j = 0; j < Y_SIZE; j++)
                 {
                     if (balls[i, j].ObjectiveType == ObjectiveType.OBJECTIVE1)
                     {
@@ -112,6 +114,28 @@ namespace BallMaze.Data
             board.balls[0, 0] = BallData.GetObjective1Ball();
             board.tiles[2, 2] = TileData.GetObjective1Tile();
             return board;
+        }
+
+        public static BoardData GetBoardData(BoardPosition[,] board)
+        {
+            BoardData data = new BoardData();
+            int X_SIZE = board.GetLength(0);
+            int Y_SIZE = board.GetLength(1);
+
+            data.balls = new BallData[X_SIZE, Y_SIZE];
+            data.tiles = new TileData[X_SIZE, Y_SIZE];
+
+            for (int x = 0; x < X_SIZE; x++)
+            {
+                for (int y = 0; y < Y_SIZE; y++)
+                {
+                    IBallController ball = board[x, y].ball;
+                    TileController tile = board[x, y].tile;
+                    data.balls[x, y] = new BallData(ball.GetBallType(), ball.GetObjectiveType());
+                    data.tiles[x, y] = new TileData(tile.GetObjectiveType(), tile.tileType);
+                }
+            }
+            return data;
         }
     }
 }

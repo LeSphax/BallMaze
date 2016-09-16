@@ -37,6 +37,11 @@ namespace BallMaze.GameMechanics.Tiles
         protected ObjectiveType objectiveType;
         public TileType tileType;
 
+        void Awake()
+        {
+            view = gameObject.AddComponent<TileView>();
+        }
+
         protected virtual void InitEffectManager()
         {
             if (objectiveType == ObjectiveType.OBJECTIVE1 || objectiveType == ObjectiveType.OBJECTIVE2)
@@ -140,10 +145,6 @@ namespace BallMaze.GameMechanics.Tiles
             view.Mesh = mesh;
         }
 
-        void Awake()
-        {
-            view = gameObject.AddComponent<TileView>();
-        }
     }
 
 }

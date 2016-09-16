@@ -19,7 +19,7 @@ namespace BallMaze.Data
             }
             set
             {
-                fileName = value;
+                fileName = value.Trim();
             }
         }
 
@@ -82,10 +82,7 @@ namespace BallMaze.Data
 
         public bool Save(string fileName, bool force = false)
         {
-#if UNITY_EDITOR
-            SaveToResources(fileName, force);
-
-#elif UNITY_WEBGL || UNITY_WEBPLAYER
+#if UNITY_WEBGL || UNITY_WEBPLAYER
             _tempLevelData = this;
             return true;
 #endif
@@ -137,9 +134,9 @@ namespace BallMaze.Data
             return nextLevelName != "";
         }
 
-        public static bool TryLoad(string fileName, out LevelData levelData)
+        public static bool TryLoad<T>(string fileName, out T levelData) where T : LevelData
         {
-#if ! UNITY_EDITOR
+#if !UNITY_EDITOR
             if (fileName == LevelCreatorController.TEMP_LEVEL_NAME)
             {
                 levelData = _tempLevelData;
@@ -158,7 +155,7 @@ namespace BallMaze.Data
         {
             string path = GetApplicationPath() + fileName;
 
-            Type type = GetFileType(fileName);
+            Type type = PuzzleData.GetFileType(fileName);
 
             TextAsset textAsset = (TextAsset)Resources.Load(path);
             if (textAsset == null)
@@ -175,26 +172,14 @@ namespace BallMaze.Data
             return true;
         }
 
-        private static bool LoadFromStreamingAssets(string fileName, out LevelData levelData)
+        private static bool LoadFromStreamingAssets<T>(string fileName, out T levelData)
         {
             string path = GetApplicationPath() + fileName;
-            Type type = GetFileType(fileName);
+            Type type = PuzzleData.GetFileType(fileName);
             bool successfullLoad = false;
-            levelData = null;
+            levelData = default(T);
 
-            if (type == typeof(CubeLevelData))
-            {
-                successfullLoad =  Saving.TryLoad<CubeLevelData, LevelData>(path, out levelData);
-            }
-            else if (type == typeof(BoardLevelData))
-            {
-                successfullLoad =  Saving.TryLoad<BoardLevelData, LevelData>(path, out levelData);
-            }
-            else
-            {
-                Debug.LogError("The type of the file isn't valid " + type);
-            }
-
+            successfullLoad = Saving.TryLoad<T>(path, out levelData);
             if (successfullLoad)
             {
                 levelData.Name = fileName;
@@ -210,25 +195,6 @@ namespace BallMaze.Data
             return false;
         }
 
-        private static Type GetFileType(string fileName)
-        {
-            if (fileName[1] == '@')
-            {
-                if (fileName[0] == CubeLevelData.FILE_EXTENSION)
-                {
-                    return typeof(CubeLevelData);
-                }
-                else if (fileName[0] == BoardLevelData.FILE_EXTENSION)
-                {
-                    return typeof(BoardLevelData);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else { return null; }
-        }
     }
 }
 

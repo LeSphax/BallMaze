@@ -1,1 +1,2 @@
-FirstLevelName : C@CubeLevel1
+First3DLevelName : C@CubeLevel1
+First2DLevelName : Level1

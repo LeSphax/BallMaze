@@ -7,6 +7,9 @@ public class CreateInputManager : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
+#if UNITY_EDITOR
+        gameObject.AddComponent<PCInputManager>();
+#else
         if (Platform.Mobile())
         {
             gameObject.AddComponent<MobileInputManager>();
@@ -15,7 +18,7 @@ public class CreateInputManager : MonoBehaviour
         {
             gameObject.AddComponent<PCInputManager>();
         }
-
+#endif
     }
 
 }

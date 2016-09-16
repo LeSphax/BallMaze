@@ -1,25 +1,30 @@
 ﻿// C# example.
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
 public class SpecialBuild
 {
+
     [MenuItem("MyTools/Build With PreProcess")]
     public static void BuildGame()
-    {        
-        Debug.Log(AssetDatabase.CopyAsset("Assets/StreamingAssets/LevelFiles", "Assets/Resources/LevelFiles"));
+    {
+        Levels.WriteLevels();
+        AssetDatabase.MoveAsset(Levels.StreamingAssetsPath, Levels.ResourcesPath);
+        AssetDatabase.SaveAssets();
 
         // Get filename.
         string path = EditorUtility.SaveFolderPanel("Choose Location of Built Game", "", "");
-        string[] levels = new string[] { "Assets/Cube.unity"};
+        string[] levels = new string[] { "Assets/Cube.unity" };
 
         // Build player.
 #if UNITY_WEBGL
-        BuildPipeline.BuildPlayer(levels, path, BuildTarget.WebGL, BuildOptions.None);
-#elif UNITY_WP_8_1
-        BuildPipeline.BuildPlayer(levels, path, BuildTarget.WP8Player, BuildOptions.None);
+        Debug.Log(BuildPipeline.BuildPlayer(levels, path, BuildTarget.WebGL, BuildOptions.None));
+#else
+        Debug.Log(BuildPipeline.BuildPlayer(levels, path, BuildTarget.WSAPlayer, BuildOptions.None));
 #endif
-        Debug.Log(AssetDatabase.DeleteAsset("Assets/Resources/LevelFiles"));
+        AssetDatabase.MoveAsset(Levels.StreamingAssetsPath, Levels.ResourcesPath);
+        AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
         //// Run the game (Process class from System.Diagnostics).
@@ -27,6 +32,5 @@ public class SpecialBuild
         //proc.StartInfo.FileName = path + "BuiltGame.exe";
         //proc.Start();
     }
-
 
 }

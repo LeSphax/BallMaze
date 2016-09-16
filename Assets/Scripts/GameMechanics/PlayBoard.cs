@@ -29,7 +29,6 @@ namespace BallMaze.GameMechanics
 
         public Dictionary<ObjectiveType, bool> objectivesFilled;
 
-
         internal override void ReceiveInputCommand(BoardInputCommand inputCommand)
         {
             if (state == State.IDLE)
@@ -67,9 +66,10 @@ namespace BallMaze.GameMechanics
             InitVariables();
         }
 
-        protected override void Start()
+        protected virtual void Start()
         {
-            base.Start();
+            InputManager inputManager = GameObjects.GetInputManager();
+            inputManager.MoveBoardEvent += ReceiveDirection;
             state = State.IDLE;
             FitBoardToCamera();
             //Fill the objectives if balls are already placed on them
@@ -109,10 +109,10 @@ namespace BallMaze.GameMechanics
         public override void SetData(BoardData data)
         {
             boardData = data;
-            board = new BoardPosition[boardData.Width, boardData.Height];
-            for (int x = 0; x < boardData.Width; x++)
+            board = new BoardPosition[boardData.X_SIZE, boardData.Y_SIZE];
+            for (int x = 0; x < boardData.X_SIZE; x++)
             {
-                for (int y = 0; y < boardData.Height; y++)
+                for (int y = 0; y < boardData.Y_SIZE; y++)
                 {
                     Vector3 position = GetWorldPosition(x, y);
 

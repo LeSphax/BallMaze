@@ -30,6 +30,7 @@ namespace BallMaze.GameMechanics
         void UnFillObjective();
         bool IsMoving();
         ObjectiveType GetObjectiveType();
+        BallType GetBallType();
         void SetMesh(GameObject mesh);
     }
 }

@@ -141,5 +141,7 @@ namespace BallMaze.GameMechanics
         {
             transform.localPosition = position;
         }
+
+        public abstract BallType GetBallType();
     }
 }

@@ -7,6 +7,19 @@ public class BoardLevelData : LevelData
     public const char FILE_EXTENSION = 'B';
     public BoardData data;
 
+    public override string Name
+    {
+        get
+        {
+            return base.Name.Substring(2);
+        }
+
+        set
+        {
+            base.Name = value;
+        }
+    }
+
     //For Xml Serialisation
     public BoardLevelData() { }
 
@@ -34,6 +47,11 @@ public class BoardLevelData : LevelData
     {
         path += FILE_EXTENSION;
         Saving.Save(path, this);
+    }
+
+    public static string DirectoryName()
+    {
+        return "2D";
     }
 }
 

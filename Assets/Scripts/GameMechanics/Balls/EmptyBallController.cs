@@ -91,5 +91,10 @@ namespace BallMaze.GameMechanics
         public void SetPosition(Vector3 position)
         {
         }
+
+        public BallType GetBallType()
+        {
+            return BallType.EMPTY;
+        }
     }
 }

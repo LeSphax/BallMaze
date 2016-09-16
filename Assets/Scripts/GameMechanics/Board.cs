@@ -8,13 +8,6 @@ namespace BallMaze.GameMechanics
 {
     public abstract class Board : MonoBehaviour
     {
-
-        protected virtual void Start()
-        {
-            InputManager inputManager = GameObjects.GetInputManager();
-            inputManager.MoveBoardEvent += ReceiveDirection;
-        }
-
         public const float BASE_TILE_SIZE_X = 1.1f;
         public const float BASE_TILE_SIZE_Y = 1.1f;
         public float TileXSize

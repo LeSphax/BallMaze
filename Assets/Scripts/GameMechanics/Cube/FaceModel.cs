@@ -84,10 +84,15 @@ namespace BallMaze.Cube
 
         public IntVector3 GetRealSizes(int x, int y, int z)
         {
+            return GetRealSizes(new IntVector3(x, y, z));
+        }
+
+        public IntVector3 GetRealSizes(IntVector3 sizes)
+        {
             IntVector3 result = new IntVector3();
-            result[axes[0]] = x;
-            result[axes[1]] = y;
-            result[axes[2]] = z;
+            result[axes[0]] = sizes.x;
+            result[axes[1]] = sizes.y;
+            result[axes[2]] = sizes.z;
             return result;
         }
 

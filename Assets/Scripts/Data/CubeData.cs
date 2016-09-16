@@ -130,4 +130,5 @@ public class CubeData : PuzzleData
         }
         return true;
     }
+
 }

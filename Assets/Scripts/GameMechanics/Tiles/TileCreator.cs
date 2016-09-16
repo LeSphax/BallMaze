@@ -73,7 +73,7 @@ namespace BallMaze.GameMechanics.Tiles
                     tileController = tile.AddComponent<TileController>();
                     break;
                 case TileType.SYNCED:
-                    tileController = tile.AddComponent<SyncedTileModel>();
+                    tileController = tile.AddComponent<SyncedTileController>();
                     tile.tag = Tags.SyncedTile;
                     break;
                 default:

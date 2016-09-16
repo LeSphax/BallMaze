@@ -2,7 +2,7 @@
 using GenericStateMachine;
 using System.Collections.Generic;
 
-namespace BallMaze.Cube
+namespace BallMaze.CameraSM
 {
     internal abstract class E_Camera { }
 

@@ -5,19 +5,19 @@ namespace BallMaze.GameMechanics.Tiles
 {
     internal class SyncedTileEffectStrategy : ObjectiveTileEffectStrategy
     {
-        private List<SyncedTileModel> _otherSyncedTiles;
-        private List<SyncedTileModel> otherSyncedTiles
+        private List<SyncedTileController> _otherSyncedTiles;
+        private List<SyncedTileController> otherSyncedTiles
         {
             get
             {
                 if (_otherSyncedTiles == null)
                 {
-                    _otherSyncedTiles = new List<SyncedTileModel>();
+                    _otherSyncedTiles = new List<SyncedTileController>();
                     foreach (GameObject tile in GameObject.FindGameObjectsWithTag(Tags.SyncedTile))
                     {
-                        if (tile.GetComponent<SyncedTileModel>() != null && tile != tileModel.gameObject)
+                        if (tile.GetComponent<SyncedTileController>() != null && tile != tileModel.gameObject)
                         {
-                            _otherSyncedTiles.Add(tile.GetComponent<SyncedTileModel>());
+                            _otherSyncedTiles.Add(tile.GetComponent<SyncedTileController>());
                         }
                     }
                 }
@@ -53,7 +53,7 @@ namespace BallMaze.GameMechanics.Tiles
             if (activate)
             {
                 effectActivated = true;
-                foreach (SyncedTileModel tile in otherSyncedTiles)
+                foreach (SyncedTileController tile in otherSyncedTiles)
                 {
                     tile.SetOpen(true);
                 }
@@ -61,7 +61,7 @@ namespace BallMaze.GameMechanics.Tiles
             else
             {
                 effectActivated = false;
-                foreach (SyncedTileModel tile in otherSyncedTiles)
+                foreach (SyncedTileController tile in otherSyncedTiles)
                 {
                     tile.SetOpen(false);
                 }

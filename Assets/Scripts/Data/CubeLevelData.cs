@@ -47,5 +47,10 @@ public class CubeLevelData : LevelData
     {
         Saving.Save(path, this);
     }
+
+    public static string DirectoryName()
+    {
+        return "3D";
+    }
 }
 

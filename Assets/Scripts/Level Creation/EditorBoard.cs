@@ -6,12 +6,11 @@ using UnityEngine;
 
 namespace BallMaze.LevelCreation
 {
-    public class EditorBoard : PlayBoard
+    public class EditorBoard : Board
     {
 
-        protected override void Start()
+        protected void Start()
         {
-            base.Start();
             board = new BoardPosition[0, 0];
         }
 
@@ -27,10 +26,10 @@ namespace BallMaze.LevelCreation
         {
             boardData = data;
             DeleteBoard();
-            board = new BoardPosition[data.Width, data.Height];
-            for (int x = 0; x < data.Width; x++)
+            board = new BoardPosition[data.X_SIZE, data.Y_SIZE];
+            for (int x = 0; x < data.X_SIZE; x++)
             {
-                for (int y = 0; y < data.Height; y++)
+                for (int y = 0; y < data.Y_SIZE; y++)
                 {
                     if (data.tiles[x, y] != null)
                     {
