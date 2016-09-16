@@ -4,8 +4,15 @@ namespace BallMaze
 {
     class Paths
     {
+        public static char FOLDER_SEPARATOR_CHAR
+        {
+            get
+            {
+                return FOLDER_SEPARATOR[0];
+            }
+        }
         public const string FOLDER_SEPARATOR = "/";
-        public const string PARTICLES = "Prefabs"+ FOLDER_SEPARATOR + "Particles"+ FOLDER_SEPARATOR;
+        public const string PARTICLES = "Prefabs" + FOLDER_SEPARATOR + "Particles" + FOLDER_SEPARATOR;
         public const string FAIRY_DUST = PARTICLES + "FairyDust";
         public const string BRICK_SMOKE = PARTICLES + "BrickSmoke";
         private const string MECHANICS = "Prefabs" + FOLDER_SEPARATOR + "Mechanics" + FOLDER_SEPARATOR;
@@ -18,5 +25,9 @@ namespace BallMaze
         public const string OBJECTIVE2_TILE = MECHANICS + "TileO2";
         public const string LEVEL_FILES = "LevelFiles" + FOLDER_SEPARATOR;
         public const string RESOURCES = "Resources" + FOLDER_SEPARATOR;
+
+
+        public const string DIR_3D = "3D" + FOLDER_SEPARATOR;
+        public const string DIR_2D = "2D" + FOLDER_SEPARATOR;
     }
 }

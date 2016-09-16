@@ -42,7 +42,6 @@ public class CubeController : MonoBehaviour
 
         model.SetSliceBoard(ref currentSlice, rotation);
 
-        inputManager.SetBoard(currentSlice);
         currentView.GetComponent<GetComponentsFadeAnimation>().StartReverseAnimating();
         currentSlice.GetComponent<GetComponentsFadeAnimation>().StartAnimating();
     }

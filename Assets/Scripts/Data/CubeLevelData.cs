@@ -7,19 +7,6 @@ public class CubeLevelData : LevelData
     public const char FILE_EXTENSION = 'C';
     public CubeData data;
 
-    public override string Name
-    {
-        get
-        {
-            return base.Name.Substring(2);
-        }
-
-        set
-        {
-            base.Name = value;
-        }
-    }
-
     //For Xml Serialisation
     public CubeLevelData() { }
 

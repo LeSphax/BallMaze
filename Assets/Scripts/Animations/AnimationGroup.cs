@@ -66,6 +66,14 @@ namespace CustomAnimations
             }
         }
 
+        public void ChangeDuration(float newDuration)
+        {
+            foreach(MyAnimation animation in animations)
+            {
+                animation.duration = newDuration;
+            }
+        }
+
         void OnDestroy()
         {
             foreach (MyAnimation animation in animations)

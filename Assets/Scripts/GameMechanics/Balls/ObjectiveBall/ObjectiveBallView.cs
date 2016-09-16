@@ -28,6 +28,7 @@ namespace BallMaze.GameMechanics.ObjectiveBall
 
         internal void StartMovingTowards(Vector3 target)
         {
+            Debug.Log("StartMovingTowards " + PlayBoard.TURN_DURATION);
             Movement2DAnimation currentAnimation = Movement2DAnimation.CreateMovement2DAnimation(gameObject, target, PlayBoard.TURN_DURATION);
             StartAnimation(currentAnimation);
         }
@@ -75,6 +76,7 @@ namespace BallMaze.GameMechanics.ObjectiveBall
         {
             Assert.IsNotNull(completingAnimation);
             completingAnimation.FinishedAnimating += new AnimationEventHandler(AnimationFinished);
+            completingAnimation.ChangeDuration(PlayBoard.TURN_DURATION * 3);
             completingAnimation.StartReverseAnimating();
         }
 

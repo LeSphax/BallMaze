@@ -1,4 +1,5 @@
 ﻿
+using BallMaze.GameMechanics;
 using UnityEngine;
 
 namespace BallMaze.GameManagement
@@ -14,6 +15,7 @@ namespace BallMaze.GameManagement
         void Awake()
         {
             resetButton = GameObject.FindGameObjectWithTag(Tags.ResetButton);
+            GetComponent<PlayBoard>().LevelFinished += LevelFinished;
         }
 
 
@@ -51,7 +53,7 @@ namespace BallMaze.GameManagement
 
         internal override void LevelFinished()
         {
-            GameObject.FindGameObjectWithTag(Tags.BallMazeController).GetComponent<LevelLoader>().LoadNextLevelDelayed();
+            GameObjects.GetLevelLoader().LoadNextLevelDelayed();
         }
     }
 }

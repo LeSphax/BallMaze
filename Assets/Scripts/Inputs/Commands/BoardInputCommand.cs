@@ -6,6 +6,8 @@ using UnityEngine;
 namespace BallMaze.Inputs
 {
 
+    public delegate void ReceiveBoardInput(BoardInputCommand command);
+
     [XmlInclude(typeof(ResetCommand))]
     [XmlInclude(typeof(MoveCommand))]
     [XmlInclude(typeof(CancelCommand))]

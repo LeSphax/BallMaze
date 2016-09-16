@@ -9,8 +9,6 @@ namespace BallMaze.GameMechanics
 
     public class SliceBoard : PlayBoard
     {
-        public event ObjectiveListHandler NotifyObjectivesFilled;
-
         public CubeFace face;
 
         public int rotation
@@ -19,14 +17,6 @@ namespace BallMaze.GameMechanics
             private get;
         }
 
-        protected override void FinishTurn()
-        {
-            if (currentTurn.objectivesFilled.Count > 0)
-            {
-                NotifyObjectivesFilled.Invoke(currentTurn.objectivesFilled);
-            }
-            base.FinishTurn();
-        }
 
         protected override bool CheckLevelFinished()
         {

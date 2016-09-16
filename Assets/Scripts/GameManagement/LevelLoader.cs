@@ -30,24 +30,39 @@ public class LevelLoader : MonoBehaviour
         {
             string firstLevelName;
             if (TwoDimensions)
-                firstLevelName = Settings.GetFirst2DLevelName();
+                firstLevelName = Levels.GetFirst2DLevelName();
             else
-                firstLevelName = Settings.GetFirst3DLevelName();
+                firstLevelName = Levels.GetFirst3DLevelName();
             LoadLevel(firstLevelName);
         }
     }
 
     public bool LoadLevel(string levelName)
     {
-        Debug.Log("LoadLevel");
-        LevelData newData;
-        if (LevelData.TryLoad(levelName, out newData))
+        bool loaded;
+        if (Levels.is3DLevel(levelName))
         {
-            currentData = newData;
-            levelNameField.text = currentData.Name;
-            SetData(currentData);
+            CubeLevelData newData;
+            loaded = LevelData.TryLoad(levelName, out newData);
+            if (loaded)
+            {
+                currentData = newData;
+                levelNameField.text = currentData.Name;
+                SetData(newData);
+            }
         }
         else
+        {
+            BoardLevelData newData;
+            loaded = LevelData.TryLoad(levelName, out newData);
+            if (loaded)
+            {
+                currentData = newData;
+                levelNameField.text = currentData.Name;
+                SetData(newData);
+            }
+        }
+        if (!loaded)
         {
             Debug.LogError("Didn't succed in loading the following level : " + levelName);
             return false;
@@ -57,38 +72,23 @@ public class LevelLoader : MonoBehaviour
         return true;
     }
 
-    public void SetData(LevelData levelData)
-    {
-        if (levelData is BoardLevelData)
-        {
-            SetData(((BoardLevelData)levelData).data);
-        }
-        else if (levelData is CubeLevelData)
-        {
-            SetData(((CubeLevelData)levelData).data);
-        }
-        else
-        {
-            Debug.LogError("The levelData shouldn't have this type :" + levelData);
-        }
-    }
-
-    public void SetData(BoardData data)
+    public void SetData(BoardLevelData levelData)
     {
         Destroy(currentLevel);
         currentLevel = this.InstantiateAsChildren(boardLevelPrefab);
         Board boardModel = currentLevel.GetComponent<Board>();
-        boardModel.SetData(data);
-        LevelManager levelManager = currentLevel.GetComponent<LevelManager>();
+        boardModel.SetData(levelData.data);
+        NormalLevelManager levelManager = currentLevel.GetComponent<NormalLevelManager>();
+        Debug.Log(currentLevel.name);
         levelManager.SetObjectiveOrder(currentData.firstObjective);
     }
 
-    public void SetData(CubeData data)
+    public void SetData(CubeLevelData levelData)
     {
         cubeController.gameObject.SetActive(true);
         cubeController.LevelCompleted -= LoadNextLevelDelayed;
         cubeController.LevelCompleted += LoadNextLevelDelayed;
-        cubeController.SetData(data);
+        cubeController.SetData(levelData.data);
     }
 
     public void LoadNextLevelDelayed()
@@ -98,12 +98,12 @@ public class LevelLoader : MonoBehaviour
 
     public void LoadPreviousLevel()
     {
-        LoadLevel(Levels.GetPreviousLevelName(currentData.fileName));
+        LoadLevel(Levels.GetPreviousLevelName(currentData.FileName));
     }
 
     public void LoadNextLevel()
     {
-        string nextLevelName = Levels.GetPreviousLevelName(currentData.fileName);
+        string nextLevelName = Levels.GetNextLevelName(currentData.FileName);
         if (nextLevelName == null)
             EndOfGame();
         else

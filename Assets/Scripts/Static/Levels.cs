@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BallMaze;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -39,30 +40,65 @@ public static class Levels
         }
     }
 
+    public static bool is3DLevel(string fileName)
+    {
+        Debug.Log(fileName);
+        if (fileName.Substring(0, Paths.DIR_2D.Length) == Paths.DIR_2D)
+            return false;
+        else return true;
+    }
+
     public static string GetFirst2DLevelName()
     {
-        return levels[BoardLevelData.DirectoryName()].First.Value;
+        return Paths.DIR_2D + levels[BoardLevelData.DirectoryName()].First.Value;
     }
 
     public static string GetFirst3DLevelName()
     {
-        return levels[CubeLevelData.DirectoryName()].First.Value;
+        return Paths.DIR_3D + levels[CubeLevelData.DirectoryName()].First.Value;
     }
 
-    public static string GetNextLevelName(PuzzleType type, string currentLevel)
+    public static string GetNextLevelName(string currentLevel)
     {
-        string directoryName = PuzzleData.GetDirectoryName(type);
-        if (levels.ContainsKey(directoryName) && levels[directoryName].Find(currentLevel).Next != null)
-            return levels[directoryName].Find(currentLevel).Next.Value;
+        string directoryName;
+        string levelName;
+        bool levelOk = CheckLevel(currentLevel, out directoryName, out levelName);
+        if (levelOk && levels[directoryName].Find(levelName).Next != null)
+            return directoryName + "/" + levels[directoryName].Find(levelName).Next.Value;
         return "";
     }
 
-    public static string GetPreviousLevelName(PuzzleType type, string currentLevel)
+    public static string GetPreviousLevelName(string currentLevel)
     {
-        string directoryName = PuzzleData.GetDirectoryName(type);
-        if (levels.ContainsKey(directoryName) && levels[directoryName].Find(currentLevel).Previous != null)
-            return levels[directoryName].Find(currentLevel).Previous.Value;
+        string directoryName;
+        string levelName;
+        bool levelOk = CheckLevel(currentLevel, out directoryName, out levelName);
+        if (levelOk && levels[directoryName].Find(levelName).Previous != null)
+            return directoryName + "/" + levels[directoryName].Find(levelName).Previous.Value;
         return "";
+    }
+
+    private static bool CheckLevel(string currentLevel, out string directoryName, out string levelName)
+    {
+        string[] split = currentLevel.Split(Paths.FOLDER_SEPARATOR_CHAR);
+        directoryName = split[0];
+        levelName = split[1];
+        if (!levels.ContainsKey(directoryName))
+        {
+            Debug.LogError("This directory wasn't registered '" + directoryName+"' " + levels.Count);
+            return false;
+        }
+        else if (levels[directoryName].Find(levelName) == null)
+        {
+            Debug.LogError("The current level doesn't exist " + levelName + "   " + levels[directoryName].Count);
+            return false;
+        }
+        return true;
+    }
+
+    private static string GetDirectoryName(string currentLevel)
+    {
+        return currentLevel.Split(Paths.FOLDER_SEPARATOR_CHAR)[0];
     }
 
     private static Dictionary<string, LinkedList<string>> ParseLevels(string levels)
@@ -76,6 +112,7 @@ public static class Levels
             if (line[0] == '_')
             {
                 currentFolder = line.Substring(1);
+                Debug.Log(currentFolder);
             }
             else
             {
@@ -86,6 +123,10 @@ public static class Levels
                 result[currentFolder].AddLast(line);
             }
         }
+        foreach(var pair in result)
+        {
+            Debug.Log("'" +pair.Key + "'   " + pair.Value);
+        }
         return result;
     }
 
@@ -95,24 +136,26 @@ public static class Levels
         using (StreamWriter outputFile = File.AppendText("Assets/Resources/" + levelFileName + ".txt"))
         {
             string[] directories = Directory.GetDirectories(StreamingAssetsPath);
-            foreach (string directoryName in directories)
+            foreach (string directoryPath in directories)
             {
-                outputFile.WriteLine("_"+directoryName);
-                string directoryPath = StreamingAssetsPath + "/" + directoryName;
+                string directoryName = directoryPath.Substring(StreamingAssetsPath.Length + 1);
+                if (!levels.ContainsKey(directoryName))
+                {
+                    levels.Add(directoryName, new LinkedList<string>());
+                    outputFile.WriteLine("_" + directoryName);
+                }
                 string[] fileNames = Directory.GetFiles(directoryPath);
-                Debug.Log(StreamingAssetsPath + "/" + directoryName);
                 //
                 foreach (string fileName in fileNames)
                 {
-                    Debug.Log(fileName);
-                    Debug.Log(ResourcesPath);
+                    //Debug.Log(fileName);
                     if (fileName.EndsWith(".meta"))
                     {
                         continue;
                     }
                     string levelName = fileName.Substring(directoryPath.Length + 1);
                     levelName = Path.GetFileNameWithoutExtension(levelName);
-                    if (!levels.ContainsKey(directoryName) || !levels[directoryName].Contains(levelName))
+                    if (!levels[directoryName].Contains(levelName))
                     {
                         levels[directoryName].AddLast(levelName);
                         outputFile.WriteLine(levelName);

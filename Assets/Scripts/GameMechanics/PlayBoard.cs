@@ -20,7 +20,7 @@ namespace BallMaze.GameMechanics
             CANCELLING_TURN
         }
         private State state;
-        public const float TURN_DURATION = 0.2f;
+        public static float TURN_DURATION = 0.2f;
 
         private Stack<Turn> history;
         protected Turn currentTurn;
@@ -29,16 +29,35 @@ namespace BallMaze.GameMechanics
 
         public Dictionary<ObjectiveType, bool> objectivesFilled;
 
+        public event ObjectiveListHandler NotifyObjectivesFilled;
+        public event EmptyEventHandler LevelFinished;
+
+        private int numberResetCommands = -1;
+
         internal override void ReceiveInputCommand(BoardInputCommand inputCommand)
         {
             if (state == State.IDLE)
             {
-                inputCommand.SetModel(this);
-                inputCommand.Execute();
+                ExecuteCommand(inputCommand);
             }
             else
             {
                 inputs.Enqueue(inputCommand);
+            }
+        }
+
+        private void ExecuteCommand(BoardInputCommand inputCommand)
+        {
+            inputCommand.SetModel(this);
+            inputCommand.Execute();
+            if (numberResetCommands == 0)
+            {
+                //Reset to original value
+                TURN_DURATION = 0.2f;
+            }
+            if (numberResetCommands >= 0)
+            {
+                numberResetCommands--;
             }
         }
 
@@ -55,6 +74,9 @@ namespace BallMaze.GameMechanics
         internal void Reset()
         {
             int historySize = history.Count;
+            // Avoiding a reset animation that lasts too long
+            TURN_DURATION = Mathf.Min(0.2f, 1.0F / historySize);
+            numberResetCommands = historySize;
             for (int i = 0; i <= historySize; i++)
             {
                 ReceiveInputCommand(new CancelCommand());
@@ -70,6 +92,8 @@ namespace BallMaze.GameMechanics
         {
             InputManager inputManager = GameObjects.GetInputManager();
             inputManager.MoveBoardEvent += ReceiveDirection;
+            inputManager.ReceivedCommand += ReceiveInputCommand;
+
             state = State.IDLE;
             FitBoardToCamera();
             //Fill the objectives if balls are already placed on them
@@ -78,6 +102,14 @@ namespace BallMaze.GameMechanics
 
         protected virtual void FinishTurn()
         {
+            if (currentTurn.objectivesFilled.Count > 0)
+            {
+                if (NotifyObjectivesFilled != null)
+                    NotifyObjectivesFilled.Invoke(currentTurn.objectivesFilled);
+                // Not listened at the moment. Could replace the commands way
+                //else
+                //    Debug.LogError("This should be listened to");
+            }
             if (state == State.PLAYING_TURN && currentTurn.WasUseful())
             {
                 history.Push(currentTurn);
@@ -86,9 +118,7 @@ namespace BallMaze.GameMechanics
             currentTurn = null;
             if (!CheckLevelFinished() && inputs.Count > 0)
             {
-                BoardInputCommand command = inputs.Dequeue();
-                command.SetModel(this);
-                command.Execute();
+                ExecuteCommand(inputs.Dequeue());
             }
         }
 
@@ -177,6 +207,10 @@ namespace BallMaze.GameMechanics
             if (won)
             {
                 state = State.WON;
+                if (LevelFinished != null)
+                    LevelFinished.Invoke();
+                else
+                    Debug.LogError("This should be listened to " + LevelFinished);
             }
             return won;
         }

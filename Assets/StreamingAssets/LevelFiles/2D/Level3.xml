@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="Windows-1252"?>
-<LevelData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<BoardLevelData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <previousLevelName>Level2</previousLevelName>
   <nextLevelName>Level4</nextLevelName>
-  <boardData xsi:type="EditableBoardData">
+  <data xsi:type="EditableBoardData">
     <serializedTiles>
       <ArrayOfTileData>
         <TileData>
@@ -91,7 +91,7 @@
         </BallData>
       </ArrayOfBallData>
     </serializedBalls>
-  </boardData>
+  </data>
   <numberMoves>8</numberMoves>
   <firstObjective>NONE</firstObjective>
-</LevelData>
+</BoardLevelData>

@@ -7,19 +7,6 @@ public class BoardLevelData : LevelData
     public const char FILE_EXTENSION = 'B';
     public BoardData data;
 
-    public override string Name
-    {
-        get
-        {
-            return base.Name.Substring(2);
-        }
-
-        set
-        {
-            base.Name = value;
-        }
-    }
-
     //For Xml Serialisation
     public BoardLevelData() { }
 

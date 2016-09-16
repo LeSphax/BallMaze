@@ -1,15 +1,18 @@
 ﻿using BallMaze.GameMechanics;
 using UnityEngine;
 
-namespace BallMaze.Inputs {
+namespace BallMaze.Inputs
+{
     public abstract class InputManager : MonoBehaviour
     {
 
         public event DirectionEventHandler MoveBoardEvent;
         public event DirectionEventHandler MoveCubeEvent;
         public event EmptyEventHandler ChangePerspectiveEvent;
+        public event EmptyEventHandler LoadNextLevel;
+        public event EmptyEventHandler LoadPreviousLevel;
 
-        private Board board;
+        public event ReceiveBoardInput ReceivedCommand;
 
         protected virtual void Update()
         {
@@ -39,34 +42,30 @@ namespace BallMaze.Inputs {
 
         public void Cancel()
         {
-            board.ReceiveInputCommand(new CancelCommand());
+            ReceivedCommand.Invoke(new CancelCommand());
         }
 
         public void Reset()
         {
-            //board.ReceiveInputCommand(new ResetCommand());
+            ReceivedCommand.Invoke(new ResetCommand());
         }
 
-        public void LoadPreviousLevel()
+        public void PreviousLevel()
         {
-            // new PreviousLevelCommand(loader).Execute();
+            if (LoadPreviousLevel != null)
+                LoadPreviousLevel.Invoke();
         }
 
-        public void LoadNextLevel()
+        public void NextLevel()
         {
-            // new PreviousLevelCommand(loader).Execute();
+            if (LoadNextLevel != null)
+                LoadNextLevel.Invoke();
         }
 
         public void Quit()
         {
             //new QuitCommand(saveManager, GameObject.FindGameObjectWithTag(Subject4087.Tags.Player).GetComponent<PlayerController>()).Execute();
         }
-
-        public void SetBoard(Board board)
-        {
-            this.board = board;
-        }
-
 
         protected abstract bool CancelPressed();
 

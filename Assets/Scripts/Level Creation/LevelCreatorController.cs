@@ -19,6 +19,8 @@ public class LevelCreatorController : MonoBehaviour
     public GameObject PopUp;
     public CubeController cubeController;
 
+    private CubeLevelData currentData;
+
     private int currentElevation = 0;
 
     public string currentLevelName
@@ -33,7 +35,7 @@ public class LevelCreatorController : MonoBehaviour
     {
         get
         {
-            return Levels.GetNextLevelName(currentLevelName);
+            return Levels.GetNextLevelName(currentData.FileName);
         }
     }
 
@@ -41,7 +43,7 @@ public class LevelCreatorController : MonoBehaviour
     {
         get
         {
-            return Levels.GetPreviousLevelName(currentLevelName);
+            return Levels.GetPreviousLevelName(currentData.FileName);
         }
     }
     private EditableCubeData boardData;
@@ -116,8 +118,8 @@ public class LevelCreatorController : MonoBehaviour
         }
         else
         {
-            CubeLevelData levelData = CreateLevelData(levelName);
-            if (!levelData.Save(levelName, force))
+            currentData = CreateLevelData(levelName);
+            if (!currentData.Save(levelName, force))
             {
                 ActivatePopUp(true);
                 return false;
@@ -145,14 +147,13 @@ public class LevelCreatorController : MonoBehaviour
 
     private void LoadLevel(string levelName)
     {
-        LevelData level;
-        if (LevelData.TryLoad(levelName, out level))
+        if (LevelData.TryLoad(levelName, out currentData))
         {
-            levelNameField.text = level.fileName;
+            levelNameField.text = currentData.FileName;
             previousLevelNameField.text = previousLevelName;
             nextLevelNameField.text = nextLevelName;
-            numberMovesField.text = level.numberMoves.ToString();
-            switch (level.firstObjective)
+            numberMovesField.text = currentData.numberMoves.ToString();
+            switch (currentData.firstObjective)
             {
                 case ObjectiveType.NONE:
                     FirstObjective.value = 0;
@@ -164,8 +165,7 @@ public class LevelCreatorController : MonoBehaviour
                     FirstObjective.value = 2;
                     break;
             }
-            Assert.IsTrue(level is CubeLevelData);
-            boardData.SetData(((CubeLevelData)level).data);
+            boardData.SetData(currentData.data);
         }
 
     }

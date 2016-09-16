@@ -17,7 +17,7 @@ namespace CustomAnimations
         }
 
         protected State state = State.IDLE;
-        protected float duration;
+        public float duration;
         //An optional delay before the animation starts
         protected float delay;
 
