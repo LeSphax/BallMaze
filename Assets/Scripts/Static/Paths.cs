@@ -29,5 +29,6 @@ namespace BallMaze
 
         public const string DIR_3D = "3D" + FOLDER_SEPARATOR;
         public const string DIR_2D = "2D" + FOLDER_SEPARATOR;
+        public const string SCREEN_FADER = "Prefabs" + FOLDER_SEPARATOR + "ScreenFader";
     }
 }

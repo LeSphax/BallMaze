@@ -2,6 +2,7 @@
 using BallMaze.Extensions;
 using BallMaze.GameManagement;
 using BallMaze.GameMechanics;
+using BallMaze.Inputs;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,6 +27,11 @@ public class LevelLoader : MonoBehaviour
 
     void Start()
     {
+        InputManager IM = GameObjects.GetInputManager();
+        IM.LoadPreviousLevel += LoadPreviousLevel;
+        IM.LoadNextLevel += LoadNextLevel;
+        IM.ReloadLevel += ReloadLevel;
+
         if (!CreatorMode)
         {
             string firstLevelName;
@@ -99,6 +105,12 @@ public class LevelLoader : MonoBehaviour
     public void LoadPreviousLevel()
     {
         LoadLevel(Levels.GetPreviousLevelName(currentData.FileName));
+    }
+
+    public void ReloadLevel()
+    {
+        Debug.Log("Reload");
+        LoadLevel(currentData.FileName);
     }
 
     public void LoadNextLevel()

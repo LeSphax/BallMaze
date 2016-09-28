@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class UIInputManager : MonoBehaviour {
 
-    public InputManager manager;
+    private InputManager manager;
 
     void Start()
     {
@@ -20,9 +20,19 @@ public class UIInputManager : MonoBehaviour {
         manager.Reset();
     }
 
+    public void ReloadLevel()
+    {
+        manager.Reload();
+    }
+
     public void PreviousLevel()
     {
         manager.PreviousLevel();
+    }
+
+    public void NextLevel()
+    {
+        manager.NextLevel();
     }
 
     public void Quit()

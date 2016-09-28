@@ -50,8 +50,10 @@ public class LevelCreatorController : MonoBehaviour
 
     void Start()
     {
+#if UNITY_EDITOR && ! UNITY_WEBPLAYER
         Levels.WriteLevels();
-        EmptyEventHandler resetElevation = delegate () { Debug.Log("reset"); currentElevation = 0; };
+#endif
+        EmptyEventHandler resetElevation = delegate () { currentElevation = 0; };
         GameObjects.GetCameraController().RotationChanged += resetElevation;
         boardData = new EditableCubeData(cubeController);
         boardData.CreateBoard(new IntVector3(3, 3, 3));

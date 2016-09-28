@@ -1,5 +1,4 @@
 ﻿using BallMaze;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -112,7 +111,6 @@ public static class Levels
             if (line[0] == '_')
             {
                 currentFolder = line.Substring(1);
-                Debug.Log(currentFolder);
             }
             else
             {
@@ -123,17 +121,13 @@ public static class Levels
                 result[currentFolder].AddLast(line);
             }
         }
-        foreach(var pair in result)
-        {
-            Debug.Log("'" +pair.Key + "'   " + pair.Value);
-        }
         return result;
     }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !UNITY_WEBPLAYER
     public static void WriteLevels()
     {
-        using (StreamWriter outputFile = File.AppendText("Assets/Resources/" + levelFileName + ".txt"))
+        using (StreamWriter outputFile = System.IO.File.AppendText("Assets/Resources/" + levelFileName + ".txt"))
         {
             string[] directories = Directory.GetDirectories(StreamingAssetsPath);
             foreach (string directoryPath in directories)

@@ -11,6 +11,7 @@ namespace BallMaze.GameManagement
         private int objectivesFilled = 0;
 
         private GameObject resetButton;
+        private bool waitingForInput = false;
 
         void Awake()
         {
@@ -18,6 +19,10 @@ namespace BallMaze.GameManagement
             GetComponent<PlayBoard>().LevelFinished += LevelFinished;
         }
 
+        void Start()
+        {
+            GameObjects.GetInputManager().AnyInput += EndLevelIfFinished;
+        }
 
         internal override void NotifyFilledObjective(ObjectiveType objectiveEntered)
         {
@@ -53,7 +58,19 @@ namespace BallMaze.GameManagement
 
         internal override void LevelFinished()
         {
-            GameObjects.GetLevelLoader().LoadNextLevelDelayed();
+            foreach (GameObject tile in Tags.FindObjectiveTiles())
+            {
+                tile.AddComponent<WinAnim>();
+                CameraFade.StartFade(CameraFade.FadeType.FADEIN, Color.white * new Vector4(1, 1, 1, 0.5f));
+            }
+            waitingForInput = true;
         }
+
+        private void EndLevelIfFinished()
+        {
+            if (waitingForInput)
+                GameObjects.GetLevelLoader().LoadNextLevelDelayed();
+        }
+        
     }
 }

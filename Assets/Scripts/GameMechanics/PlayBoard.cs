@@ -172,7 +172,7 @@ namespace BallMaze.GameMechanics
             }
             else
             {
-                Debug.LogError("PlayBoardModel.MoveBrick" + board[posX, posY].ball.ToString() + "(" + posX + "," + posY + "," + newPosX + "," + newPosY + ") : The target tile should be empty");
+                Debug.LogError("PlayBoardModel.MoveBrick " + board[posX, posY].ball.ToString() + "(" + posX + "," + posY + "," + newPosX + "," + newPosY + ") : The target tile should be empty");
                 Debug.DebugBreak();
             }
         }

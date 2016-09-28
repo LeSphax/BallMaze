@@ -28,7 +28,7 @@ public abstract class LevelData
         get
         {
             string[] split = fileName.Split(Paths.FOLDER_SEPARATOR_CHAR);
-            return split[split.Length-1];
+            return split[split.Length - 1];
         }
     }
 
@@ -92,8 +92,7 @@ public abstract class LevelData
     public bool Save(string fileName, bool force = false)
     {
 #if UNITY_WEBGL || UNITY_WEBPLAYER
-            _tempLevelData = this;
-            return true;
+        return true;
 #endif
         return SaveToStreamingAssets(fileName, force);
     }
@@ -125,7 +124,7 @@ public abstract class LevelData
 
     private static string GetApplicationPath()
     {
-#if !UNITY_EDITOR
+#if true
             return Paths.LEVEL_FILES;
 #else
         return Application.streamingAssetsPath + Paths.FOLDER_SEPARATOR + Paths.LEVEL_FILES;
@@ -145,18 +144,10 @@ public abstract class LevelData
 
     public static bool TryLoad<T>(string fileName, out T levelData) where T : LevelData
     {
-#if !UNITY_EDITOR
-            if (fileName == LevelCreatorController.TEMP_LEVEL_NAME)
-            {
-                levelData = _tempLevelData;
-                return true;
-            }
-            else
-            {
-                return LoadFromResources(fileName, out levelData);
-            }
+#if true
+                return LoadFromResources<T>(fileName, out levelData);
 #else
-        return LoadFromStreamingAssets(fileName, out levelData);
+        return LoadFromStreamingAssets<T>(fileName, out levelData);
 #endif
     }
 
@@ -168,7 +159,7 @@ public abstract class LevelData
         if (textAsset == null)
         {
             levelData = null;
-            Debug.LogError("The file you are trying to load does not exist : (Path : " + path + " ) (FileName : " + fileName + " )");
+            Debug.LogError("The file you are trying to load does not exist : (Path : '" + path + "' ) (FileName : '" + fileName + "' )");
             return false;
         }
 
@@ -182,7 +173,6 @@ public abstract class LevelData
     private static bool LoadFromStreamingAssets<T>(string fileName, out T levelData) where T : LevelData
     {
         string path = GetApplicationPath() + fileName;
-        Debug.Log(typeof(T));
         bool successfullLoad = Saving.TryLoad<T>(path, out levelData);
 
         if (successfullLoad)

@@ -1,5 +1,4 @@
-﻿using BallMaze.GameMechanics;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BallMaze.Inputs
 {
@@ -11,11 +10,16 @@ namespace BallMaze.Inputs
         public event EmptyEventHandler ChangePerspectiveEvent;
         public event EmptyEventHandler LoadNextLevel;
         public event EmptyEventHandler LoadPreviousLevel;
+        public event EmptyEventHandler ReloadLevel;
+        public event EmptyEventHandler AnyInput;
+
+
 
         public event ReceiveBoardInput ReceivedCommand;
 
         protected virtual void Update()
         {
+            bool anyInput = true;
             if (CancelPressed())
             {
                 Cancel();
@@ -37,6 +41,12 @@ namespace BallMaze.Inputs
                 direction = ChangeDirectionForCube(direction);
                 if (direction != Direction.NONE && MoveCubeEvent != null)
                     MoveCubeEvent.Invoke(direction);
+                else
+                    anyInput = false;
+            }
+            if (anyInput && AnyInput != null)
+            {
+                AnyInput.Invoke();
             }
         }
 
@@ -61,6 +71,14 @@ namespace BallMaze.Inputs
             if (LoadNextLevel != null)
                 LoadNextLevel.Invoke();
         }
+
+        internal void Reload()
+        {
+            if (ReloadLevel != null)
+                ReloadLevel.Invoke();
+        }
+
+
 
         public void Quit()
         {

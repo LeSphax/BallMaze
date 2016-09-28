@@ -1,5 +1,4 @@
 ﻿using BallMaze;
-using BallMaze.GameManagement;
 using BallMaze.Inputs;
 using UnityEngine;
 
@@ -25,7 +24,7 @@ public static class GameObjects
 
     public static GameState GetGameState()
     {
-        return GetTaggedComponent<GameState>(Tags.BallMazeController);
+        return GetTaggedComponent<GameState>(Tags.GameController);
     }
 
     public static LevelCreatorController GetLevelCreatorController()
