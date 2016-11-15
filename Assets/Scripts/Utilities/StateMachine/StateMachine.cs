@@ -10,13 +10,13 @@ namespace GenericStateMachine
      * The machine is associated with a class of Events that are passed to it through its handleEvent method.
      * Each time a new Event is received, it will be passed to the current State, depending on the Event's class, the corresponding Transition will be fired.
      **/
-    public abstract class StateMachine<StateMachineType,EventType> : MonoBehaviour where StateMachineType : StateMachine<StateMachineType,EventType>
+    public abstract class StateMachine<StateMachineType, EventType> : MonoBehaviour where StateMachineType : StateMachine<StateMachineType, EventType>
     {
 
         internal State<StateMachineType, EventType> current = null;
         internal State<StateMachineType, EventType> first = null;
 
-        public StateMachine()
+        protected virtual void Awake()
         {
             first = DefineFirst();
             Assert.IsNotNull(first);

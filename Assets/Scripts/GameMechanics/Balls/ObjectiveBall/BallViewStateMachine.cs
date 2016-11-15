@@ -6,8 +6,9 @@ namespace BallMaze.GameMechanics.ObjectiveBall
     {
         internal ObjectiveBallView view;
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             view = GetComponent<ObjectiveBallView>();
         }
 

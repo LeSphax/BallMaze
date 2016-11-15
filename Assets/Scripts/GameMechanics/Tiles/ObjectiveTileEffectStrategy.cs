@@ -9,11 +9,11 @@ namespace BallMaze.GameMechanics.Tiles
 
         public override void Init()
         {
-            tileModel.SetOpen(true);
             GameObject fairyDust = Resources.Load<GameObject>(Paths.FAIRY_DUST);
             dustObject = Object.Instantiate(fairyDust);
             dustObject.transform.SetParent(tileModel.transform, false);
             dust = dustObject.GetComponent<ParticleSystem>().emission;
+            tileModel.SetOpen(true);
         }
 
         public override void SetState(TileController.State newState)

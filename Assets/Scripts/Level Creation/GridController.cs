@@ -26,7 +26,7 @@ namespace BallMaze.LevelCreation.Grid
 
         void Start()
         {
-            LevelCreatorController controller = Camera.main.GetComponent<LevelCreatorController>();
+            //LevelCreatorController controller = Camera.main.GetComponent<LevelCreatorController>();
             SetBoardData(BoardData.GetDummyBoardData());
             ComputeGridSize(oldBoardData);
             ComputeBoardPosition(gridSize, boardData);

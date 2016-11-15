@@ -93,8 +93,9 @@ public abstract class LevelData
     {
 #if UNITY_WEBGL || UNITY_WEBPLAYER
         return true;
-#endif
+#else
         return SaveToStreamingAssets(fileName, force);
+#endif
     }
 
     private bool SaveToResources(string fileName, bool force)

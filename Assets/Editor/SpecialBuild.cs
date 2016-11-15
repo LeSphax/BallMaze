@@ -26,7 +26,7 @@ public class SpecialBuild
         Debug.Log(BuildPipeline.BuildPlayer(levels, path, BuildTarget.WSAPlayer, BuildOptions.None));
 #endif
         }
-        catch (Exception e)
+        catch (Exception)
         {
             AssetDatabase.MoveAsset(Levels.StreamingAssetsPath, Levels.ResourcesPath);
             AssetDatabase.SaveAssets();

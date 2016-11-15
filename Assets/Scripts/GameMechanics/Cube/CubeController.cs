@@ -17,7 +17,7 @@ public class CubeController : MonoBehaviour
     public CameraController cameraController;
 
     public GameObject levelPrefab;
-    private InputManager inputManager;
+    //private InputManager inputManager;
 
     public event EmptyEventHandler LevelCompleted;
 
@@ -29,7 +29,7 @@ public class CubeController : MonoBehaviour
 
     void Start()
     {
-        inputManager = GameObjects.GetInputManager();
+        //inputManager = GameObjects.GetInputManager();
         cameraController.PerspectiveActivated += DestroySlice;
         cameraController.SliceChanged += CreateSlice;
     }

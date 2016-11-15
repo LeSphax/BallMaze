@@ -58,12 +58,14 @@ namespace BallMaze.GameManagement
 
         internal override void LevelFinished()
         {
-            foreach (GameObject tile in Tags.FindObjectiveTiles())
-            {
-                tile.AddComponent<WinAnim>();
-                CameraFade.StartFade(CameraFade.FadeType.FADEIN, Color.white * new Vector4(1, 1, 1, 0.5f));
-            }
-            waitingForInput = true;
+            GameObjects.GetLevelLoader().LoadNextLevelDelayed();
+
+            //foreach (GameObject tile in Tags.FindObjectiveTiles())
+            //{
+            //    //tile.AddComponent<WinAnim>();
+            //    //CameraFade.StartFade(CameraFade.FadeType.FADEIN, Color.white * new Vector4(1, 1, 1, 0.5f));
+            //}
+            //waitingForInput = true;
         }
 
         private void EndLevelIfFinished()

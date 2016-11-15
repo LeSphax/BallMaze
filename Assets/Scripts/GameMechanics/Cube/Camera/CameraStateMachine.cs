@@ -31,8 +31,9 @@ namespace BallMaze.CameraSM
         internal Queue<E_Delayed> nextEvents = new Queue<E_Delayed>();
         internal CameraController cameraController;
         
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             cameraController = GetComponent<CameraController>();
         }
 
