@@ -64,7 +64,7 @@ public static class Levels
         bool levelOk = CheckLevel(currentLevel, out directoryName, out levelName);
         if (levelOk && levels[directoryName].Find(levelName).Next != null)
             return directoryName + "/" + levels[directoryName].Find(levelName).Next.Value;
-        return "";
+        return null;
     }
 
     public static string GetPreviousLevelName(string currentLevel)
@@ -74,7 +74,7 @@ public static class Levels
         bool levelOk = CheckLevel(currentLevel, out directoryName, out levelName);
         if (levelOk && levels[directoryName].Find(levelName).Previous != null)
             return directoryName + "/" + levels[directoryName].Find(levelName).Previous.Value;
-        return "";
+        return null;
     }
 
     private static bool CheckLevel(string currentLevel, out string directoryName, out string levelName)

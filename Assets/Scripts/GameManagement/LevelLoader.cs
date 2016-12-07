@@ -104,7 +104,9 @@ public class LevelLoader : MonoBehaviour
 
     public void LoadPreviousLevel()
     {
-        LoadLevel(Levels.GetPreviousLevelName(currentData.FileName));
+        string previousLevel = Levels.GetPreviousLevelName(currentData.FileName);
+        if (previousLevel != null)
+            LoadLevel(previousLevel);
     }
 
     public void ReloadLevel()
@@ -116,6 +118,7 @@ public class LevelLoader : MonoBehaviour
     public void LoadNextLevel()
     {
         string nextLevelName = Levels.GetNextLevelName(currentData.FileName);
+        Debug.Log(nextLevelName);
         if (nextLevelName == null)
             EndOfGame();
         else
