@@ -1,12 +1,18 @@
-﻿
-using BallMaze.Data;
-using System;
-using System.Xml.Serialization;
+﻿using System;
 
-[XmlInclude(typeof(BoardData))]
-[XmlInclude(typeof(CubeData))]
 public abstract class PuzzleData
 {
     public abstract bool IsValid();
+
+    public virtual string Serialize()
+    {
+        if (typeof(CubeData).IsAssignableFrom(GetType()))
+            return ((CubeData)this).Serialize();
+        else if (typeof(BoardData).IsAssignableFrom(GetType()))
+            return ((BoardData)this).Serialize();
+        else
+            throw new Exception("This type of puzzle data is not supported " + GetType());
+    }
+
 }
 

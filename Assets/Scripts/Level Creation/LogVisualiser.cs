@@ -1,58 +1,54 @@
-﻿using BallMaze.GameManagement;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace BallMaze.GameMechanics.LevelCreation
+public class LogVisualiser : MonoBehaviour
 {
-    public class LogVisualiser : MonoBehaviour
+
+    GamesLogs gamesLogs;
+    GameLogs gameCurrent;
+    Log logCurrent;
+    int indexLogs;
+
+    public string fileName;
+
+    private enum State
     {
+        IDLE,
+        PLAYING,
+    }
+    private State state;
 
-        GamesLogs gamesLogs;
-        GameLogs gameCurrent;
-        Log logCurrent;
-        int indexLogs;
+    void Start()
+    {
+        gamesLogs = SaveManager.GetAllLogs(fileName);
+        gameCurrent = gamesLogs.games[0];
+        indexLogs = 0;
+        logCurrent = gameCurrent.logs[indexLogs];
+        state = State.PLAYING;
+    }
 
-        public string fileName;
-
-        private enum State
+    void Update()
+    {
+        switch (state)
         {
-            IDLE,
-            PLAYING,
-        }
-        private State state;
-
-        void Start()
-        {
-            gamesLogs = SaveManager.GetAllLogs(fileName);
-            gameCurrent = gamesLogs.games[0];
-            indexLogs = 0;
-            logCurrent = gameCurrent.logs[indexLogs];
-            state = State.PLAYING;
-        }
-
-        void Update()
-        {
-            switch (state)
-            {
-                case State.PLAYING:
-                    float timeCurrent = Time.realtimeSinceStartup;
-                    if (timeCurrent > logCurrent.timeSaved)
+            case State.PLAYING:
+                float timeCurrent = Time.realtimeSinceStartup;
+                if (timeCurrent > logCurrent.timeSaved)
+                {
+                    logCurrent.command.LogExecute();
+                    if (indexLogs < gameCurrent.logs.Count - 1)
                     {
-                        logCurrent.command.LogExecute();
-                        if (indexLogs < gameCurrent.logs.Count - 1)
-                        {
-                            indexLogs++;
-                            logCurrent = gameCurrent.logs[indexLogs];
-                        }
-                        else
-                        {
-                            state = State.IDLE;
-                        }
+                        indexLogs++;
+                        logCurrent = gameCurrent.logs[indexLogs];
                     }
-                    break;
-                case State.IDLE:
-                    break;
-            }
-
+                    else
+                    {
+                        state = State.IDLE;
+                    }
+                }
+                break;
+            case State.IDLE:
+                break;
         }
+
     }
 }

@@ -1,44 +1,38 @@
-﻿using BallMaze.GameManagement;
-using BallMaze.GameMechanics;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using UnityEngine;
 
-namespace BallMaze.Inputs
+public delegate void ReceiveBoardInput(BoardInputCommand command);
+
+[XmlInclude(typeof(ResetCommand))]
+[XmlInclude(typeof(MoveCommand))]
+[XmlInclude(typeof(CancelCommand))]
+public abstract class BoardInputCommand : InputCommand
 {
 
-    public delegate void ReceiveBoardInput(BoardInputCommand command);
+    protected PlayBoard model;
 
-    [XmlInclude(typeof(ResetCommand))]
-    [XmlInclude(typeof(MoveCommand))]
-    [XmlInclude(typeof(CancelCommand))]
-    public abstract class BoardInputCommand : InputCommand
+    public BoardInputCommand(SaveManager saveManager = null) : base(saveManager)
     {
-
-        protected PlayBoard model;
-
-        public BoardInputCommand(SaveManager saveManager = null) : base(saveManager)
-        {
-        }
-
-        protected override void PrepareExecution()
-        {
-            model = GameObject.FindGameObjectWithTag(Tags.LevelController).GetComponent<PlayBoard>();
-        }
-
-        public void SetModel(PlayBoard model)
-        {
-            this.model = model;
-        }
-
-        public override void LogExecute()
-        {
-            PrepareExecution();
-            saveManager = null;
-            model.ReceiveInputCommand(this);
-        }
-
-        //public abstract void Undo();
-
-        //public abstract bool IsExecuting();
     }
+
+    protected override void PrepareExecution()
+    {
+        model = GameObject.FindGameObjectWithTag(Tags.LevelController).GetComponent<PlayBoard>();
+    }
+
+    public void SetModel(PlayBoard model)
+    {
+        this.model = model;
+    }
+
+    public override void LogExecute()
+    {
+        PrepareExecution();
+        saveManager = null;
+        model.ReceiveInputCommand(this);
+    }
+
+    //public abstract void Undo();
+
+    //public abstract bool IsExecuting();
 }

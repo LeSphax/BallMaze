@@ -1,7 +1,7 @@
 ﻿using GenericStateMachine;
 using UnityEngine;
 
-namespace BallMaze.GameMechanics.Turns
+namespace TurnsStateMachine
 {
     internal class TurnsStateMachine : StateMachine<TurnsStateMachine, TurnEvent>
     {
@@ -80,6 +80,4 @@ namespace BallMaze.GameMechanics.Turns
         {
         }
     }
-
-
 }

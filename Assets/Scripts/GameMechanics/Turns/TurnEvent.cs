@@ -1,4 +1,5 @@
-﻿
+﻿namespace TurnsStateMachine
+{
     internal abstract class TurnEvent
     {
     }
@@ -7,4 +8,4 @@
     {
 
     }
-
+}

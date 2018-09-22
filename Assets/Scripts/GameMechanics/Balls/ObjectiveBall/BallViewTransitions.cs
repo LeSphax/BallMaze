@@ -2,9 +2,8 @@
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace BallMaze.GameMechanics.ObjectiveBall
+namespace BVStateMachine
 {
-
     internal abstract class FinishedAnimationTransition : Transition<BallViewStateMachine, BallViewEvent, FinishedAnimation>
     {
         public FinishedAnimationTransition(BallViewState state) : base(state)
@@ -70,7 +69,7 @@ namespace BallMaze.GameMechanics.ObjectiveBall
 
         public override void action(MoveCommand evt)
         {
-            #if !UNITY_WP_8_1
+#if !UNITY_WP_8_1
             Assert.IsTrue(myState.GetType().IsSubclassOf(typeof(BallViewState)));
 #endif
             BallViewState state = (BallViewState)myState;
@@ -146,5 +145,5 @@ namespace BallMaze.GameMechanics.ObjectiveBall
     //        return new Completed(myState.stateMachine);
     //    }
     //}
-}
 
+}

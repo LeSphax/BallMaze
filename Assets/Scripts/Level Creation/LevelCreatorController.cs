@@ -1,7 +1,6 @@
-﻿using BallMaze.Cube;
-using BallMaze.Data;
+﻿
+using System.IO;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 
@@ -19,11 +18,11 @@ public class LevelCreatorController : MonoBehaviour
     public GameObject PopUp;
     public CubeController cubeController;
 
-    private CubeLevelData currentData;
+    private LevelData currentData;
 
     private int currentElevation = 0;
 
-    public string currentLevelName
+    public string CurrentLevelName
     {
         get
         {
@@ -31,7 +30,7 @@ public class LevelCreatorController : MonoBehaviour
         }
     }
 
-    public string nextLevelName
+    public string NextLevelName
     {
         get
         {
@@ -39,7 +38,7 @@ public class LevelCreatorController : MonoBehaviour
         }
     }
 
-    public string previousLevelName
+    public string PreviousLevelName
     {
         get
         {
@@ -109,30 +108,34 @@ public class LevelCreatorController : MonoBehaviour
     }
 
 
-    private bool SaveData(bool force = false)
+    private void SaveData(bool force = false)
     {
         string levelName = levelNameField.text;
         if (levelName == "")
         {
             Debug.LogWarning("The level needs a name");
             levelNameField.Select();
-            return false;
         }
         else
         {
             currentData = CreateLevelData(levelName);
-            if (!currentData.Save(levelName, force))
+            FileInfo file = new FileInfo(Application.dataPath + "/Resources/LevelFiles/" + levelName + ".txt");
+
+            if (!force && file.Exists)
             {
                 ActivatePopUp(true);
-                return false;
             }
-            return true;
+            else
+            {
+                file.Directory.Create(); // If the directory already exists, this method does nothing.
+                File.WriteAllText(file.FullName, currentData.Serialize());
+            }
         }
     }
 
-    private CubeLevelData CreateLevelData(string levelName)
+    private LevelData CreateLevelData(string levelName)
     {
-        CubeLevelData levelData = new CubeLevelData(boardData, previousLevelNameField.text, levelName, nextLevelNameField.text);
+        LevelData levelData = new LevelData(boardData, levelName);
         if (FirstObjective.value == 1)
         {
             levelData.SetFirstObjective(ObjectiveType.OBJECTIVE1);
@@ -149,27 +152,24 @@ public class LevelCreatorController : MonoBehaviour
 
     private void LoadLevel(string levelName)
     {
-        if (LevelData.TryLoad(levelName, out currentData))
+        currentData = LevelData.Load(levelName);
+        levelNameField.text = currentData.FileName;
+        previousLevelNameField.text = PreviousLevelName;
+        nextLevelNameField.text = NextLevelName;
+        numberMovesField.text = currentData.numberMoves.ToString();
+        switch (currentData.firstObjective)
         {
-            levelNameField.text = currentData.FileName;
-            previousLevelNameField.text = previousLevelName;
-            nextLevelNameField.text = nextLevelName;
-            numberMovesField.text = currentData.numberMoves.ToString();
-            switch (currentData.firstObjective)
-            {
-                case ObjectiveType.NONE:
-                    FirstObjective.value = 0;
-                    break;
-                case ObjectiveType.OBJECTIVE1:
-                    FirstObjective.value = 1;
-                    break;
-                case ObjectiveType.OBJECTIVE2:
-                    FirstObjective.value = 2;
-                    break;
-            }
-            boardData.SetData(currentData.data);
+            case ObjectiveType.NONE:
+                FirstObjective.value = 0;
+                break;
+            case ObjectiveType.OBJECTIVE1:
+                FirstObjective.value = 1;
+                break;
+            case ObjectiveType.OBJECTIVE2:
+                FirstObjective.value = 2;
+                break;
         }
-
+        boardData.SetData((CubeData)currentData.PuzzleData);
     }
 
     public void OnTileClick(CubeFace face, int x, int y)
@@ -177,16 +177,16 @@ public class LevelCreatorController : MonoBehaviour
         FaceModel faceModel = FaceModel.ModelsDictionary[face];
         int Z_SIZE = faceModel.GetRealSizes(boardData.Sizes)[Axis.Z];
         IntVector3 position = faceModel.GetRealCoords(new IntVector3(x, y, Z_SIZE - 1 - currentElevation), boardData.Sizes);
-        if (position.x < boardData.X_SIZE && position.y < boardData.Y_SIZE && position.z < boardData.Z_SIZE)
+        if (position.X < boardData.X_SIZE && position.Y < boardData.Y_SIZE && position.Z < boardData.Z_SIZE)
         {
             MapClicksToCreation(face, x, y, position);
         }
         else
         {
             Debug.LogWarning("OutOfCube");
-            Debug.Log(position.x + " vs " + boardData.X_SIZE);
-            Debug.Log(position.y + " vs " + boardData.Y_SIZE);
-            Debug.Log(position.z + " vs " + boardData.Z_SIZE);
+            Debug.Log(position.X + " vs " + boardData.X_SIZE);
+            Debug.Log(position.Y + " vs " + boardData.Y_SIZE);
+            Debug.Log(position.Z + " vs " + boardData.Z_SIZE);
         }
 
     }
@@ -227,16 +227,16 @@ public class LevelCreatorController : MonoBehaviour
 
     public void LoadPrevious()
     {
-        LoadLevel(previousLevelName);
+        LoadLevel(PreviousLevelName);
     }
 
     public void LoadCurrent()
     {
-        LoadLevel(currentLevelName);
+        LoadLevel(CurrentLevelName);
     }
 
     public void LoadNext()
     {
-        LoadLevel(nextLevelName);
+        LoadLevel(NextLevelName);
     }
 }

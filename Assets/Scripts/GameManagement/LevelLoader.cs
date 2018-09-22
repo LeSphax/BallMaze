@@ -1,8 +1,7 @@
-﻿using BallMaze.Data;
-using BallMaze.Extensions;
-using BallMaze.GameManagement;
-using BallMaze.GameMechanics;
-using BallMaze.Inputs;
+﻿
+
+
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -45,56 +44,41 @@ public class LevelLoader : MonoBehaviour
 
     public bool LoadLevel(string levelName)
     {
-        bool loaded;
-        if (Levels.is3DLevel(levelName))
-        {
-            CubeLevelData newData;
-            loaded = LevelData.TryLoad(levelName, out newData);
-            if (loaded)
-            {
-                currentData = newData;
-                levelNameField.text = currentData.Name;
-                SetData(newData);
-            }
-        }
+        //bool loaded;
+        bool isCube = Levels.is3DLevel(levelName);
+        currentData = LevelData.Load(levelName);
+        levelNameField.text = currentData.Name;
+        if (isCube)
+            SetCubeData(currentData);
         else
-        {
-            BoardLevelData newData;
-            loaded = LevelData.TryLoad(levelName, out newData);
-            if (loaded)
-            {
-                currentData = newData;
-                levelNameField.text = currentData.Name;
-                SetData(newData);
-            }
-        }
-        if (!loaded)
-        {
-            Debug.LogError("Didn't succed in loading the following level : " + levelName);
-            return false;
-        }
+            SetBoardData(currentData);
+        //if (!loaded)
+        //{
+        //    Debug.LogError("Didn't succed in loading the following level : " + levelName);
+        //    return false;
+        //}
         if (LevelChanged != null)
             LevelChanged.Invoke();
         return true;
     }
 
-    public void SetData(BoardLevelData levelData)
+    public void SetBoardData(LevelData levelData)
     {
         Destroy(currentLevel);
         currentLevel = this.InstantiateAsChildren(boardLevelPrefab);
         Board boardModel = currentLevel.GetComponent<Board>();
-        boardModel.SetData(levelData.data);
+        boardModel.SetData((BoardData)levelData.PuzzleData);
         NormalLevelManager levelManager = currentLevel.GetComponent<NormalLevelManager>();
         Debug.Log(currentLevel.name);
         levelManager.SetObjectiveOrder(currentData.firstObjective);
     }
 
-    public void SetData(CubeLevelData levelData)
+    public void SetCubeData(LevelData levelData)
     {
         cubeController.gameObject.SetActive(true);
         cubeController.LevelCompleted -= LoadNextLevelDelayed;
         cubeController.LevelCompleted += LoadNextLevelDelayed;
-        cubeController.SetData(levelData.data);
+        cubeController.SetData((CubeData)levelData.PuzzleData);
     }
 
     public void LoadNextLevelDelayed()

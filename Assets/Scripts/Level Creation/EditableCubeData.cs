@@ -1,5 +1,5 @@
 ﻿
-using BallMaze.Cube;
+
 
 public class EditableCubeData : CubeData
 {
@@ -70,15 +70,15 @@ public class EditableCubeData : CubeData
 
     public void ResetBoard()
     {
-        oldFaces = TileData.GetEmptyFaceArray(new IntVector3(0, 0, 0));
-        oldBalls = BallData.GetEmptyBallDataMatrix(0, 0, 0);
-        CreateBoard(IntVector3.one *3);
+        oldFaces = TileData.CreateEmptyFaceArray(new IntVector3(0, 0, 0));
+        oldBalls = BallData.CreateEmptyBallDataMatrix(new IntVector3(0, 0, 0));
+        CreateBoard(IntVector3.One *3);
         UpdateModel();
     }
 
     public void CreateBoard(IntVector3 sizes)
     {
-        faces = TileData.GetEmptyFaceArray(sizes, oldFaces);
+        faces = TileData.CreateEmptyFaceArray(sizes, oldFaces);
         balls = InitBalls(sizes);
         UpdateModel();
     }
@@ -92,12 +92,12 @@ public class EditableCubeData : CubeData
 
     private BallData[,,] InitBalls(IntVector3 sizes)
     {
-        BallData[,,] result = new BallData[sizes.x, sizes.y, sizes.z];
-        for (int i = 0; i < sizes.x; i++)
+        BallData[,,] result = new BallData[sizes.X, sizes.Y, sizes.Z];
+        for (int i = 0; i < sizes.X; i++)
         {
-            for (int j = 0; j < sizes.y; j++)
+            for (int j = 0; j < sizes.Y; j++)
             {
-                for (int k = 0; k < sizes.z; k++)
+                for (int k = 0; k < sizes.Z; k++)
                 {
                     if (oldBalls.GetLength(0) > i && oldBalls.GetLength(1) > j && oldBalls.GetLength(2) > k)
                     {
@@ -116,6 +116,12 @@ public class EditableCubeData : CubeData
     public void NextBall(IntVector3 position)
     {
         balls.Set(position, balls.Get(position).GetNext());
+        UpdateModel();
+    }
+
+    internal void PreviousBall(IntVector3 position)
+    {
+        balls.Set(position, balls.Get(position).GetPrevious());
         UpdateModel();
     }
 
@@ -151,7 +157,6 @@ public class EditableCubeData : CubeData
     {
         faces = cubeData.faces;
         balls = cubeData.balls;
-        _objectives = null;
         UpdateModel();
     }
 
@@ -162,12 +167,6 @@ public class EditableCubeData : CubeData
             return true;
         }
         return false;
-    }
-
-    internal void PreviousBall(IntVector3 position)
-    {
-        balls.Set(position, balls.Get(position).GetPrevious());
-        UpdateModel();
     }
 
     private void UpdateModel()

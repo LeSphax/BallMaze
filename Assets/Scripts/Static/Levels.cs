@@ -1,4 +1,4 @@
-﻿using BallMaze;
+﻿
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -49,12 +49,12 @@ public static class Levels
 
     public static string GetFirst2DLevelName()
     {
-        return Paths.DIR_2D + levels[BoardLevelData.DirectoryName()].First.Value;
+        return Paths.DIR_2D + levels[Paths.DIR_2D.Substring(0,Paths.DIR_2D.Length-1)].First.Value;
     }
 
     public static string GetFirst3DLevelName()
     {
-        return Paths.DIR_3D + levels[CubeLevelData.DirectoryName()].First.Value;
+        return Paths.DIR_3D + levels[Paths.DIR_3D.Substring(0, Paths.DIR_2D.Length - 1)].First.Value;
     }
 
     public static string GetNextLevelName(string currentLevel)

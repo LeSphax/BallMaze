@@ -1,6 +1,4 @@
-﻿using Utilities;
-
-public struct IntVector2
+﻿public struct IntVector2
 {
     private int[] coords;
 

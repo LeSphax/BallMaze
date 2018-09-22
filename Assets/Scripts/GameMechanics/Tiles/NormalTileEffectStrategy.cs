@@ -1,12 +1,9 @@
-﻿namespace BallMaze.GameMechanics.Tiles
+﻿internal class NormalTileEffectStrategy : ATileEffectStrategy
 {
-    internal class NormalTileEffectStrategy : ATileEffectStrategy
+
+    public override void Init()
     {
-
-        public override void Init()
-        {
-            tileModel.SetState(TileController.State.FILLED);
-        }
+        tileModel.SetState(TileController.State.FILLED);
     }
-
 }
+

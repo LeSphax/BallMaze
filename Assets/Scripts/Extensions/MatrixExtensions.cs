@@ -193,11 +193,11 @@ public static class MatrixExtensions
 
     public static T Get<T>(this T[,,] matrix, IntVector3 position)
     {
-        return matrix[position.x, position.y, position.z];
+        return matrix[position.X, position.Y, position.Z];
     }
 
     public static void Set<T>(this T[,,] matrix, IntVector3 coords, T value)
     {
-        matrix[coords.x, coords.y, coords.z] = value;
+        matrix[coords.X, coords.Y, coords.Z] = value;
     }
 }

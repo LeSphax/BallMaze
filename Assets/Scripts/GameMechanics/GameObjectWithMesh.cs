@@ -1,21 +1,18 @@
 ﻿using UnityEngine;
 
-namespace BallMaze.GameMechanics
+public abstract class GameObjectWithMesh : MonoBehaviour
 {
-    public abstract class GameObjectWithMesh : MonoBehaviour
+    [SerializeField]
+    private GameObject _Mesh;
+    public virtual GameObject Mesh
     {
-        [SerializeField]
-        private GameObject _Mesh;
-        public virtual GameObject Mesh
+        get
         {
-            get
-            {
-                return _Mesh;
-            }
-            set
-            {
-                _Mesh = value;
-            }
+            return _Mesh;
+        }
+        set
+        {
+            _Mesh = value;
         }
     }
 }

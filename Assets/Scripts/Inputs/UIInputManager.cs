@@ -1,4 +1,4 @@
-﻿using BallMaze.Inputs;
+﻿
 using UnityEngine;
 
 public class UIInputManager : MonoBehaviour {

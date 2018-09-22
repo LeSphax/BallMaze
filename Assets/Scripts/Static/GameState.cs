@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BallMaze
+public class GameState : MonoBehaviour
 {
-    public class GameState : MonoBehaviour
-    {
-        public bool LevelEditor = false;
-    }
+    public bool LevelEditor = false;
 }

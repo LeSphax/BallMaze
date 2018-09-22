@@ -1,7 +1,7 @@
-﻿using BallMaze;
-using BallMaze.Cube;
-using BallMaze.GameMechanics;
-using BallMaze.Inputs;
+﻿
+
+
+
 using UnityEngine;
 
 public class CubeController : MonoBehaviour

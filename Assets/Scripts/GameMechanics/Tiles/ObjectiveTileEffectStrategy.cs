@@ -1,39 +1,36 @@
 ﻿using UnityEngine;
 
-namespace BallMaze.GameMechanics.Tiles
+internal class ObjectiveTileEffectStrategy : ATileEffectStrategy
 {
-    internal class ObjectiveTileEffectStrategy : ATileEffectStrategy
+    private ParticleSystem.EmissionModule dust;
+    private GameObject dustObject;
+
+    public override void Init()
     {
-        private ParticleSystem.EmissionModule dust;
-        private GameObject dustObject;
+        GameObject fairyDust = Resources.Load<GameObject>(Paths.FAIRY_DUST);
+        dustObject = Object.Instantiate(fairyDust);
+        dustObject.transform.SetParent(tileModel.transform, false);
+        dust = dustObject.GetComponent<ParticleSystem>().emission;
+        tileModel.SetOpen(true);
+    }
 
-        public override void Init()
+    public override void SetState(TileController.State newState)
+    {
+        switch (newState)
         {
-            GameObject fairyDust = Resources.Load<GameObject>(Paths.FAIRY_DUST);
-            dustObject = Object.Instantiate(fairyDust);
-            dustObject.transform.SetParent(tileModel.transform, false);
-            dust = dustObject.GetComponent<ParticleSystem>().emission;
-            tileModel.SetOpen(true);
+            case TileController.State.CLOSED:
+                dust.enabled = false;
+                break;
+            case TileController.State.OPEN:
+                dust.enabled = true;
+                break;
+            case TileController.State.FILLED:
+                dust.enabled = false;
+                break;
+            default:
+                break;
         }
-
-        public override void SetState(TileController.State newState)
-        {
-            switch (newState)
-            {
-                case TileController.State.CLOSED:
-                    dust.enabled = false;
-                    break;
-                case TileController.State.OPEN:
-                    dust.enabled = true;
-                    break;
-                case TileController.State.FILLED:
-                    dust.enabled = false;
-                    break;
-                default:
-                    break;
-            }
-        }
-
     }
 
 }
+

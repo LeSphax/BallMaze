@@ -1,16 +1,11 @@
-﻿using BallMaze;
-using System;
-using System.IO;
-using System.Xml.Serialization;
+﻿using System;
+using System.Linq;
+using System.Text;
 using UnityEngine;
-using Utilities;
 
-public abstract class LevelData
+public class LevelData
 {
 
-
-    public string previousLevelName;
-    [XmlIgnore]
     private string fileName;
     public string FileName
     {
@@ -32,26 +27,9 @@ public abstract class LevelData
         }
     }
 
-    public string nextLevelName;
-    protected abstract PuzzleData puzzleData
-    {
-        get;
-        set;
-    }
-    public int numberMoves;
+    public PuzzleData PuzzleData;
 
-    private static LevelData _tempLevelData;
-    public static LevelData tempLevelData
-    {
-        get
-        {
-            return _tempLevelData;
-        }
-        set
-        {
-            _tempLevelData = value;
-        }
-    }
+    public int numberMoves;
 
     public ObjectiveType firstObjective;
 
@@ -60,22 +38,15 @@ public abstract class LevelData
 
     }
 
-    public LevelData(PuzzleData data, string name, string nextLevelName = "")
+    public LevelData(PuzzleData data, string name)
     {
-        InitData(data, name, nextLevelName);
+        InitData(data, name);
     }
 
-    private void InitData(PuzzleData data, string name, string nextLevelName)
+    private void InitData(PuzzleData data, string name)
     {
-        this.puzzleData = data;
+        this.PuzzleData = data;
         this.fileName = name;
-        this.nextLevelName = nextLevelName;
-    }
-
-    public LevelData(PuzzleData data, string previousLevelName, string name, string nextLevelName)
-    {
-        this.previousLevelName = previousLevelName;
-        InitData(data, name, nextLevelName);
     }
 
     public void SetFirstObjective(ObjectiveType first)
@@ -88,107 +59,67 @@ public abstract class LevelData
         this.numberMoves = numberMoves;
     }
 
-
-    public bool Save(string fileName, bool force = false)
+    public virtual string Serialize()
     {
-#if UNITY_WEBGL || UNITY_WEBPLAYER
-        return true;
-#else
-        return SaveToStreamingAssets(fileName, force);
-#endif
+        StringBuilder builder = new StringBuilder();
+        builder.AppendLine("; numberMoves");
+        builder.AppendLine("\t" + numberMoves);
+        builder.AppendLine("; firstObjective");
+        builder.AppendLine("\t" + (int)firstObjective);
+
+        string serializedData = PuzzleData.Serialize();
+        //Add additionnal tab on each line
+        serializedData.Split(Environment.NewLine.ToCharArray()).Select(x => "\t" + x).Aggregate((i, j) => i + Environment.NewLine + j);
+        builder.Append(serializedData);
+
+        return builder.ToString();
     }
 
-    private bool SaveToResources(string fileName, bool force)
+    public static LevelData Load(string fileName)
     {
-        string path = Application.dataPath + Paths.FOLDER_SEPARATOR + Paths.RESOURCES + Paths.LEVEL_FILES + fileName;
-        return SaveFile(fileName, force, path);
+        string serializedData = Resources.Load<TextAsset>(Paths.LEVEL_FILES + fileName).text;
+        return Parse(fileName, serializedData);
     }
 
-    private bool SaveFile(string fileName, bool force, string path)
+    public static LevelData Parse(string fileName, string serializedData)
     {
-        if (!force && File.Exists(path))
+        string currentField = "";
+        int currentPosition = 0;
+        LevelData result = new LevelData();
+        result.FileName = fileName;
+        foreach (string line in serializedData.Split(Environment.NewLine.ToCharArray()))
         {
-            return false;
-        }
-        Serialize(path);
-        Debug.Log(fileName + " was successfully saved !");
-        return true;
-    }
-
-    protected abstract void Serialize(string path);
-
-    private bool SaveToStreamingAssets(string fileName, bool force)
-    {
-        string path = GetApplicationPath() + fileName;
-        return SaveFile(fileName, force, path);
-    }
-
-    private static string GetApplicationPath()
-    {
-#if true
-            return Paths.LEVEL_FILES;
-#else
-        return Application.streamingAssetsPath + Paths.FOLDER_SEPARATOR + Paths.LEVEL_FILES;
-#endif
-
-    }
-
-    internal bool HasPreviousLevel()
-    {
-        return previousLevelName != "";
-    }
-
-    internal bool HasNextLevel()
-    {
-        return nextLevelName != "";
-    }
-
-    public static bool TryLoad<T>(string fileName, out T levelData) where T : LevelData
-    {
-#if true
-                return LoadFromResources<T>(fileName, out levelData);
-#else
-        return LoadFromStreamingAssets<T>(fileName, out levelData);
-#endif
-    }
-
-    private static bool LoadFromResources<T>(string fileName, out T levelData) where T : LevelData
-    {
-        string path = GetApplicationPath() + fileName;
-
-        TextAsset textAsset = (TextAsset)Resources.Load(path);
-        if (textAsset == null)
-        {
-            levelData = null;
-            Debug.LogError("The file you are trying to load does not exist : (Path : '" + path + "' ) (FileName : '" + fileName + "' )");
-            return false;
-        }
-
-        StringReader reader = new StringReader(textAsset.text);
-        XmlSerializer xs = new XmlSerializer(typeof(T));
-        levelData = (T)xs.Deserialize(reader);
-        levelData.FileName = fileName;
-        return true;
-    }
-
-    private static bool LoadFromStreamingAssets<T>(string fileName, out T levelData) where T : LevelData
-    {
-        string path = GetApplicationPath() + fileName;
-        bool successfullLoad = Saving.TryLoad<T>(path, out levelData);
-
-        if (successfullLoad)
-        {
-            levelData.FileName = fileName;
-            if (levelData.puzzleData.IsValid())
-                return true;
-            else
+            currentPosition += line.Length;
+            string trimmedLine = line.Trim();
+            if (trimmedLine.Length > 0)
             {
-                Debug.LogError("The boardData isn't valid ! The filename was " + fileName);
-                return true;
+                if (trimmedLine[0] == ';')
+                {
+                    currentField = trimmedLine.Substring(1);
+                }
+                else if (trimmedLine == "Board")
+                {
+                    result.PuzzleData = BoardData.Parse(serializedData.Substring(currentPosition));
+                }
+                else if(trimmedLine == "Cube")
+                {
+                    result.PuzzleData = CubeData.Parse(serializedData.Substring(currentPosition));
+                }
+                else
+                {
+                    switch (currentField)
+                    {
+                        case "numberMoves":
+                            result.numberMoves = int.Parse(trimmedLine);
+                            break;
+                        case "firstObjective":
+                            result.firstObjective = (ObjectiveType)int.Parse(trimmedLine);
+                            break;
+                    }
+                }
             }
         }
-        levelData = null;
-        return false;
+        return result;
     }
 }
 

@@ -1,82 +1,79 @@
 ﻿
 using System.Collections.Generic;
 using UnityEngine;
-namespace BallMaze.GameMechanics.Tiles
+internal class SyncedTileEffectStrategy : ObjectiveTileEffectStrategy
 {
-    internal class SyncedTileEffectStrategy : ObjectiveTileEffectStrategy
+    private List<SyncedTileController> _otherSyncedTiles;
+    private List<SyncedTileController> otherSyncedTiles
     {
-        private List<SyncedTileController> _otherSyncedTiles;
-        private List<SyncedTileController> otherSyncedTiles
+        get
         {
-            get
+            if (_otherSyncedTiles == null)
             {
-                if (_otherSyncedTiles == null)
+                _otherSyncedTiles = new List<SyncedTileController>();
+                foreach (GameObject tile in GameObject.FindGameObjectsWithTag(Tags.SyncedTile))
                 {
-                    _otherSyncedTiles = new List<SyncedTileController>();
-                    foreach (GameObject tile in GameObject.FindGameObjectsWithTag(Tags.SyncedTile))
+                    if (tile.GetComponent<SyncedTileController>() != null && tile != tileModel.gameObject)
                     {
-                        if (tile.GetComponent<SyncedTileController>() != null && tile != tileModel.gameObject)
-                        {
-                            _otherSyncedTiles.Add(tile.GetComponent<SyncedTileController>());
-                        }
+                        _otherSyncedTiles.Add(tile.GetComponent<SyncedTileController>());
                     }
                 }
-                return _otherSyncedTiles;
             }
+            return _otherSyncedTiles;
         }
-        private bool effectActivated = false;
+    }
+    private bool effectActivated = false;
 
-        public override void Init()
-        {
-            base.Init();
-            
-            tileModel.SetOpen(false);
-        }
+    public override void Init()
+    {
+        base.Init();
 
-        public override bool ActivateEffect(IBallController ball)
-        {
-            if (ball.GetObjectiveType() == tileModel.GetObjectiveType() && !effectActivated)
-            {
-                ActivateEffect(true);
-                return true;
-            }
-            else if (effectActivated && ball.GetObjectiveType() != tileModel.GetObjectiveType())
-            {
-                ActivateEffect(false);
-                return true;
-            }
-            return false;
-        }
+        tileModel.SetOpen(false);
+    }
 
-        public override void ActivateEffect(bool activate)
+    public override bool ActivateEffect(IBallController ball)
+    {
+        if (ball.GetObjectiveType() == tileModel.GetObjectiveType() && !effectActivated)
         {
-            if (activate)
-            {
-                effectActivated = true;
-                foreach (SyncedTileController tile in otherSyncedTiles)
-                {
-                    tile.SetOpen(true);
-                }
-            }
-            else
-            {
-                effectActivated = false;
-                foreach (SyncedTileController tile in otherSyncedTiles)
-                {
-                    tile.SetOpen(false);
-                }
-            }
-        }
-
-        public override bool HasEffect()
-        {
+            ActivateEffect(true);
             return true;
         }
-
-        public override bool IsEffectActivated()
+        else if (effectActivated && ball.GetObjectiveType() != tileModel.GetObjectiveType())
         {
-            return effectActivated;
+            ActivateEffect(false);
+            return true;
         }
+        return false;
+    }
+
+    public override void ActivateEffect(bool activate)
+    {
+        if (activate)
+        {
+            effectActivated = true;
+            foreach (SyncedTileController tile in otherSyncedTiles)
+            {
+                tile.SetOpen(true);
+            }
+        }
+        else
+        {
+            effectActivated = false;
+            foreach (SyncedTileController tile in otherSyncedTiles)
+            {
+                tile.SetOpen(false);
+            }
+        }
+    }
+
+    public override bool HasEffect()
+    {
+        return true;
+    }
+
+    public override bool IsEffectActivated()
+    {
+        return effectActivated;
     }
 }
 

@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using BallMaze;
+
 
 public class AddSmoke : MonoBehaviour
 {

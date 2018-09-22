@@ -1,17 +1,14 @@
 ﻿using System;
 
-namespace BallMaze.GameMechanics.Balls
+class WallController : BallController<BallView>
 {
-    class WallController : BallController<BallView>
+    public override bool IsWall()
     {
-        public override bool IsWall()
-        {
-            return true;
-        }
+        return true;
+    }
 
-        public override BallType GetBallType()
-        {
-            return BallType.WALL;
-        }
+    public override BallType GetBallType()
+    {
+        return BallType.WALL;
     }
 }

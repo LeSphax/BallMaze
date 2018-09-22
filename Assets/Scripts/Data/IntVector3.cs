@@ -1,10 +1,8 @@
-﻿using Utilities;
-
-public struct IntVector3
+﻿public struct IntVector3
 {
     private int[] coords;
 
-    public int x
+    public int X
     {
         get
         {
@@ -16,7 +14,7 @@ public struct IntVector3
         }
     }
 
-    public int y
+    public int Y
     {
         get
         {
@@ -28,7 +26,7 @@ public struct IntVector3
         }
     }
 
-    public int z
+    public int Z
     {
         get
         {
@@ -85,7 +83,7 @@ public struct IntVector3
         return coords.Print();
     }
 
-    public static IntVector3 zero
+    public static IntVector3 Zero
     {
         get
         {
@@ -93,7 +91,7 @@ public struct IntVector3
         }
     }
 
-    public static IntVector3 one
+    public static IntVector3 One
     {
         get
         {
@@ -103,6 +101,6 @@ public struct IntVector3
 
     public static IntVector3 operator *(IntVector3 vector, int y)
     {
-        return new IntVector3(vector.x * y, vector.y * y, vector.z * y);
+        return new IntVector3(vector.X * y, vector.Y * y, vector.Z * y);
     }
 }

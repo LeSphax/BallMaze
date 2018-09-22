@@ -1,42 +1,39 @@
-﻿namespace BallMaze.GameMechanics.Commands
+﻿public delegate void BallCommandEventHandler(AbstractBallCommand sender);
+
+
+
+public abstract class AbstractBallCommand
 {
-    public delegate void BallCommandEventHandler(AbstractBallCommand sender);
+    public event BallCommandEventHandler FinishedExecuting;
 
-
-
-    public abstract class AbstractBallCommand
+    public abstract void Execute();
+    public virtual void Undo()
     {
-        public event BallCommandEventHandler FinishedExecuting;
-
-        public abstract void Execute();
-        public virtual void Undo()
+        if (WasUseful())
         {
-            if (WasUseful())
-            {
-                ExecuteUndo();
-            }
-            else
-            {
-                RaiseFinishedExecuting();
-            }
+            ExecuteUndo();
         }
-
-        protected abstract void ExecuteUndo();
-
-        protected void RaiseFinishedExecuting()
+        else
         {
-            TakeOffListener();
-            if (FinishedExecuting != null)
-            {
-                FinishedExecuting.Invoke(this);
-            }
+            RaiseFinishedExecuting();
         }
+    }
 
-        protected abstract void TakeOffListener();
+    protected abstract void ExecuteUndo();
 
-        public virtual bool WasUseful()
+    protected void RaiseFinishedExecuting()
+    {
+        TakeOffListener();
+        if (FinishedExecuting != null)
         {
-            return true;
+            FinishedExecuting.Invoke(this);
         }
+    }
+
+    protected abstract void TakeOffListener();
+
+    public virtual bool WasUseful()
+    {
+        return true;
     }
 }

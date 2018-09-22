@@ -1,6 +1,6 @@
 ﻿using GenericStateMachine;
 
-namespace BallMaze.GameMechanics.ObjectiveBall
+namespace BVStateMachine
 {
     internal class BallViewStateMachine : StateMachine<BallViewStateMachine, BallViewEvent>
     {
@@ -26,7 +26,7 @@ namespace BallMaze.GameMechanics.ObjectiveBall
     }
 
 
-    internal class StaticState: BallViewState
+    internal class StaticState : BallViewState
     {
         public StaticState(BallViewStateMachine stateMachine) : base(stateMachine)
         {
@@ -93,6 +93,5 @@ namespace BallMaze.GameMechanics.ObjectiveBall
             stateMachine.view.ActivateFloating(false);
         }
     }
-
-
 }
+

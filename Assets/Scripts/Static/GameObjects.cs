@@ -1,5 +1,5 @@
-﻿using BallMaze;
-using BallMaze.Inputs;
+﻿
+
 using UnityEngine;
 
 public static class GameObjects

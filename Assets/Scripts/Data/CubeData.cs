@@ -1,20 +1,17 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Xml.Serialization;
-using UnityEngine;
 
 [XmlInclude(typeof(EditableCubeData))]
 public class CubeData : PuzzleData
 {
-    [XmlIgnore]
     public BallData[,,] balls;
-    [XmlIgnore]
     public TileData[][,] faces;
 
-    [XmlIgnore]
     public Dictionary<ObjectiveType, int> _objectives;
-    [XmlIgnore]
     public Dictionary<ObjectiveType, int> Objectives
     {
         get
@@ -37,55 +34,97 @@ public class CubeData : PuzzleData
         }
     }
 
-    //For Xml Serialisation
-    public CubeData()
-    {
-
-    }
-
-    public CubeData(BallData[,,] balls, TileData[][,] faces)
-    {
-        this.balls = balls;
-        this.faces = faces;
-    }
-
-    public TileData[][][] serializedTiles
-    {
-        get
-        {
-            TileData[][][] result = new TileData[6][][];
-            foreach (var item in faces.Select((value, i) => new { i, value }))
-            {
-                result[item.i] = item.value.ToJaggedArray();
-            }
-            return result;
-        }
-        set
-        {
-            TileData[][,] result = new TileData[6][,];
-            foreach (var item in value.Select((val, i) => new { i, val }))
-            {
-                result[item.i] = item.val.ToMatrix();
-            }
-            faces = result;
-        }
-    }
-
-    public BallData[][][] serializedBalls
-    {
-        get
-        {
-            return balls.ToJaggedArray();
-        }
-        set
-        {
-            balls = value.ToMatrix();
-        }
-    }
-
     public override bool IsValid()
     {
         return CheckObjectives();
+    }
+
+    public override string Serialize()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.AppendLine("Cube");
+        builder.AppendLine("; Dimension");
+        builder.AppendLine("\t 3,3,3");
+        builder.AppendLine("; Tiles");
+        for (int i = 0; i < faces.Length; i++)
+        {
+            for (int y = 0; y < faces[0].GetLength(0); y++)
+            {
+                for (int z = 0; z < faces[0].GetLength(1); z++)
+                {
+                    if (faces[i][y, z].ObjectiveType != ObjectiveType.NONE)
+                    {
+                        builder.AppendLine("\t" + (char)faces[i][y, z].TileType + ":" + (int)faces[i][y, z].ObjectiveType + " " + i + "," + y + "," + z);
+                    }
+                }
+            }
+        }
+        builder.AppendLine("; Balls");
+        for (int i = 0; i < balls.GetLength(0); i++)
+        {
+            for (int y = 0; y < balls.GetLength(1); y++)
+            {
+                for (int z = 0; z < balls.GetLength(2); z++)
+                {
+                    if (balls[i, y, z].BallType != BallType.EMPTY)
+                        builder.AppendLine("\t" + (char)balls[i, y, z].BallType + ":" + (int)balls[i, y, z].ObjectiveType + " " + i + "," + y + "," + z);
+                }
+            }
+        }
+        return builder.ToString();
+    }
+
+    public static CubeData Parse(string serializedData)
+    {
+        string currentField = "";
+        CubeData result = new CubeData();
+        foreach (string line in serializedData.Split(Environment.NewLine.ToCharArray()))
+        {
+            string trimmedLine = line.Trim();
+            if (trimmedLine.Length > 0)
+            {
+                if (trimmedLine[0] == ';')
+                {
+                    currentField = trimmedLine.Substring(1).Trim();
+                }
+                else
+                {
+                    switch (currentField)
+                    {
+                        case "Dimension":
+                            string[] split = trimmedLine.Split(',');
+                            IntVector3 dimensions = new IntVector3
+                            (
+                                int.Parse(split[0].Trim()),
+                                int.Parse(split[1].Trim()),
+                                int.Parse(split[2].Trim())
+                            );
+                            result.faces = TileData.CreateEmptyFaceArray(dimensions);
+                            result.balls = BallData.CreateEmptyBallDataMatrix(dimensions);
+                            break;
+                        case "Tiles":
+                            string[] split2 = trimmedLine.Split(' ');
+                            string[] positions = split2[1].Split(',');
+                            int x2 = int.Parse(positions[0].Trim());
+                            int y2 = int.Parse(positions[1].Trim());
+                            int z2 = int.Parse(positions[2].Trim());
+                            string[] type = split2[0].Split(':');
+                            result.faces[x2][y2,z2] = new TileData((ObjectiveType)int.Parse(type[1]), (TileType)type[0][0]);
+                            break;
+                        case "Balls":
+                            string[] split3 = trimmedLine.Split(' ');
+                            string[] positions3 = split3[1].Split(',');
+                            int x3 = int.Parse(positions3[0].Trim());
+                            int y3 = int.Parse(positions3[1].Trim());
+                            int z3 = int.Parse(positions3[2].Trim());
+                            string[] type3 = split3[0].Split(':');
+                            result.balls[x3, y3, z3] = new BallData((BallType)type3[0][0], (ObjectiveType)int.Parse(type3[1]));
+                            break;
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     private bool CheckObjectives()

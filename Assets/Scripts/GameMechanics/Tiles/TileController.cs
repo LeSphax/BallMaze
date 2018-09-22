@@ -2,149 +2,145 @@
 using System;
 using UnityEngine;
 
-namespace BallMaze.GameMechanics.Tiles
+[Serializable]
+public class TileController : MonoBehaviour
 {
-    [Serializable]
-    public class TileController : MonoBehaviour
+    protected TileView view;
+    protected ATileEffectStrategy effectManager;
+
+    public GameObject Mesh
     {
-        protected TileView view;
-        protected ATileEffectStrategy effectManager;
-
-        public GameObject Mesh
+        get
         {
-            get
-            {
-                return view.Mesh;
-            }
+            return view.Mesh;
         }
+    }
 
-        public bool IsOpen
+    public bool IsOpen
+    {
+        get
         {
-            get
-            {
-                return state == State.OPEN;
-            }
+            return state == State.OPEN;
         }
+    }
 
-        public enum State
-        {
-            CLOSED,
-            OPEN,
-            FILLED,
-        }
+    public enum State
+    {
+        CLOSED,
+        OPEN,
+        FILLED,
+    }
 
-        private State state;
-        protected ObjectiveType objectiveType;
-        public TileType tileType;
+    private State state;
+    protected ObjectiveType objectiveType;
+    public TileType tileType;
 
-        void Awake()
-        {
-            view = gameObject.AddComponent<TileView>();
-        }
+    void Awake()
+    {
+        view = gameObject.AddComponent<TileView>();
+    }
 
-        protected virtual void InitEffectManager()
-        {
-            if (objectiveType == ObjectiveType.OBJECTIVE1 || objectiveType == ObjectiveType.OBJECTIVE2)
-                if (tileType == TileType.NORMAL)
-                    effectManager = gameObject.AddComponent<ObjectiveTileEffectStrategy>();
-                else
-                    effectManager = gameObject.AddComponent<SyncedTileEffectStrategy>();
+    protected virtual void InitEffectManager()
+    {
+        if (objectiveType == ObjectiveType.OBJECTIVE1 || objectiveType == ObjectiveType.OBJECTIVE2)
+            if (tileType == TileType.NORMAL)
+                effectManager = gameObject.AddComponent<ObjectiveTileEffectStrategy>();
             else
-                effectManager = gameObject.AddComponent<NormalTileEffectStrategy>();
+                effectManager = gameObject.AddComponent<SyncedTileEffectStrategy>();
+        else
+            effectManager = gameObject.AddComponent<NormalTileEffectStrategy>();
 
-            effectManager.Init();
-        }
+        effectManager.Init();
+    }
 
-        public void SetOpen(bool open)
-        {
-            if (open)
-            {
-                SetState(State.OPEN);
-            }
-            else
-            {
-                SetState(State.CLOSED);
-            }
-        }
-
-        internal ColorAnimation GetFillingAnimation(float duration)
-        {
-            return view.GetFillingAnimation(duration);
-        }
-
-        public void Fill(bool fill = true)
-        {
-            if (fill)
-                GetFillingAnimation(0).StartAnimating();
-            else
-                GetFillingAnimation(0).StartReverseAnimating();
-        }
-
-        public ObjectiveType GetObjectiveType()
-        {
-            return objectiveType;
-        }
-
-        public void SetState(State newState)
-        {
-            effectManager.SetState(newState);
-            state = newState;
-        }
-
-        public bool TryFillTile()
-        {
-            if (IsOpen)
-            {
-                SetState(State.FILLED);
-                return true;
-            }
-            return false;
-        }
-
-        public void UnFillTile()
+    public void SetOpen(bool open)
+    {
+        if (open)
         {
             SetState(State.OPEN);
         }
-
-        public bool ActivateEffect(IBallController ball)
+        else
         {
-            return effectManager.ActivateEffect(ball);
+            SetState(State.CLOSED);
         }
+    }
 
-        public void ActivateEffect(bool activate)
+    internal ColorAnimation GetFillingAnimation(float duration)
+    {
+        return view.GetFillingAnimation(duration);
+    }
+
+    public void Fill(bool fill = true)
+    {
+        if (fill)
+            GetFillingAnimation(0).StartAnimating();
+        else
+            GetFillingAnimation(0).StartReverseAnimating();
+    }
+
+    public ObjectiveType GetObjectiveType()
+    {
+        return objectiveType;
+    }
+
+    public void SetState(State newState)
+    {
+        effectManager.SetState(newState);
+        state = newState;
+    }
+
+    public bool TryFillTile()
+    {
+        if (IsOpen)
         {
-            effectManager.ActivateEffect(activate);
+            SetState(State.FILLED);
+            return true;
         }
+        return false;
+    }
 
-        public bool HasEffect()
-        {
-            return effectManager.HasEffect();
-        }
+    public void UnFillTile()
+    {
+        SetState(State.OPEN);
+    }
 
-        public bool IsEffectActivated()
-        {
-            return effectManager.IsEffectActivated();
-        }
+    public bool ActivateEffect(IBallController ball)
+    {
+        return effectManager.ActivateEffect(ball);
+    }
 
-        public bool IsFilled()
-        {
-            return state == State.FILLED;
-        }
+    public void ActivateEffect(bool activate)
+    {
+        effectManager.ActivateEffect(activate);
+    }
 
-        public void Init(TileData tileData)
-        {
-            objectiveType = tileData.ObjectiveType;
-            tileType = tileData.TileType;
-            InitEffectManager();
-        }
+    public bool HasEffect()
+    {
+        return effectManager.HasEffect();
+    }
 
-        public virtual void SetMesh(GameObject mesh)
-        {
-            gameObject.name = mesh.name;
-            mesh.transform.SetParent(transform, false);
-            view.Mesh = mesh;
-        }
+    public bool IsEffectActivated()
+    {
+        return effectManager.IsEffectActivated();
+    }
 
+    public bool IsFilled()
+    {
+        return state == State.FILLED;
+    }
+
+    public void Init(TileData tileData)
+    {
+        objectiveType = tileData.ObjectiveType;
+        tileType = tileData.TileType;
+        InitEffectManager();
+    }
+
+    public virtual void SetMesh(GameObject mesh)
+    {
+        gameObject.name = mesh.name;
+        mesh.transform.SetParent(transform, false);
+        view.Mesh = mesh;
     }
 
 }

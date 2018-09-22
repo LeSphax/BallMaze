@@ -1,113 +1,107 @@
-﻿using BallMaze.Data;
-using BallMaze.GameMechanics.Tiles;
-using BallMaze.Inputs;
-using UnityEngine;
+﻿using UnityEngine;
 
 
-namespace BallMaze.GameMechanics
+public abstract class Board : MonoBehaviour
 {
-    public abstract class Board : MonoBehaviour
+    public const float BASE_TILE_SIZE_X = 1.1f;
+    public const float BASE_TILE_SIZE_Y = 1.1f;
+    public float TileXSize
     {
-        public const float BASE_TILE_SIZE_X = 1.1f;
-        public const float BASE_TILE_SIZE_Y = 1.1f;
-        public float TileXSize
+        get
         {
-            get
-            {
-                return BASE_TILE_SIZE_X * SizeRatio;
-            }
-
-        }
-        public float TileYSize
-        {
-            get
-            {
-                return BASE_TILE_SIZE_Y * SizeRatio;
-            }
-        }
-        private const float BASE_BOARD_SIZE = 3;
-
-        public virtual float SizeRatio
-        {
-            get
-            {
-                return BASE_BOARD_SIZE / Mathf.Max(Width, Height);
-            }
+            return BASE_TILE_SIZE_X * SizeRatio;
         }
 
-        protected BoardData boardData;
-
-        protected BoardPosition[,] board;
-
-        public int Width
+    }
+    public float TileYSize
+    {
+        get
         {
-            get
-            {
-                return board.GetLength(0);
-            }
+            return BASE_TILE_SIZE_Y * SizeRatio;
         }
+    }
+    private const float BASE_BOARD_SIZE = 3;
 
-        public int Height
+    public virtual float SizeRatio
+    {
+        get
         {
-            get
-            {
-                return board.GetLength(1);
-            }
+            return BASE_BOARD_SIZE / Mathf.Max(Width, Height);
         }
+    }
 
-        internal void ReceiveDirection(Direction direction)
+    protected BoardData boardData;
+
+    protected BoardPosition[,] board;
+
+    public int Width
+    {
+        get
         {
-            ReceiveInputCommand(new MoveCommand(direction));
+            return board.GetLength(0);
         }
+    }
 
-        internal virtual void ReceiveInputCommand(BoardInputCommand inputCommand)
+    public int Height
+    {
+        get
         {
-
+            return board.GetLength(1);
         }
+    }
 
-        public abstract void SetData(BoardData boardData);
+    internal void ReceiveDirection(Direction direction)
+    {
+        ReceiveInputCommand(new MoveCommand(direction));
+    }
+
+    internal virtual void ReceiveInputCommand(BoardInputCommand inputCommand)
+    {
+
+    }
+
+    public abstract void SetData(BoardData boardData);
 
 
-        internal TileController GetTile(int posX, int posY)
-        {
-            return board[posX, posY].tile;
-        }
+    internal TileController GetTile(int posX, int posY)
+    {
+        return board[posX, posY].tile;
+    }
 
-        internal IBallController GetBrick(int posX, int posY)
-        {
-            return board[posX, posY].ball;
-        }
+    internal IBallController GetBrick(int posX, int posY)
+    {
+        return board[posX, posY].ball;
+    }
 
 
-        internal Vector3 GetWorldPosition(int posX, int posY)
-        {
-            return new Vector3(posX * TileXSize, 0, posY * TileYSize);
-        }
+    internal Vector3 GetWorldPosition(int posX, int posY)
+    {
+        return new Vector3(posX * TileXSize, 0, posY * TileYSize);
+    }
 
-        internal void RemoveBrick(int x, int y)
-        {
-            board[x, y].ball = new EmptyBallController();
-        }
+    internal void RemoveBrick(int x, int y)
+    {
+        board[x, y].ball = new EmptyBallController();
+    }
 
-        internal void AddBrick(IBallController brickModel, int x, int y)
-        {
-            board[x, y].ball = brickModel;
-        }
+    internal void AddBrick(IBallController brickModel, int x, int y)
+    {
+        board[x, y].ball = brickModel;
+    }
 
-        internal bool IsEmpty(int x, int y)
-        {
-            return board[x, y].ball.IsEmpty();
-        }
+    internal bool IsEmpty(int x, int y)
+    {
+        return board[x, y].ball.IsEmpty();
+    }
 
-        internal virtual void MoveBrick(int posX, int posY, int newPosX, int newPosY)
-        {
+    internal virtual void MoveBrick(int posX, int posY, int newPosX, int newPosY)
+    {
 
-        }
+    }
 
-        void OnDestroy()
-        {
-            if (GameObjects.GetInputManager() != null)
-                GameObjects.GetInputManager().MoveBoardEvent -= ReceiveDirection;
-        }
+    void OnDestroy()
+    {
+        if (GameObjects.GetInputManager() != null)
+            GameObjects.GetInputManager().MoveBoardEvent -= ReceiveDirection;
     }
 }

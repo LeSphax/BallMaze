@@ -1,31 +1,29 @@
-﻿using BallMaze.Cube;
-using BallMaze.GameMechanics;
+﻿
 using System;
-using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.Assertions;
 
 [Serializable]
 public enum ObjectiveType
 {
-    NONE,
-    OBJECTIVE1,
-    OBJECTIVE2,
+    NONE = 0,
+    OBJECTIVE1 = 1,
+    OBJECTIVE2 = 2,
 }
-
 
 [Serializable]
 public enum BallType
 {
-    EMPTY,
-    WALL,
-    NORMAL,
+    EMPTY = 'E',
+    WALL = 'W',
+    NORMAL = 'N',
 }
 
 [Serializable]
 public enum TileType
 {
-    NORMAL,
-    SYNCED,
+    NORMAL = 'N',
+    SYNCED = 'S',
 }
 
 [Serializable]
@@ -45,21 +43,23 @@ public class BallData
         ObjectiveType = objective;
     }
 
+    private static List<BallData> order = new List<BallData>()
+    {
+        GetEmptyBall(),
+        GetWall(),
+        GetObjective1Ball(),
+        GetObjective2Ball(),
+        GetNormalBall()
+    };
+
     public BallData GetNext()
     {
-        switch (BallType)
-        {
-            case BallType.NORMAL:
-                switch (ObjectiveType)
-                {
-                    case ObjectiveType.OBJECTIVE2:
-                        return GetEmptyBall();
-                    default:
-                        return new BallData(BallType, ObjectiveType.Next());
-                }
-            default:
-                return new BallData(BallType.Next());
-        }
+        return order[BallMazeMaths.Mod(order.IndexOf(this) + 1,order.Count)];
+    }
+
+    public BallData GetPrevious()
+    {
+        return order[BallMazeMaths.Mod(order.IndexOf(this) - 1 , order.Count)];
     }
 
     public static BallData GetEmptyBall()
@@ -67,7 +67,7 @@ public class BallData
         return new BallData(BallType.EMPTY);
     }
 
-    public static BallData[,] GetEmptyBallDataMatrix(int width, int height)
+    public static BallData[,] CreateEmptyBallDataMatrix(int width, int height)
     {
         BallData[,] matrix = new BallData[width, height];
         for (int i = 0; i < width; i++)
@@ -78,12 +78,12 @@ public class BallData
         return matrix;
     }
 
-    public static BallData[,,] GetEmptyBallDataMatrix(int width, int height, int depth)
+    public static BallData[,,] CreateEmptyBallDataMatrix(IntVector3 dimensions)
     {
-        BallData[,,] matrix = new BallData[width, height, depth];
-        for (int i = 0; i < width; i++)
-            for (int j = 0; j < height; j++)
-                for (int k = 0; k < height; k++)
+        BallData[,,] matrix = new BallData[dimensions.X, dimensions.Y, dimensions.Z];
+        for (int i = 0; i < dimensions.X; i++)
+            for (int j = 0; j < dimensions.Y; j++)
+                for (int k = 0; k < dimensions.Z; k++)
                     matrix[i, j, k] = GetEmptyBall();
         return matrix;
     }
@@ -106,25 +106,6 @@ public class BallData
     public static BallData GetWall()
     {
         return new BallData(BallType.WALL);
-    }
-
-    public BallData GetPrevious()
-    {
-        switch (BallType)
-        {
-            case BallType.NORMAL:
-                switch (ObjectiveType)
-                {
-                    case ObjectiveType.NONE:
-                        return GetWall();
-                    default:
-                        return new BallData(BallType, ObjectiveType.Previous());
-                }
-            case BallType.EMPTY:
-                return GetObjective2Ball();
-            default:
-                return new BallData(BallType.Previous());
-        }
     }
 
     public override int GetHashCode()
@@ -173,7 +154,7 @@ public class TileData
         return new TileData(ObjectiveType.NONE, TileType.NORMAL);
     }
 
-    public static TileData[,] GetEmptyTileDataMatrix(int width, int height)
+    public static TileData[,] CreateEmptyTileDataMatrix(int width, int height)
     {
         TileData[,] matrix = new TileData[width, height];
         for (int i = 0; i < width; i++)
@@ -184,7 +165,7 @@ public class TileData
         return matrix;
     }
 
-    public static TileData[][,] GetEmptyFaceArray(IntVector3 sizes, TileData[][,] oldFaces = null)
+    public static TileData[][,] CreateEmptyFaceArray(IntVector3 sizes, TileData[][,] oldFaces = null)
     {
         TileData[][,] result = new TileData[FaceModel.NUMBER_FACES][,];
         for (int i = 0; i < FaceModel.NUMBER_FACES; i++)

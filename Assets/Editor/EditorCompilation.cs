@@ -29,7 +29,7 @@ public class EditorCompilation : MonoBehaviour
                     Debug.Log("Auto-Saving scene before entering Play mode: " + EditorSceneManager.GetActiveScene());
 
                     EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
-                    EditorApplication.SaveAssets();
+                    AssetDatabase.SaveAssets();
                 }
             };
         }

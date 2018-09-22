@@ -1,7 +1,6 @@
-﻿using BallMaze.GameMechanics.Tiles;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace BallMaze.GameMechanics.ObjectiveBall
+namespace BVStateMachine
 {
     internal abstract class BallViewEvent
     {
@@ -20,7 +19,7 @@ namespace BallMaze.GameMechanics.ObjectiveBall
     internal class CompleteCommand : BallViewEvent
     {
         internal TileController objective;
-        
+
 
         public CompleteCommand(TileController objective)
         {

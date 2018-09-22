@@ -1,29 +1,25 @@
-﻿using BallMaze.GameManagement;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace BallMaze.Inputs
+public class CancelCommand : BoardInputCommand
 {
-    public class CancelCommand : BoardInputCommand
+
+    public CancelCommand() : base()
     {
+    }
 
-        public CancelCommand() : base()
-        {
-        }
+    public CancelCommand(SaveManager saveManager) : base(saveManager)
+    {
+    }
 
-        public CancelCommand(SaveManager saveManager) : base(saveManager)
-        {
-        }
+    public override void Execute()
+    {
+        base.Execute();
+        model.CancelLastMovement();
+    }
 
-        public override void Execute()
-        {
-            base.Execute();
-            model.CancelLastMovement();
-        }
-
-        public override void LogExecute()
-        {
-            base.LogExecute();
-            GameObject.FindGameObjectWithTag(Tags.UndoButton).GetComponent<BlinkingButton>().BlinkOnce();
-        }
+    public override void LogExecute()
+    {
+        base.LogExecute();
+        GameObject.FindGameObjectWithTag(Tags.UndoButton).GetComponent<BlinkingButton>().BlinkOnce();
     }
 }

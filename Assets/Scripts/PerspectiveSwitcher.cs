@@ -35,7 +35,6 @@ public class PerspectiveSwitcher : MonoBehaviour
         perspective = Matrix4x4.Perspective(fov, aspect, near, far);
         m_Camera.projectionMatrix = ortho;
         orthoOn = true;
-        
     }
 
     public void SetOrthographic(bool value, MatrixBlendEnded endCallback)
